@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "target": "es2017",
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "sourceMap": true,
+      "pretty": true,
+      "newLine": "LF",
+      "jsx": "react",
+      "strict": true,
+      "outDir": "./out"
+  },
+  "exclude": [ "node_modules" ],
+  "include": [
+    "./src/**/*", "scripts/build.ts", "webpack.config.ts"
+  ]
+}
