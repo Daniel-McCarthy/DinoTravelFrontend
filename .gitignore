@@ -1,0 +1,5 @@
+# Ignore build files
+docs
+
+# Ignore dependencies
+node_modules
