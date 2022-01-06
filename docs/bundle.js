@@ -25,18 +25,22 @@ class HomePage extends React.Component {
                 React.createElement("div", { className: "banner" },
                     React.createElement("div", { className: "logo" }, "Dino Travel Logo"),
                     React.createElement("div", { className: "slogan" },
-                        React.createElement("h2", { className: "slogan" }, "Travel More (slogan)"))),
+                        React.createElement("h3", { className: "slogan" }, "Travel More"))),
                 React.createElement("nav", null,
                     React.createElement("button", null, "support"),
                     React.createElement("button", null, "about us"),
                     React.createElement("button", null, "trips"))),
-            React.createElement("body", null,
+            React.createElement("section", null,
                 React.createElement("h1", null, "Search Flights"),
-                React.createElement("div", null,
+                React.createElement("div", { className: "flightTypeFilters" },
                     React.createElement("button", null, "Round Trip"),
                     React.createElement("button", null, "One-Way"),
-                    React.createElement("button", null, "Multi-City"))),
-            React.createElement("h1", null, "Test")));
+                    React.createElement("button", null, "Multi-City")),
+                React.createElement("div", { className: "filterDropdowns" },
+                    React.createElement("select", null,
+                        React.createElement("option", null, "Travelers")),
+                    React.createElement("select", null,
+                        React.createElement("option", null, "Class"))))));
     }
 }
 exports.HomePage = HomePage;
@@ -63,7 +67,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "header {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n/* header nav {\r\n    margin-right: 15px;\r\n} */\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 120px;\r\n    height: 120px;\r\n    margin-left: 20px;\r\n\r\n    border: black 2px solid;\r\n    display: inline-block;\r\n    margin-right: 15px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n    /* font-size: 18px; */\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;AACvB;;AAEA;;GAEG;;AAEH;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,uBAAuB;IACvB,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;IACnB,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;AACzB","sourcesContent":["header {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n/* header nav {\r\n    margin-right: 15px;\r\n} */\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 120px;\r\n    height: 120px;\r\n    margin-left: 20px;\r\n\r\n    border: black 2px solid;\r\n    display: inline-block;\r\n    margin-right: 15px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n    /* font-size: 18px; */\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\n/* header nav {\r\n    margin-right: 15px;\r\n} */\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 120px;\r\n    height: 120px;\r\n    margin-left: 20px;\r\n\r\n    border: black 2px solid;\r\n    display: inline-block;\r\n    margin-right: 15px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n    /* font-size: 18px; */\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\nsection button {\r\n    width: 160px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 80px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;AAC3B;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;;GAEG;;AAEH;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,uBAAuB;IACvB,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;IACnB,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\n/* header nav {\r\n    margin-right: 15px;\r\n} */\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 120px;\r\n    height: 120px;\r\n    margin-left: 20px;\r\n\r\n    border: black 2px solid;\r\n    display: inline-block;\r\n    margin-right: 15px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n    /* font-size: 18px; */\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\nsection button {\r\n    width: 160px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 80px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -89,7 +93,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n    height: 60px;\r\n    width: 160px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,kCAAkC;IAClC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB","sourcesContent":["button {\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n    height: 60px;\r\n    width: 160px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n    height: 60px;\r\n    width: 160px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\nselect {\r\n    height: 60px;\r\n    width: 160px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,kCAAkC;IAClC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n    height: 60px;\r\n    width: 160px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\nselect {\r\n    height: 60px;\r\n    width: 160px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
