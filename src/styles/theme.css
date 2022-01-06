@@ -6,3 +6,8 @@ button {
     font-size: large;
     border-radius: 7px;
 }
+
+select {
+    height: 60px;
+    width: 160px;
+}

@@ -36,7 +36,26 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         <button>trips</button>
                     </nav>
                 </header>
-                <h1>Test</h1>
+                <section>
+                    <h1>Search Flights</h1>
+                    <div className="flightTypeFilters">
+                        <button>Round Trip</button>
+                        <button>One-Way</button>
+                        <button>Multi-City</button>
+                    </div>
+
+                    <div className="filterDropdowns">
+                        <select>
+                            <option>Travelers</option>
+                        </select>
+
+                        <select>
+                            <option>
+                                Class
+                            </option>
+                        </select>
+                    </div>
+                </section>
             </div>
         )
     }
