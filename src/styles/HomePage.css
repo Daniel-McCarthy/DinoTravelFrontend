@@ -1,0 +1,28 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header nav button {
+    margin-right: 15px;
+}
+
+.logo {
+    width: 120px;
+    height: 120px;
+    margin-left: 20px;
+
+    border: black 2px solid;
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.slogan {
+    display: inline-block;
+    align-items: center;
+}
+
+nav {
+    display: inline-block;
+}
