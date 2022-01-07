@@ -1,13 +1,13 @@
 button {
     background-color: rgb(59, 77, 145);
     color: white;
-    height: 60px;
-    width: 160px;
+    height: 50px;
+    width: 150px;
     font-size: large;
     border-radius: 7px;
 }
 
 select {
-    height: 60px;
-    width: 160px;
+    height: 40px;
+    width: 150px;
 }

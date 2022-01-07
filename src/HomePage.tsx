@@ -37,24 +37,45 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     </nav>
                 </header>
                 <section>
-                    <h1>Search Flights</h1>
-                    <div className="flightTypeFilters">
-                        <button>Round Trip</button>
-                        <button>One-Way</button>
-                        <button>Multi-City</button>
+                    <div id="filterRow">
+                        <h1>Search Flights</h1>
+                        <div className="flightTypeFilters">
+                            <button>Round Trip</button>
+                            <button>One-Way</button>
+                            <button>Multi-City</button>
+                        </div>
+
+                        <div className="filterDropdowns">
+                            <select>
+                                <option>Travelers</option>
+                            </select>
+
+                            <select>
+                                <option>
+                                    Class
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="userInputRow">
+                        <div id="destinationInputs">
+                            <input className="leavingInput" placeholder="Leaving From" />
+                            <input placeholder="Going To" />
+                        </div>
+                        <div className="dateInputContainer">
+                            <h3>Departing</h3>
+                            <input className="datePicker" type="date"></input>
+                        </div>
+                        
+                        <div className="dateInputContainer">
+                            <h3>Returning</h3>
+                            <input className="datePicker" type="date"></input>
+                        </div>
                     </div>
 
-                    <div className="filterDropdowns">
-                        <select>
-                            <option>Travelers</option>
-                        </select>
+                    <button id="submitButton">Submit</button>
 
-                        <select>
-                            <option>
-                                Class
-                            </option>
-                        </select>
-                    </div>
+
                 </section>
             </div>
         )
