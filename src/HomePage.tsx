@@ -24,9 +24,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             <div>
                 <header>
                     <div className="banner">
-                        <div className="logo">Dino Travel Logo</div>
+                        <img className="logo" alt="Dino Travel Logo" src="../assets/dino_travel_logo.png"/>
                         <div className="slogan">
-                            <h3 className="slogan">Travel More</h3>
+                            <h3>Travel More</h3>
                         </div>
                     </div>
 
