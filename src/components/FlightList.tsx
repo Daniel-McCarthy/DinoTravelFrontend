@@ -35,6 +35,11 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         }
 
         if (prevProps.flightData !== this.props.flightData) {
+            // Add dummy costs until real costs are included in database.
+            for (const flight of this.props.flightData) {
+                flight.flight_cost = this.calculateRandomDummyPrice();
+            }
+
             this.setState({
                 flightData: this.props.flightData
             });
@@ -77,7 +82,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
                             </tr>
                         </table>
                         <div className="ticketPrice">
-                            <text>{`$${this.calculateRandomDummyPrice()}`}</text>
+                            <text>{`$${flight.flight_cost}`}</text>
                         </div>
                     </div>
                 })}
