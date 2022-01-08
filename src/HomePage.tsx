@@ -1,9 +1,14 @@
 import * as React from "react";
+import { FlightClass } from "./enums/FlightClass";
+import { FlightType } from "./enums/FlightType";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
 
 interface IHomePageState {
+    flightType: FlightType;
+    flightClass: FlightClass;
+    isMultiCity: boolean;
 }
 
 interface IHomePageProps {
@@ -16,10 +21,17 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         super(props)
 
         this.state = {
+            flightType: FlightType.RoundTrip,
+            flightClass: FlightClass.EconomyClass,
+            isMultiCity: true
         }
     }
 
     render() {
+        const isRoundTripSelected = this.state.flightType === FlightType.RoundTrip;
+        const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
+        const oneWayButtonClass = !isRoundTripSelected ? 'selected' : '';
+        const multiCityButtonClass = this.state.isMultiCity ? 'selected' : '';
         return (
             <div>
                 <header>
@@ -31,18 +43,18 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     </div>
 
                     <nav>
-                        <button>support</button>
-                        <button>about us</button>
-                        <button>trips</button>
+                        <button className="nontoggle">support</button>
+                        <button className="nontoggle">about us</button>
+                        <button className="nontoggle">trips</button>
                     </nav>
                 </header>
                 <section>
                     <div id="filterRow">
                         <h1>Search Flights</h1>
                         <div className="flightTypeFilters">
-                            <button>Round Trip</button>
-                            <button>One-Way</button>
-                            <button>Multi-City</button>
+                            <button className={roundTripButtonClass} onClick={this.selectRoundTrip}>Round Trip</button>
+                            <button className={oneWayButtonClass} onClick={this.selectOneWay}>One-Way</button>
+                            <button className={multiCityButtonClass} onClick={this.toggleMultiCityFlight}>Multi-City</button>
                         </div>
 
                         <div className="filterDropdowns">
@@ -73,11 +85,27 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     </div>
 
-                    <button id="submitButton">Submit</button>
-
-
+                    <button className="nontoggle" id="submitButton">Submit</button>
                 </section>
             </div>
         )
+    }
+
+    selectRoundTrip = () => {
+        this.setState({
+            flightType: FlightType.RoundTrip
+        });
+    }
+
+    selectOneWay = () => {
+        this.setState({
+            flightType: FlightType.OneWay
+        });
+    }
+
+    toggleMultiCityFlight = () => {
+        this.setState({
+            isMultiCity: !this.state.isMultiCity
+        });
     }
 }
