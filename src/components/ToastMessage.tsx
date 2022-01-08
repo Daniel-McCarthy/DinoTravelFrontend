@@ -34,6 +34,18 @@ export class ToastMessage extends React.Component<IToastProps, IToastState> {
                 show: this.props.show
             });
         }
+
+        if (prevProps.message !== this.props.message) {
+            this.setState({
+                message: this.props.message
+            })
+        }
+
+        if (prevProps.toastType !== this.props.toastType) {
+            this.setState({
+                toastType: this.props.toastType
+            })
+        }
     }
 
     render() {
