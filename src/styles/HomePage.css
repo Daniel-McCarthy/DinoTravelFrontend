@@ -59,11 +59,21 @@ section {
 
 .filterDropdowns {
     display: inline-block;
-    margin-left: 80px;
+    margin-left: 60px;
 }
 
 .filterDropdowns select {
     margin-right: 35px;
+}
+
+#filterRow input {
+    height: 35px;
+    width: 200px;
+}
+
+.travelersInput {
+    display: inline-block;
+    margin-right: 20px;
 }
 
 section h1 {
@@ -84,7 +94,6 @@ section h1 {
 
 #userInputRow input {
     width: 220px;
-    height: 50px;
     border-radius: 3px;
     margin-right: 10px;
 }
@@ -105,6 +114,7 @@ section h1 {
 
 #userInputRow input {
     margin-right: 40px;
+    height: 50px;
 }
 
 #submitButton {

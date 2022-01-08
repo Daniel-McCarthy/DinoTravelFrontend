@@ -63,9 +63,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             </select>
 
                             <select>
-                                <option>
-                                    Class
-                                </option>
+                                <option disabled selected>Class</option>
+                                {Object.values(FlightClass).map(flightClass => (
+                                    <option>{flightClass}</option>
+                                ))}
                             </select>
                         </div>
                     </div>
