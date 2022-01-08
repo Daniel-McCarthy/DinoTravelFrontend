@@ -8,6 +8,8 @@ import './styles/theme.css';
 interface IHomePageState {
     flightType: FlightType;
     flightClass: FlightClass;
+    numAdultTravelers: number;
+    numChildTravelers: number;
     isMultiCity: boolean;
 }
 
@@ -23,6 +25,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.state = {
             flightType: FlightType.RoundTrip,
             flightClass: FlightClass.EconomyClass,
+            numAdultTravelers: 0,
+            numChildTravelers: 0,
             isMultiCity: true
         }
     }
@@ -58,9 +62,27 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
 
                         <div className="filterDropdowns">
-                            <select>
-                                <option>Travelers</option>
-                            </select>
+                            <div className="travelersInput">
+                                <h3>Number of Adult Travelers:</h3>
+                                <input
+                                    type="number"
+                                    placeholder="0"
+                                    step={1}
+                                    max={10}
+                                    min={0}
+                                />
+                            </div>
+
+                            <div className="travelersInput">
+                                <h3>Number of Child Travelers:</h3>
+                                <input
+                                    type="number"
+                                    placeholder="0"
+                                    step={1}
+                                    max={10}
+                                    min={0}
+                                />
+                            </div>
 
                             <select>
                                 <option disabled selected>Class</option>

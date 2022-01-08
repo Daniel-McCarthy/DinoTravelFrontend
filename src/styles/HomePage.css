@@ -71,6 +71,10 @@ section {
     width: 200px;
 }
 
+#filterRow h3 {
+    font-size: 14px;
+}
+
 .travelersInput {
     display: inline-block;
     margin-right: 20px;
