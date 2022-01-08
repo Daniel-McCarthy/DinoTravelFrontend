@@ -75,7 +75,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
                             </tr>
                             <tr>
                                 <td>({flight.arrival_airport}) - ({flight.departure_airport})</td>
-                                <td>1 hour 4 min stop in Ft Lauderdale</td>
+                                <td>Direct flight.</td>
                             </tr>
                             <tr>
                                 <td>{flight.flight_provider}</td>
