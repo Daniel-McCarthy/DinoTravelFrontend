@@ -36,33 +36,6 @@ class HomePage extends React.Component {
                 this.displayError(`Error: ${JSON.stringify(error)}`);
             }
         };
-        // TODO: Separate FlightList into a component (the header too!)
-        // renderFlightList = () => {
-        //     // const flights = await this.getFlightAPIData();
-        //     return this.state.flightsData.length === 0
-        //         ? <div className="emptyFlightTable"></div>
-        //         : this.state.flightsData.map((flight: IFlightData) => {
-        //             console.log(`Mapping flight: ${flight}`)
-        //             return <div className="flightRow">
-        //                 <table>
-        //                     <tr>
-        //                         <td>5:15 AM - 2:30 PM</td>
-        //                         <td>9 hrs 34 min</td>
-        //                     </tr>
-        //                     <tr>
-        //                         <td>(ORD) - (CLO)</td>
-        //                         <td>1 hour 4 min stop in Ft Lauderdale</td>
-        //                     </tr>
-        //                     <tr>
-        //                         <td>Spirit Airlines</td>
-        //                     </tr>
-        //                     {/* {flight.departure_airport} */}
-        //                 </table>
-        //             </div>
-        //         });
-        // }
-        // assembleFlightListTable = () => {
-        // }
         this.displayError = (message) => {
             this.setState({
                 showToast: true,
@@ -72,10 +45,8 @@ class HomePage extends React.Component {
                 }
             });
         };
-        this.displayToast = () => {
-            this.setState({
-                showToast: true
-            });
+        this.onArrivalFlightDateSelected = () => {
+            this.getFlightAPIData();
         };
         this.selectRoundTrip = () => {
             this.setState({
@@ -94,20 +65,18 @@ class HomePage extends React.Component {
         };
         this.toggle = () => {
             this.setState({
-                showToast: !this.state.showToast
+                showToast: true,
+                toastMessage: { toastType: ToastType_1.ToastType.SuccessToast, message: "Success! Your flight has now been booked. We'll now show you the flight details." }
             });
-            console.log(this.state.showToast);
-            this.getFlightAPIData();
         };
         this.state = {
             flightType: FlightType_1.FlightType.RoundTrip,
             flightClass: FlightClass_1.FlightClass.EconomyClass,
-            numTravelers: 1,
             numAdultTravelers: 0,
             numChildTravelers: 0,
             isMultiCity: true,
             // Initialize toast data, invisible by default until is configured for a message to be shown.
-            toastMessage: { toastType: ToastType_1.ToastType.SuccessToast, message: "Success! Your flight has now been booked. We'll now show you the flight details." },
+            toastMessage: { toastType: ToastType_1.ToastType.InfoToast, message: "" },
             showToast: false,
             flightsData: []
         };
@@ -117,7 +86,6 @@ class HomePage extends React.Component {
         const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
         const oneWayButtonClass = !isRoundTripSelected ? 'selected' : '';
         const multiCityButtonClass = this.state.isMultiCity ? 'selected' : '';
-        // const flightsElements = await this.displayFlightList();
         return (React.createElement("div", null,
             React.createElement("header", null,
                 React.createElement("div", { className: "banner" },
@@ -151,7 +119,7 @@ class HomePage extends React.Component {
                         React.createElement("input", { placeholder: "Going To" })),
                     React.createElement("div", { className: "dateInputContainer" },
                         React.createElement("h3", null, "Departing"),
-                        React.createElement("input", { className: "datePicker", type: "date" })),
+                        React.createElement("input", { className: "datePicker", type: "date", onChange: this.onArrivalFlightDateSelected })),
                     React.createElement("div", { className: "dateInputContainer" },
                         React.createElement("h3", null, "Returning"),
                         React.createElement("input", { className: "datePicker", type: "date" }))),
@@ -173,14 +141,15 @@ exports.HomePage = HomePage;
 
 "use strict";
 
-// const serverIP = '35.171.66.24';
-// const port = '8080';
-// const flightsAPI = '/api/flights';
-// const flightEndpointURL = `http://${serverIP}:${port}${flightsAPI}`;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getFlightData = void 0;
+const serverIP = '35.171.66.24';
+const port = '8080';
+const flightsAPI = '/api/flights';
+const flightEndpointURL = `http://${serverIP}:${port}${flightsAPI}`;
 const apiDataString = `[{"flight_id":1,"seats_available":55,"flight_provider":"American Airlines","departure_airport":"ORD","departure_time":"2021-01-05 01:10:00","arrival_airport":"JFK","arrival_time":"2021-01-05 02:00:00"},{"flight_id":2,"seats_available":12,"flight_provider":"United Airlines","departure_airport":"LON","departure_time":"2021-01-06 01:10:00","arrival_airport":"YMQ","arrival_time":"2021-01-06 02:00:00"},{"flight_id":3,"seats_available":1,"flight_provider":"Alaska Airlines","departure_airport":"STO","departure_time":"2021-01-07 01:10:00","arrival_airport":"TYO","arrival_time":"2021-01-07 02:00:00"},{"flight_id":4,"seats_available":65,"flight_provider":"Jet Blue","departure_airport":"WAS","departure_time":"2021-01-08 01:10:00","arrival_airport":"DCA","arrival_time":"2021-01-08 02:00:00"},{"flight_id":5,"seats_available":123,"flight_provider":"Southwest Airlines","departure_airport":"MDW","departure_time":"2021-01-09 01:10:00","arrival_airport":"LAX","arrival_time":"2021-01-09 02:00:00"},{"flight_id":6,"seats_available":3,"flight_provider":"Spirit Airlines","departure_airport":"IAD","departure_time":"2021-01-10 01:10:00","arrival_airport":"LBG","arrival_time":"2021-01-10 02:00:00"},{"flight_id":7,"seats_available":43,"flight_provider":"United Airlines","departure_airport":"BKK","departure_time":"2021-01-11 01:10:00","arrival_airport":"GLA","arrival_time":"2021-01-11 02:00:00"},{"flight_id":8,"seats_available":16,"flight_provider":"Air Wisconsin","departure_airport":"HOU","departure_time":"2021-01-12 01:10:00","arrival_airport":"SNA","arrival_time":"2021-01-12 02:00:00"},{"flight_id":9,"seats_available":7,"flight_provider":"Mesa Airlines","departure_airport":"SEA","departure_time":"2021-01-13 01:10:00","arrival_airport":"TPE","arrival_time":"2021-01-13 02:00:00"},{"flight_id":10,"seats_available":8,"flight_provider":"Dino Airlines","departure_airport":"BHX","departure_time":"2021-01-14 01:10:00","arrival_airport":"BHM","arrival_time":"2021-01-14 02:00:00"},{"flight_id":11,"seats_available":17,"flight_provider":"LOT Polish Airlines","departure_airport":"ORD","departure_time":"2022-01-12 08:00:00","arrival_airport":"WAW","arrival_time":"2022-01-12 18:00:00"}]`;
 const getFlightData = async () => {
+    console.log(`Retrieving Flight data from: ${flightEndpointURL}`);
     // var opts = {
     //     headers: {
     //         'method': 'get',
@@ -192,13 +161,7 @@ const getFlightData = async () => {
     // const responseData: Response = await fetch(flightEndpointURL, opts);
     // const flightsJson = await responseData.json();
     const flightsJson = JSON.parse(apiDataString);
-    const flightsText = JSON.stringify(flightsJson);
-    console.log(flightsText);
-    return flightsJson.map((flight) => {
-        // const flightData: IFlightData = flight;
-        return flight;
-    });
-    // return flightsJson;
+    return flightsJson;
 };
 exports.getFlightData = getFlightData;
 
@@ -236,7 +199,9 @@ class FlightList extends React.Component {
             return (React.createElement("div", null, this.state.flightData.map((flight) => {
                 const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.arrival_time, flight.departure_time);
                 const flightLengthLabel = this.formatFlightLengthTime(flight.arrival_time, flight.departure_time);
-                return React.createElement("div", { className: "flightRow" },
+                const isSelected = flight.flight_id.toString() === this.state.selectedFlight;
+                const selectionClass = isSelected ? 'selectedFlight' : '';
+                return React.createElement("div", { className: `flightRow ${selectionClass}`, onClick: this.selectFlight, id: flight.flight_id.toString() },
                     React.createElement("table", null,
                         React.createElement("tr", null,
                             React.createElement("td", null, takeOffLandingTime),
@@ -248,11 +213,11 @@ class FlightList extends React.Component {
                                 ") - (",
                                 flight.departure_airport,
                                 ")"),
-                            React.createElement("td", null, "1 hour 4 min stop in Ft Lauderdale")),
+                            React.createElement("td", null, "Direct flight.")),
                         React.createElement("tr", null,
                             React.createElement("td", null, flight.flight_provider))),
                     React.createElement("div", { className: "ticketPrice" },
-                        React.createElement("text", null, `$${this.calculateRandomDummyPrice()}`)));
+                        React.createElement("text", null, `$${flight.flight_cost}`)));
             })));
         };
         this.parseDateFormat = (date) => {
@@ -282,9 +247,16 @@ class FlightList extends React.Component {
         this.calculateRandomDummyPrice = () => {
             return (0, utility_1.randomInt)(100, 600);
         };
+        this.selectFlight = (event) => {
+            const selectedFlightID = event.currentTarget.id;
+            this.setState({
+                selectedFlight: selectedFlightID
+            });
+        };
         this.state = {
             flightData: props.flightData,
-            isHidden: props.hide
+            isHidden: props.hide,
+            selectedFlight: ''
         };
     }
     componentDidUpdate(prevProps) {
@@ -295,6 +267,10 @@ class FlightList extends React.Component {
             });
         }
         if (prevProps.flightData !== this.props.flightData) {
+            // Add dummy costs until real costs are included in database.
+            for (const flight of this.props.flightData) {
+                flight.flight_cost = this.calculateRandomDummyPrice();
+            }
             this.setState({
                 flightData: this.props.flightData
             });
@@ -336,6 +312,16 @@ class ToastMessage extends React.Component {
         if (prevProps.show !== this.props.show) {
             this.setState({
                 show: this.props.show
+            });
+        }
+        if (prevProps.message !== this.props.message) {
+            this.setState({
+                message: this.props.message
+            });
+        }
+        if (prevProps.toastType !== this.props.toastType) {
+            this.setState({
+                toastType: this.props.toastType
             });
         }
     }
@@ -451,7 +437,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightList.css"],"names":[],"mappings":"AAAA;;EAEE;AACF;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,gBAAgB;AACpB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,mBAAmB;IACnB,yBAAyB;AAC7B;;AAEA,iEAAiE;AACjE;IACI,oBAAoB;CACvB;;AAED;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;IACjB,eAAe;IACf,qBAAqB;AACzB","sourcesContent":["/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(120, 120, 245);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightList.css"],"names":[],"mappings":"AAAA;;EAEE;AACF;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,gBAAgB;AACpB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,mBAAmB;IACnB,yBAAyB;AAC7B;;AAEA,iEAAiE;AACjE;IACI,oBAAoB;CACvB;;AAED;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;IACjB,eAAe;IACf,qBAAqB;AACzB;;AAEA;IACI,oCAAoC;AACxC","sourcesContent":["/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(120, 120, 245);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -483,7 +469,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content:url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,+CAAgD;AACpD;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content:url(\"../../assets/dino_travel_logo.png\");\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content:url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,+CAAgD;AACpD;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,oBAAoB;AACxB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content:url(\"../../assets/dino_travel_logo.png\");\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
