@@ -1,11 +1,11 @@
 import * as React from "react";
 import { FlightClass } from "./enums/FlightClass";
 import { FlightType } from "./enums/FlightType";
+import { ToastType } from "./enums/ToastType";
 import { ToastMessage } from "./components/ToastMessage";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
-import { ToastType } from "./enums/ToastType";
 
 interface IHomePageState {
     flightType: FlightType;
