@@ -1,0 +1,44 @@
+/*
+ * No Flight Data Message Styling
+ */
+.noDataList {
+    padding-top: 20px;
+    text-align: center;
+}
+
+/*
+ * Flight List Styling
+ */
+
+.flightList {
+    margin-top: 30px;
+}
+
+.flightListHeader {
+    font-weight: bold;
+}
+
+.flightRow {
+    padding-top: 15px;
+}
+
+.flightRow table td {
+    padding-right: 70px;
+    /* padding-bottom: 8px; */
+}
+
+/* Add more vertical spacing between first row and rest of rows */
+.flightRow table tr:first-of-type td {
+    padding-bottom: 16px;
+ }
+
+.flightRow table {
+    display: inline-block;
+}
+
+.flightRow .ticketPrice {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 24px;
+    align-content: center;
+}

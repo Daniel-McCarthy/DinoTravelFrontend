@@ -3,9 +3,11 @@ import { FlightClass } from "./enums/FlightClass";
 import { FlightType } from "./enums/FlightType";
 import { ToastType } from "./enums/ToastType";
 import { ToastMessage } from "./components/ToastMessage";
+import { getFlightData, IFlightData } from "./api/flights";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
+import { FlightList } from "./components/FlightList";
 
 interface IHomePageState {
     flightType: FlightType;
@@ -16,6 +18,7 @@ interface IHomePageState {
     // Error/Message Toast display and configuration
     showToast: boolean;
     toastMessage: IToastMessage;
+    flightsData: Array<IFlightData>;
 }
 
 interface IHomePageProps {
@@ -40,8 +43,33 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             isMultiCity: true,
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
-            showToast: false
+            showToast: false,
+            flightsData: []
         }
+    }
+
+    getFlightAPIData = async () => {
+        try {
+            const flights = await getFlightData();
+            console.log(flights);
+
+            this.setState({
+                flightsData: flights
+            })
+            return flights;
+        } catch (error) {
+            this.displayError(`Error: ${JSON.stringify(error)}`);
+        }
+    }
+
+    displayError = (message: string) => {
+        this.setState({
+            showToast: true,
+            toastMessage: {
+                message,
+                toastType: ToastType.ErrorToast
+            }
+        });
     }
 
     render() {
@@ -122,6 +150,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     </div>
 
                     <button className="nontoggle" id="submitButton">Submit</button>
+                    <FlightList flightData={this.state.flightsData} hide={false}></FlightList>
+
                 </section>
 
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
