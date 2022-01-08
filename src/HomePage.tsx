@@ -149,9 +149,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     </div>
 
-                    <button className="nontoggle" id="submitButton">Submit</button>
+                    {/* {this.renderFlightList()} */}
                     <FlightList flightData={this.state.flightsData} hide={false}></FlightList>
 
+                    <button className="nontoggle" id="submitButton" onClick={this.toggle}>Submit</button>
                 </section>
 
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
@@ -175,5 +176,12 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.setState({
             isMultiCity: !this.state.isMultiCity
         });
+    }
+
+    toggle = () => {
+        this.setState({
+            showToast: true,
+            toastMessage: { toastType: ToastType.SuccessToast, message: "Success! Your flight has now been booked. We'll now show you the flight details." }
+        })
     }
 }
