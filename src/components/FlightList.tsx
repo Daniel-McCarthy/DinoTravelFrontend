@@ -8,6 +8,7 @@ import '../styles/FlightList.css';
 interface IFlightListState {
     flightData: Array<IFlightData>
     isHidden: boolean;
+    selectedFlight: string;
 }
 
 interface IFlightListProps {
@@ -22,7 +23,8 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
 
         this.state = {
             flightData: props.flightData,
-            isHidden: props.hide
+            isHidden: props.hide,
+            selectedFlight: ''
         }
     }
 
@@ -67,7 +69,9 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
                 {this.state.flightData.map((flight: IFlightData) => {
                     const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.arrival_time, flight.departure_time);
                     const flightLengthLabel = this.formatFlightLengthTime(flight.arrival_time, flight.departure_time);
-                    return <div className="flightRow">
+                    const isSelected = flight.flight_id.toString() === this.state.selectedFlight;
+                    const selectionClass = isSelected ? 'selectedFlight' : '';
+                    return <div className={`flightRow ${selectionClass}`} onClick={this.selectFlight} id={flight.flight_id.toString()}>
                         <table>
                             <tr>
                                 <td>{takeOffLandingTime}</td>
@@ -124,6 +128,13 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
 
     calculateRandomDummyPrice = () => {
         return randomInt(100, 600);
+    }
+
+    selectFlight = (event: React.MouseEvent<HTMLDivElement>) => {
+        const selectedFlightID = event.currentTarget.id;
+        this.setState({
+            selectedFlight: selectedFlightID
+        });
     }
 
     render() {

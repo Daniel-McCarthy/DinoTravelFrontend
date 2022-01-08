@@ -42,3 +42,7 @@
     font-size: 24px;
     align-content: center;
 }
+
+.selectedFlight {
+    background-color: rgb(175, 175, 248);
+}
