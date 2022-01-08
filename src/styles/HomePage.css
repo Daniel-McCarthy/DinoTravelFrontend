@@ -21,6 +21,7 @@ header nav button {
 
     display: inline-block;
     margin-right: 10px;
+    content:url("../../assets/dino_travel_logo.png");
 }
 
 .slogan {
