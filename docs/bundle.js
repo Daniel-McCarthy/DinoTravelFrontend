@@ -12,14 +12,42 @@
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HomePage = void 0;
 const React = __webpack_require__(/*! react */ "react");
+const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enums/FlightClass.ts");
+const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
 __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.selectRoundTrip = () => {
+            this.setState({
+                flightType: FlightType_1.FlightType.RoundTrip
+            });
+        };
+        this.selectOneWay = () => {
+            this.setState({
+                flightType: FlightType_1.FlightType.OneWay
+            });
+        };
+        this.toggleMultiCityFlight = () => {
+            this.setState({
+                isMultiCity: !this.state.isMultiCity
+            });
+        };
+        this.state = {
+            flightType: FlightType_1.FlightType.RoundTrip,
+            flightClass: FlightClass_1.FlightClass.EconomyClass,
+            numTravelers: 1,
+            numAdultTravelers: 0,
+            numChildTravelers: 0,
+            isMultiCity: true
+        };
     }
     render() {
+        const isRoundTripSelected = this.state.flightType === FlightType_1.FlightType.RoundTrip;
+        const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
+        const oneWayButtonClass = !isRoundTripSelected ? 'selected' : '';
+        const multiCityButtonClass = this.state.isMultiCity ? 'selected' : '';
         return (React.createElement("div", null,
             React.createElement("header", null,
                 React.createElement("div", { className: "banner" },
@@ -27,21 +55,26 @@ class HomePage extends React.Component {
                     React.createElement("div", { className: "slogan" },
                         React.createElement("h3", null, "Travel More"))),
                 React.createElement("nav", null,
-                    React.createElement("button", null, "support"),
-                    React.createElement("button", null, "about us"),
-                    React.createElement("button", null, "trips"))),
+                    React.createElement("button", { className: "nontoggle" }, "support"),
+                    React.createElement("button", { className: "nontoggle" }, "about us"),
+                    React.createElement("button", { className: "nontoggle" }, "trips"))),
             React.createElement("section", null,
                 React.createElement("div", { id: "filterRow" },
                     React.createElement("h1", null, "Search Flights"),
                     React.createElement("div", { className: "flightTypeFilters" },
-                        React.createElement("button", null, "Round Trip"),
-                        React.createElement("button", null, "One-Way"),
-                        React.createElement("button", null, "Multi-City")),
+                        React.createElement("button", { className: roundTripButtonClass, onClick: this.selectRoundTrip }, "Round Trip"),
+                        React.createElement("button", { className: oneWayButtonClass, onClick: this.selectOneWay }, "One-Way"),
+                        React.createElement("button", { className: multiCityButtonClass, onClick: this.toggleMultiCityFlight }, "Multi-City")),
                     React.createElement("div", { className: "filterDropdowns" },
+                        React.createElement("div", { className: "travelersInput" },
+                            React.createElement("h3", null, "Number of Adult Travelers:"),
+                            React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
+                        React.createElement("div", { className: "travelersInput" },
+                            React.createElement("h3", null, "Number of Child Travelers:"),
+                            React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
                         React.createElement("select", null,
-                            React.createElement("option", null, "Travelers")),
-                        React.createElement("select", null,
-                            React.createElement("option", null, "Class")))),
+                            React.createElement("option", { disabled: true, selected: true }, "Class"),
+                            Object.values(FlightClass_1.FlightClass).map(flightClass => (React.createElement("option", null, flightClass)))))),
                 React.createElement("div", { id: "userInputRow" },
                     React.createElement("div", { id: "destinationInputs" },
                         React.createElement("input", { className: "leavingInput", placeholder: "Leaving From" }),
@@ -52,10 +85,47 @@ class HomePage extends React.Component {
                     React.createElement("div", { className: "dateInputContainer" },
                         React.createElement("h3", null, "Returning"),
                         React.createElement("input", { className: "datePicker", type: "date" }))),
-                React.createElement("button", { id: "submitButton" }, "Submit"))));
+                React.createElement("button", { className: "nontoggle", id: "submitButton" }, "Submit"))));
     }
 }
 exports.HomePage = HomePage;
+
+
+/***/ }),
+
+/***/ "./src/enums/FlightClass.ts":
+/*!**********************************!*\
+  !*** ./src/enums/FlightClass.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FlightClass = void 0;
+var FlightClass;
+(function (FlightClass) {
+    FlightClass["FirstClass"] = "First Class";
+    FlightClass["EconomyClass"] = "Economy Class";
+    FlightClass["BusinessClass"] = "Business Class";
+})(FlightClass = exports.FlightClass || (exports.FlightClass = {}));
+
+
+/***/ }),
+
+/***/ "./src/enums/FlightType.ts":
+/*!*********************************!*\
+  !*** ./src/enums/FlightType.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FlightType = void 0;
+var FlightType;
+(function (FlightType) {
+    FlightType["OneWay"] = "One Way";
+    FlightType["RoundTrip"] = "Round Trip";
+})(FlightType = exports.FlightType || (exports.FlightType = {}));
 
 
 /***/ }),
@@ -79,7 +149,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\n.slogan h3 {\r\n    margin-bottom: 20px;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 80px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    height: 50px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;AAC3B;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;AACvB;;AAEA;IACI,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\n.slogan h3 {\r\n    margin-bottom: 20px;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 80px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    height: 50px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;AAC3B;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -105,7 +175,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,kCAAkC;IAClC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,oCAAoC;IACpC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,kCAAkC;AACtC;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
