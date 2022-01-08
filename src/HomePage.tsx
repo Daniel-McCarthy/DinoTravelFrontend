@@ -149,7 +149,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     </div>
 
-                    {/* {this.renderFlightList()} */}
                     <FlightList flightData={this.state.flightsData} hide={false}></FlightList>
 
                     <button className="nontoggle" id="submitButton" onClick={this.toggle}>Submit</button>
