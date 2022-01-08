@@ -1,9 +1,11 @@
 import * as React from "react";
 import { FlightClass } from "./enums/FlightClass";
 import { FlightType } from "./enums/FlightType";
+import { ToastMessage } from "./components/ToastMessage";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
+import { ToastType } from "./enums/ToastType";
 
 interface IHomePageState {
     flightType: FlightType;
@@ -11,10 +13,18 @@ interface IHomePageState {
     numAdultTravelers: number;
     numChildTravelers: number;
     isMultiCity: boolean;
+    // Error/Message Toast display and configuration
+    showToast: boolean;
+    toastMessage: IToastMessage;
 }
 
 interface IHomePageProps {
 
+}
+
+interface IToastMessage {
+    message: string;
+    toastType: ToastType,
 }
 
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
@@ -27,7 +37,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             flightClass: FlightClass.EconomyClass,
             numAdultTravelers: 0,
             numChildTravelers: 0,
-            isMultiCity: true
+            isMultiCity: true,
+            // Initialize toast data, invisible by default until is configured for a message to be shown.
+            toastMessage: { toastType: ToastType.InfoToast, message: "" },
+            showToast: false
         }
     }
 
@@ -110,6 +123,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <button className="nontoggle" id="submitButton">Submit</button>
                 </section>
+
+                <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
             </div>
         )
     }

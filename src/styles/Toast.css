@@ -1,0 +1,48 @@
+.toast {
+    color: white;
+
+    display: flex;
+    width: 100%;
+    min-height: 40px;
+
+    /* Fix toast to the top of the screen */
+    float: left;
+    position: fixed;
+    top:0;
+}
+
+.fadeAway {
+    /* Make toast disappear automatically - fade out after 4 seconds */
+    animation: fadeOut 500ms linear 4s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+    0% {opacity: 100;}
+    100% {opacity: 0;}
+  }
+
+.invisible {
+    opacity: 0;
+}
+
+.infoToast {
+    background-color: rgb(69, 80, 228);
+    border-bottom: darkblue 3px solid;
+}
+
+.errorToast {
+    background-color: red;
+    border-bottom: rgb(204, 0, 0) 3px solid;
+}
+
+.successToast {
+    background-color: rgb(0, 167, 0);
+    border-bottom: darkgreen 3px solid;
+}
+
+.toast h3 {
+    margin-left: 15px;
+    font-size: 18px;
+}
