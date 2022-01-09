@@ -1,7 +1,7 @@
 const serverIP = '35.171.66.24';
 const port = '8080';
 const flightsAPI = '/api/flights';
-const flightEndpointURL = `http://${serverIP}:${port}${flightsAPI}`;
+const flightEndpointURL = `https://${serverIP}:${port}${flightsAPI}`;
 
 export interface IFlightData {
     arrival_airport: string; // 3 character abbreviation of the airport name
