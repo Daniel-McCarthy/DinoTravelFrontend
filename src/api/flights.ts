@@ -1,7 +1,7 @@
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const flightsAPI = '/api/flights';
-const flightEndpointURL = `https://${baseURL}:${port}${flightsAPI}`;
+const flightEndpointURL = `https://www.${baseURL}:${port}${flightsAPI}`;
 
 export interface IFlightData {
     arrival_airport: string; // 3 character abbreviation of the airport name
