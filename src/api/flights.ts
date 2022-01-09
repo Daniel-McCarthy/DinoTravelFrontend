@@ -18,15 +18,13 @@ const apiDataString = `[{"flight_id":1,"seats_available":55,"flight_provider":"A
 
 export const getFlightData = async () => {
     console.log(`Retrieving Flight data from: ${flightEndpointURL}`);
-    var opts = {
-        headers: {
-            'method': 'get',
-            'mode': 'no-cors'
-        }
+    const options = {
+        'method': 'GET',
+        'mode': 'no-cors' as RequestMode
     }
 
     try {
-        const responseData: Response = await fetch(flightEndpointURL, opts);
+        const responseData: Response = await fetch(flightEndpointURL, options);
         return await responseData.json();
     } catch (error) {
         console.error(`Failed to get flight data from API endpoint due to reason: ${error}`);
