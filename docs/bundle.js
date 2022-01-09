@@ -153,6 +153,7 @@ const getFlightData = async () => {
     var opts = {
         headers: {
             'method': 'get',
+            'mode': 'no-cors'
         }
     };
     try {
