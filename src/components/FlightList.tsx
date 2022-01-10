@@ -111,7 +111,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         const arrivalDate = new Date(Date.parse(arrival_time));
         const destinationDate = new Date(Date.parse(destination_time));
 
-        return `${this.formatTime(arrivalDate)} ${this.formatTime(destinationDate)}`;
+        return `${this.formatTime(arrivalDate)} - ${this.formatTime(destinationDate)}`;
     }
 
     formatTime = (date: Date): string => {
@@ -123,7 +123,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
             min += '0';
 
         const amPMLabel = (hour < 12) || (hour == 24) ? 'AM' : 'PM';
-        return `${hour}:${min} - ${amPMLabel}`;
+        return `${hour}:${min} ${amPMLabel}`;
     }
 
     calculateRandomDummyPrice = () => {
