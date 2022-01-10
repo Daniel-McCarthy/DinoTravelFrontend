@@ -198,8 +198,8 @@ class FlightList extends React.Component {
         };
         this.assembleFlightListTable = () => {
             return (React.createElement("div", null, this.state.flightData.map((flight) => {
-                const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.arrival_time, flight.departure_time);
-                const flightLengthLabel = this.formatFlightLengthTime(flight.arrival_time, flight.departure_time);
+                const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.departure_time, flight.arrival_time);
+                const flightLengthLabel = this.formatFlightLengthTime(flight.departure_time, flight.arrival_time);
                 const isSelected = flight.flight_id.toString() === this.state.selectedFlight;
                 const selectionClass = isSelected ? 'selectedFlight' : '';
                 return React.createElement("div", { className: `flightRow ${selectionClass}`, onClick: this.selectFlight, id: flight.flight_id.toString() },
@@ -224,17 +224,19 @@ class FlightList extends React.Component {
         this.parseDateFormat = (date) => {
             return moment(date, 'YYYY-MM-DD HH-mm-ss');
         };
-        this.formatFlightLengthTime = (arrival_time, destination_time) => {
+        // Good candidate for a unit test
+        this.formatFlightLengthTime = (departure_time, arrival_time) => {
+            const departureMoment = this.parseDateFormat(departure_time);
             const arrivalMoment = this.parseDateFormat(arrival_time);
-            const landingMoment = this.parseDateFormat(destination_time);
-            const hourDifference = arrivalMoment.diff(landingMoment, 'hours');
-            const minuteDifference = arrivalMoment.diff(landingMoment, 'minutes');
+            const timeDifferenceInMinutes = Math.abs(departureMoment.diff(arrivalMoment, 'minutes'));
+            const hourDifference = Math.floor(timeDifferenceInMinutes / 60);
+            const minuteDifference = timeDifferenceInMinutes % 60;
             return `${hourDifference} hrs ${minuteDifference} min`;
         };
-        this.formatFlightTakeOffAndLandingTime = (arrival_time, destination_time) => {
+        this.formatFlightTakeOffAndLandingTime = (depature_time, arrival_time) => {
+            const departureDate = new Date(Date.parse(depature_time));
             const arrivalDate = new Date(Date.parse(arrival_time));
-            const destinationDate = new Date(Date.parse(destination_time));
-            return `${this.formatTime(arrivalDate)} ${this.formatTime(destinationDate)}`;
+            return `${this.formatTime(departureDate)} - ${this.formatTime(arrivalDate)}`;
         };
         this.formatTime = (date) => {
             const hour = date.getHours();
@@ -243,7 +245,7 @@ class FlightList extends React.Component {
             if (min.length < 2)
                 min += '0';
             const amPMLabel = (hour < 12) || (hour == 24) ? 'AM' : 'PM';
-            return `${hour}:${min} - ${amPMLabel}`;
+            return `${hour}:${min} ${amPMLabel}`;
         };
         this.calculateRandomDummyPrice = () => {
             return (0, utility_1.randomInt)(100, 600);
