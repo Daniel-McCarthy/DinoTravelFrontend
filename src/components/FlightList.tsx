@@ -67,8 +67,8 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         return (
             <div>
                 {this.state.flightData.map((flight: IFlightData) => {
-                    const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.arrival_time, flight.departure_time);
-                    const flightLengthLabel = this.formatFlightLengthTime(flight.arrival_time, flight.departure_time);
+                    const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.departure_time, flight.arrival_time);
+                    const flightLengthLabel = this.formatFlightLengthTime(flight.departure_time, flight.arrival_time);
                     const isSelected = flight.flight_id.toString() === this.state.selectedFlight;
                     const selectionClass = isSelected ? 'selectedFlight' : '';
                     return <div className={`flightRow ${selectionClass}`} onClick={this.selectFlight} id={flight.flight_id.toString()}>
@@ -98,20 +98,23 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         return moment(date, 'YYYY-MM-DD HH-mm-ss');
      }
 
-    formatFlightLengthTime = (arrival_time: string, destination_time: string): string => {
+    // Good candidate for a unit test
+    formatFlightLengthTime = (departure_time: string, arrival_time: string): string => {
+        const departureMoment = this.parseDateFormat(departure_time);
         const arrivalMoment = this.parseDateFormat(arrival_time);
-        const landingMoment = this.parseDateFormat(destination_time);
 
-        const hourDifference = arrivalMoment.diff(landingMoment, 'hours');
-        const minuteDifference = arrivalMoment.diff(landingMoment, 'minutes');
+        const timeDifferenceInMinutes = Math.abs(departureMoment.diff(arrivalMoment, 'minutes'));
+        const hourDifference = Math.floor(timeDifferenceInMinutes / 60);
+        const minuteDifference = timeDifferenceInMinutes % 60;
         return `${hourDifference} hrs ${minuteDifference} min`;
     }
 
-    formatFlightTakeOffAndLandingTime = (arrival_time: string, destination_time: string): string => {
+    formatFlightTakeOffAndLandingTime = (depature_time: string, arrival_time: string): string => {
+        const departureDate = new Date(Date.parse(depature_time));
         const arrivalDate = new Date(Date.parse(arrival_time));
-        const destinationDate = new Date(Date.parse(destination_time));
 
-        return `${this.formatTime(arrivalDate)} - ${this.formatTime(destinationDate)}`;
+
+        return `${this.formatTime(departureDate)} - ${this.formatTime(arrivalDate)}`;
     }
 
     formatTime = (date: Date): string => {
