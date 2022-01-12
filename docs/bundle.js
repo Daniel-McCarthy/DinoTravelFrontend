@@ -160,6 +160,8 @@ const getFlightData = async () => {
     };
     try {
         const responseData = await fetch(flightEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from /flight endpoint with status: '${statusCode}'`);
         const text = await responseData.text();
         console.log(`Text recieved from /flight endpoint: '${text}'`);
         const json = await responseData.json();
