@@ -152,11 +152,19 @@ const getFlightData = async () => {
     console.log(`Retrieving Flight data from: ${flightEndpointURL}`);
     const options = {
         'method': 'GET',
-        'mode': 'no-cors'
+        // 'mode': 'no-cors' as RequestMode,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
     };
     try {
         const responseData = await fetch(flightEndpointURL, options);
-        return await responseData.json();
+        const text = await responseData.text();
+        console.log(`Text recieved from /flight endpoint: '${text}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from /flight endpoint: '${JSON.stringify(json)}'`);
+        return json;
     }
     catch (error) {
         console.error(`Failed to get flight data from API endpoint due to reason: ${error}`);
