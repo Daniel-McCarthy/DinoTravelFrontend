@@ -223,13 +223,11 @@ exports.getFlightData = getFlightData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getNextAvailableReservationId = exports.registerReservation = exports.getReservationByID = exports.getAllReservations = void 0;
+exports.getNextAvailableReservationId = exports.registerReservation = exports.getAllReservations = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const reservationsAPI = '/api/reservations';
 const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
-const reservationsIdAPI = '/api/reservations/id';
-const reservationsIdEndpointURL = `https://www.${baseURL}:${port}${reservationsIdAPI}`;
 const getAllReservations = async () => {
     console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
     const options = {
@@ -249,26 +247,24 @@ const getAllReservations = async () => {
     }
 };
 exports.getAllReservations = getAllReservations;
-const getReservationByID = async (id) => {
-    console.log(`Retrieving reservation data associated with id (${id}) from: ${reservationsIdEndpointURL}`);
-    const options = {
-        'method': 'GET'
-    };
-    try {
-        const responseData = await fetch(reservationsIdEndpointURL, options);
-        const statusCode = responseData.status;
-        console.log(`Recieved response from ${reservationsIdEndpointURL} endpoint with status: '${statusCode}'`);
-        const json = await responseData.json();
-        console.log(`JSON recieved from ${reservationsIdEndpointURL} endpoint: '${JSON.stringify(json)}'`);
-        return json;
-    }
-    catch (error) {
-        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
-    }
-};
-exports.getReservationByID = getReservationByID;
+// export const getReservationByID = async (id: number) => {
+//     console.log(`Retrieving reservation data associated with id (${id}) from: ${reservationsIdEndpointURL}`);
+//     const options = {
+//         'method': 'GET'
+//     };
+//     try {
+//         const responseData: Response = await fetch(reservationsIdEndpointURL, options);
+//         const statusCode = responseData.status;
+//         console.log(`Recieved response from ${reservationsIdEndpointURL} endpoint with status: '${statusCode}'`);
+//         const json = await responseData.json();
+//         console.log(`JSON recieved from ${reservationsIdEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+//         return json;
+//     } catch (error) {
+//         console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+//     }
+// };
 const registerReservation = async (reservation) => {
-    console.log(`Registering reservation with endpoint: ${reservationsIdEndpointURL}`);
+    console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
     const options = {
         'method': 'POST',
         headers: {
@@ -278,9 +274,9 @@ const registerReservation = async (reservation) => {
         body: JSON.stringify(reservation)
     };
     try {
-        const responseData = await fetch(reservationsIdEndpointURL, options);
+        const responseData = await fetch(reservationsEndpointURL, options);
         const statusCode = responseData.status;
-        console.log(`Recieved response from ${reservationsIdEndpointURL} endpoint with status: '${statusCode}'`);
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
         return responseData;
     }
     catch (error) {
@@ -290,16 +286,12 @@ const registerReservation = async (reservation) => {
 };
 exports.registerReservation = registerReservation;
 const getNextAvailableReservationId = (currentReservations) => {
-    let highestID = 0;
-    // const reservationIndices = Object.keys(currentReservations);
-    // for (const reservationIndex of reservationIndices) {
+    let highestID = -1;
     for (const reservation of currentReservations) {
-        // const reservation = currentReservations. .get(reservationIndex);
-        if (reservation.reservation_id > highestID) {
+        if (reservation.reservation_id > highestID)
             highestID = reservation.reservation_id;
-        }
     }
-    return highestID;
+    return highestID + 1;
 };
 exports.getNextAvailableReservationId = getNextAvailableReservationId;
 
