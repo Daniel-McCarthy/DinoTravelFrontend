@@ -46,6 +46,15 @@ class HomePage extends React.Component {
                 }
             });
         };
+        this.displaySuccess = (message) => {
+            this.setState({
+                showToast: true,
+                toastMessage: {
+                    message,
+                    toastType: ToastType_1.ToastType.SuccessToast
+                }
+            });
+        };
         this.onArrivalFlightDateSelected = () => {
             this.getFlightAPIData();
         };
@@ -65,28 +74,34 @@ class HomePage extends React.Component {
             });
         };
         this.submitReservation = async () => {
-            // const reservation: IReservationData = {
-            //     reservation_id: 0, // Eventually this will be incremented depending on data available, or handled on the backend.
-            //     user_id: 0, // Constant user ID until login/sessions are supported
-            //     trip_type: '',
-            //     outgoing_flight_type: '',
-            //     outgoing_flight_id: 0,
-            //     returning_flight_type: '',
-            //     returning_flight_id: 0,
-            //     price: 0
-            // };
-            // const registrationResponse: Response | Error = await registerReservation(reservation);
-            // if ()
             const reservations = await (0, reservations_1.getAllReservations)();
             if (reservations instanceof Error) {
                 this.displayError('Failed to retrieve reservations from Dino Travel.');
                 return;
             }
-            (0, reservations_1.getNextAvailableReservationId)(reservations);
-            this.setState({
-                showToast: true,
-                toastMessage: { toastType: ToastType_1.ToastType.SuccessToast, message: "Success! Your flight has now been booked. We'll now show you the flight details." }
-            });
+            const reservationId = (0, reservations_1.getNextAvailableReservationId)(reservations);
+            const reservation = {
+                reservation_id: reservationId,
+                user_id: 0,
+                trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
+                outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
+                outgoing_flight_id: 0,
+                returning_flight_type: undefined,
+                returning_flight_id: undefined,
+                price: 0
+            };
+            const response = await (0, reservations_1.registerReservation)(reservation);
+            if (response instanceof Error) {
+                this.displayError('Failed to send reservation submission to Dino Travel.');
+                return;
+            }
+            if (response.status !== 200) {
+                this.displayError('Failed to register reservation.');
+                console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
+            }
+            else {
+                this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
+            }
         };
         this.testReservations = () => {
             (0, reservations_1.getAllReservations)();
@@ -208,25 +223,13 @@ exports.getFlightData = getFlightData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getNextAvailableReservationId = exports.registerReservation = exports.getReservationByID = exports.getAllReservations = exports.FlightType = exports.TripType = void 0;
+exports.getNextAvailableReservationId = exports.registerReservation = exports.getReservationByID = exports.getAllReservations = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const reservationsAPI = '/api/reservations';
 const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
 const reservationsIdAPI = '/api/reservations/id';
 const reservationsIdEndpointURL = `https://www.${baseURL}:${port}${reservationsIdAPI}`;
-var TripType;
-(function (TripType) {
-    TripType["RoundTrip"] = "ROUND_TRIP";
-    TripType["OneWay"] = "ONE_WAY";
-})(TripType = exports.TripType || (exports.TripType = {}));
-var FlightType;
-(function (FlightType) {
-    FlightType["FirstClass"] = "FIRST_CLASS";
-    FlightType["Economy"] = "ECONOMY";
-    FlightType["PremiumEconomy"] = "PREMIUM_ECONOMY";
-    FlightType["Business"] = "BUSINESS";
-})(FlightType = exports.FlightType || (exports.FlightType = {}));
 const getAllReservations = async () => {
     console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
     const options = {
@@ -264,8 +267,6 @@ const getReservationByID = async (id) => {
     }
 };
 exports.getReservationByID = getReservationByID;
-// export const updateReservationByID = async () => {
-// }
 const registerReservation = async (reservation) => {
     console.log(`Registering reservation with endpoint: ${reservationsIdEndpointURL}`);
     const options = {
@@ -298,6 +299,7 @@ const getNextAvailableReservationId = (currentReservations) => {
             highestID = reservation.reservation_id;
         }
     }
+    return highestID;
 };
 exports.getNextAvailableReservationId = getNextAvailableReservationId;
 
@@ -484,13 +486,24 @@ exports.ToastMessage = ToastMessage;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.FlightClass = void 0;
+exports.flightClassAsJsonLabel = exports.FlightClassJsonLabel = exports.FlightClass = void 0;
 var FlightClass;
 (function (FlightClass) {
     FlightClass["FirstClass"] = "First Class";
     FlightClass["EconomyClass"] = "Economy Class";
     FlightClass["BusinessClass"] = "Business Class";
 })(FlightClass = exports.FlightClass || (exports.FlightClass = {}));
+var FlightClassJsonLabel;
+(function (FlightClassJsonLabel) {
+    FlightClassJsonLabel["First Class"] = "FIRST_CLASS";
+    FlightClassJsonLabel["Economy Class"] = "ECONOMY";
+    FlightClassJsonLabel["Business Class"] = "BUSINESS";
+    // Premium Economy found in backend not yet accounted for due to not being in the requirements.
+})(FlightClassJsonLabel = exports.FlightClassJsonLabel || (exports.FlightClassJsonLabel = {}));
+const flightClassAsJsonLabel = (classValue) => {
+    return FlightClassJsonLabel[classValue];
+};
+exports.flightClassAsJsonLabel = flightClassAsJsonLabel;
 
 
 /***/ }),
@@ -504,12 +517,21 @@ var FlightClass;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.FlightType = void 0;
+exports.flightTypeAsJsonLabel = exports.FlightTypeJsonLabel = exports.FlightType = void 0;
 var FlightType;
 (function (FlightType) {
     FlightType["OneWay"] = "One Way";
     FlightType["RoundTrip"] = "Round Trip";
 })(FlightType = exports.FlightType || (exports.FlightType = {}));
+var FlightTypeJsonLabel;
+(function (FlightTypeJsonLabel) {
+    FlightTypeJsonLabel["One Way"] = "ONE_WAY";
+    FlightTypeJsonLabel["Round Trip"] = "ROUND_TRIP";
+})(FlightTypeJsonLabel = exports.FlightTypeJsonLabel || (exports.FlightTypeJsonLabel = {}));
+const flightTypeAsJsonLabel = (flightTypeValue) => {
+    return FlightTypeJsonLabel[flightTypeValue];
+};
+exports.flightTypeAsJsonLabel = flightTypeAsJsonLabel;
 
 
 /***/ }),
