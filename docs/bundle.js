@@ -20,6 +20,7 @@ const flights_1 = __webpack_require__(/*! ./api/flights */ "./src/api/flights.ts
 __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
+const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
@@ -63,11 +64,32 @@ class HomePage extends React.Component {
                 isMultiCity: !this.state.isMultiCity
             });
         };
-        this.toggle = () => {
+        this.submitReservation = async () => {
+            // const reservation: IReservationData = {
+            //     reservation_id: 0, // Eventually this will be incremented depending on data available, or handled on the backend.
+            //     user_id: 0, // Constant user ID until login/sessions are supported
+            //     trip_type: '',
+            //     outgoing_flight_type: '',
+            //     outgoing_flight_id: 0,
+            //     returning_flight_type: '',
+            //     returning_flight_id: 0,
+            //     price: 0
+            // };
+            // const registrationResponse: Response | Error = await registerReservation(reservation);
+            // if ()
+            const reservations = await (0, reservations_1.getAllReservations)();
+            if (reservations instanceof Error) {
+                this.displayError('Failed to retrieve reservations from Dino Travel.');
+                return;
+            }
+            (0, reservations_1.getNextAvailableReservationId)(reservations);
             this.setState({
                 showToast: true,
                 toastMessage: { toastType: ToastType_1.ToastType.SuccessToast, message: "Success! Your flight has now been booked. We'll now show you the flight details." }
             });
+        };
+        this.testReservations = () => {
+            (0, reservations_1.getAllReservations)();
         };
         this.state = {
             flightType: FlightType_1.FlightType.RoundTrip,
@@ -95,7 +117,7 @@ class HomePage extends React.Component {
                 React.createElement("nav", null,
                     React.createElement("button", { className: "nontoggle" }, "support"),
                     React.createElement("button", { className: "nontoggle" }, "about us"),
-                    React.createElement("button", { className: "nontoggle" }, "trips"))),
+                    React.createElement("button", { className: "nontoggle", onClick: this.testReservations }, "trips"))),
             React.createElement("section", null,
                 React.createElement("div", { id: "filterRow" },
                     React.createElement("h1", null, "Search Flights"),
@@ -124,7 +146,7 @@ class HomePage extends React.Component {
                         React.createElement("h3", null, "Returning"),
                         React.createElement("input", { className: "datePicker", type: "date" }))),
                 React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, hide: false }),
-                React.createElement("button", { className: "nontoggle", id: "submitButton", onClick: this.toggle }, "Submit")),
+                React.createElement("button", { className: "nontoggle", id: "submitButton", onClick: this.submitReservation }, "Submit")),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
     }
 }
@@ -162,8 +184,6 @@ const getFlightData = async () => {
         const responseData = await fetch(flightEndpointURL, options);
         const statusCode = responseData.status;
         console.log(`Recieved response from /flight endpoint with status: '${statusCode}'`);
-        const text = await responseData.text();
-        console.log(`Text recieved from /flight endpoint: '${text}'`);
         const json = await responseData.json();
         console.log(`JSON recieved from /flight endpoint: '${JSON.stringify(json)}'`);
         return json;
@@ -175,6 +195,112 @@ const getFlightData = async () => {
     return JSON.parse(apiDataString);
 };
 exports.getFlightData = getFlightData;
+
+
+/***/ }),
+
+/***/ "./src/api/reservations.ts":
+/*!*********************************!*\
+  !*** ./src/api/reservations.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getNextAvailableReservationId = exports.registerReservation = exports.getReservationByID = exports.getAllReservations = exports.FlightType = exports.TripType = void 0;
+const baseURL = 'purpledinoapi.link';
+const port = '8080';
+const reservationsAPI = '/api/reservations';
+const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
+const reservationsIdAPI = '/api/reservations/id';
+const reservationsIdEndpointURL = `https://www.${baseURL}:${port}${reservationsIdAPI}`;
+var TripType;
+(function (TripType) {
+    TripType["RoundTrip"] = "ROUND_TRIP";
+    TripType["OneWay"] = "ONE_WAY";
+})(TripType = exports.TripType || (exports.TripType = {}));
+var FlightType;
+(function (FlightType) {
+    FlightType["FirstClass"] = "FIRST_CLASS";
+    FlightType["Economy"] = "ECONOMY";
+    FlightType["PremiumEconomy"] = "PREMIUM_ECONOMY";
+    FlightType["Business"] = "BUSINESS";
+})(FlightType = exports.FlightType || (exports.FlightType = {}));
+const getAllReservations = async () => {
+    console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
+    const options = {
+        'method': 'GET'
+    };
+    try {
+        const responseData = await fetch(reservationsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.getAllReservations = getAllReservations;
+const getReservationByID = async (id) => {
+    console.log(`Retrieving reservation data associated with id (${id}) from: ${reservationsIdEndpointURL}`);
+    const options = {
+        'method': 'GET'
+    };
+    try {
+        const responseData = await fetch(reservationsIdEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsIdEndpointURL} endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from ${reservationsIdEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+    }
+};
+exports.getReservationByID = getReservationByID;
+// export const updateReservationByID = async () => {
+// }
+const registerReservation = async (reservation) => {
+    console.log(`Registering reservation with endpoint: ${reservationsIdEndpointURL}`);
+    const options = {
+        'method': 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservation)
+    };
+    try {
+        const responseData = await fetch(reservationsIdEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsIdEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.registerReservation = registerReservation;
+const getNextAvailableReservationId = (currentReservations) => {
+    console.log(currentReservations);
+    // let highestID = 0;
+    // currentReservations.results.array.forEach(element => {
+    // });
+    // for (const reservationIndex in currentReservations) {
+    //     const reservation = currentReservations. currentReservations[parseInt(reservationIndex)];
+    //     if (reservation.reservation_id > highestID) {
+    //         highestID = reservation.reservation_id;
+    //     }
+    // }
+};
+exports.getNextAvailableReservationId = getNextAvailableReservationId;
 
 
 /***/ }),
