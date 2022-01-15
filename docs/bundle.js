@@ -289,16 +289,15 @@ const registerReservation = async (reservation) => {
 };
 exports.registerReservation = registerReservation;
 const getNextAvailableReservationId = (currentReservations) => {
-    console.log(currentReservations);
-    // let highestID = 0;
-    // currentReservations.results.array.forEach(element => {
-    // });
-    // for (const reservationIndex in currentReservations) {
-    //     const reservation = currentReservations. currentReservations[parseInt(reservationIndex)];
-    //     if (reservation.reservation_id > highestID) {
-    //         highestID = reservation.reservation_id;
-    //     }
-    // }
+    let highestID = 0;
+    // const reservationIndices = Object.keys(currentReservations);
+    // for (const reservationIndex of reservationIndices) {
+    for (const reservation of currentReservations) {
+        // const reservation = currentReservations. .get(reservationIndex);
+        if (reservation.reservation_id > highestID) {
+            highestID = reservation.reservation_id;
+        }
+    }
 };
 exports.getNextAvailableReservationId = getNextAvailableReservationId;
 
