@@ -87,7 +87,7 @@ class HomePage extends React.Component {
                 outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
                 outgoing_flight_id: 0,
                 returning_flight_type: undefined,
-                returning_flight_id: undefined,
+                returning_flight_id: 0,
                 price: 0
             };
             const response = await (0, reservations_1.registerReservation)(reservation);
