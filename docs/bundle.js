@@ -273,7 +273,7 @@ const registerReservation = async (reservation) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: '' //JSON.stringify(reservation)
+        body: JSON.stringify(reservation)
     };
     try {
         const responseData = await fetch(reservationsEndpointURL, options);
