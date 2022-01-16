@@ -72,6 +72,16 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     }
 
+    displaySuccess = (message: string) => {
+        this.setState({
+            showToast: true,
+            toastMessage: {
+                message,
+                toastType: ToastType.SuccessToast
+            }
+        });
+    }
+
     render() {
         const isRoundTripSelected = this.state.flightType === FlightType.RoundTrip;
         const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
