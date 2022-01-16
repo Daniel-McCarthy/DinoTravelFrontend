@@ -82,13 +82,13 @@ class HomePage extends React.Component {
             const reservationId = (0, reservations_1.getNextAvailableReservationId)(reservations);
             const reservation = {
                 reservation_id: reservationId,
-                user_id: 0,
+                user_id: 1,
                 trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
                 outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                outgoing_flight_id: 0,
-                returning_flight_type: undefined,
-                returning_flight_id: 0,
-                price: 0
+                outgoing_flight_id: 1,
+                returning_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
+                returning_flight_id: 2,
+                price: 500
             };
             const response = await (0, reservations_1.registerReservation)(reservation);
             if (response instanceof Error) {
