@@ -226,7 +226,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getNextAvailableReservationId = exports.registerReservation = exports.getAllReservations = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
-const reservationsAPI = '/api/reservations';
+const reservationsAPI = '/api/reservations/';
 const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
 const getAllReservations = async () => {
     console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
@@ -264,6 +264,7 @@ exports.getAllReservations = getAllReservations;
 //     }
 // };
 const registerReservation = async (reservation) => {
+    console.log(reservation);
     console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
     const options = {
         'method': 'POST',
@@ -271,7 +272,7 @@ const registerReservation = async (reservation) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(reservation)
+        body: '{\"user_id\":1,\"trip_type\":\"ROUND_TRIP\",\"outgoing_flight_type\":\"ECONOMY\",\"outgoing_flight_id\":1,\"returning_flight_type\":\"ECONOMY\",\"returning_flight_id\":2,\"price\":501}' //JSON.stringify(reservation)
     };
     try {
         const responseData = await fetch(reservationsEndpointURL, options);
@@ -287,10 +288,9 @@ const registerReservation = async (reservation) => {
 exports.registerReservation = registerReservation;
 const getNextAvailableReservationId = (currentReservations) => {
     let highestID = -1;
-    for (const reservation of currentReservations) {
+    for (const reservation of currentReservations)
         if (reservation.reservation_id > highestID)
             highestID = reservation.reservation_id;
-    }
     return highestID + 1;
 };
 exports.getNextAvailableReservationId = getNextAvailableReservationId;
