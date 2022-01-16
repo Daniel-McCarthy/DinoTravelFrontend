@@ -79,17 +79,18 @@ class HomePage extends React.Component {
                 this.displayError('Failed to retrieve reservations from Dino Travel.');
                 return;
             }
-            const reservationId = (0, reservations_1.getNextAvailableReservationId)(reservations);
+            // const reservationId = getNextAvailableReservationId(reservations);
             const reservation = {
-                reservation_id: reservationId,
+                // reservation_id: reservationId,
                 user_id: 1,
                 trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
                 outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
                 outgoing_flight_id: 1,
                 returning_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
                 returning_flight_id: 2,
-                price: 500
+                price: 502
             };
+            // {\"trip_type\":\"ROUND_TRIP\",\"outgoing_flight_type\":\"ECONOMY\",\"returning_flight_type\":\"ECONOMY\",\"returning_flight_id\":2,\"price\":501}
             const response = await (0, reservations_1.registerReservation)(reservation);
             if (response instanceof Error) {
                 this.displayError('Failed to send reservation submission to Dino Travel.');
@@ -272,7 +273,7 @@ const registerReservation = async (reservation) => {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: '{\"user_id\":1,\"trip_type\":\"ROUND_TRIP\",\"outgoing_flight_type\":\"ECONOMY\",\"outgoing_flight_id\":1,\"returning_flight_type\":\"ECONOMY\",\"returning_flight_id\":2,\"price\":501}' //JSON.stringify(reservation)
+        body: '' //JSON.stringify(reservation)
     };
     try {
         const responseData = await fetch(reservationsEndpointURL, options);
