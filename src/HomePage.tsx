@@ -20,7 +20,7 @@ interface IHomePageState {
     showToast: boolean;
     toastMessage: IToastMessage;
     flightsData: Array<IFlightData>;
-    selectedFlight: IFlightData;
+    selectedFlight: IFlightData | null;
 }
 
 interface IHomePageProps {
@@ -46,7 +46,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
             showToast: false,
-            flightsData: []
+            flightsData: [],
+            selectedFlight: null
         }
     }
 
@@ -223,7 +224,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         }
     }
 
-    selectedFlightUpdated = (flightSelection: IFlightData) => {
+    selectedFlightUpdated = (flightSelection: IFlightData | null) => {
         this.setState({
             selectedFlight: flightSelection
         });

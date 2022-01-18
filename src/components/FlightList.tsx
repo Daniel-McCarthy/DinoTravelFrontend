@@ -15,7 +15,7 @@ interface IFlightListProps {
     flightData: Array<IFlightData>
     hide: boolean;
 
-    onFlightSelectionUpdate(selectedFlight: IFlightData): void;
+    onFlightSelectionUpdate(selectedFlight: IFlightData | null): void;
 }
 
 export class FlightList extends React.Component<IFlightListProps, IFlightListState> {
