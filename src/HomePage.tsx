@@ -163,7 +163,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={false}></FlightList>
 
-                    <button className="nontoggle" id="submitButton" onClick={this.toggle}>Submit</button>
+                    <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>
                 </section>
 
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
@@ -193,17 +193,39 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     }
 
+    submitReservation = async () => {
+        // Reject submission and warn user if submitting without a flight selection.
+        if (this.state.selectedFlight == null) {
+            this.displayError(`A flight to book must be selected before submission.`)
+            return;
+        }
+
+        const reservation: IReservationData = {
+            user_id: 1, // Set as a constant until login/sessions is supported.
+            trip_type: flightTypeAsJsonLabel(this.state.flightType),
+            outgoing_flight_type: flightClassAsJsonLabel(this.state.flightClass),
+            outgoing_flight_id: this.state.selectedFlight.flight_id,
+            returning_flight_type: undefined, // Empty until return flight selection is supported.
+            returning_flight_id: undefined,
+            price: this.state.selectedFlight.flight_cost
+        };
+        const response: Response | Error = await registerReservation(reservation);
+        if (response instanceof Error) {
+            this.displayError('Failed to send reservation submission to Dino Travel.');
+            return;
+        }
+
+        if (response.status !== 200) {
+            this.displayError('Failed to register reservation.');
+            console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
+        } else {
+            this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
+        }
+    }
 
     selectedFlightUpdated = (flightSelection: IFlightData) => {
         this.setState({
             selectedFlight: flightSelection
         });
-    }
-
-    toggle = () => {
-        this.setState({
-            showToast: true,
-            toastMessage: { toastType: ToastType.SuccessToast, message: "Success! Your flight has now been booked. We'll now show you the flight details." }
-        })
     }
 }
