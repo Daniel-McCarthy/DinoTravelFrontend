@@ -1,6 +1,6 @@
 import * as React from "react";
-import { FlightClass } from "./enums/FlightClass";
-import { FlightType } from "./enums/FlightType";
+import { FlightClass, flightClassAsJsonLabel } from "./enums/FlightClass";
+import { FlightType, flightTypeAsJsonLabel } from "./enums/FlightType";
 import { ToastType } from "./enums/ToastType";
 import { ToastMessage } from "./components/ToastMessage";
 import { getFlightData, IFlightData } from "./api/flights";
@@ -8,6 +8,7 @@ import { getFlightData, IFlightData } from "./api/flights";
 import './styles/HomePage.css';
 import './styles/theme.css';
 import { FlightList } from "./components/FlightList";
+import { getAllReservations, IReservationData, registerReservation, Reservations } from "./api/reservations";
 
 interface IHomePageState {
     flightType: FlightType;
@@ -19,6 +20,7 @@ interface IHomePageState {
     showToast: boolean;
     toastMessage: IToastMessage;
     flightsData: Array<IFlightData>;
+    selectedFlight: IFlightData;
 }
 
 interface IHomePageProps {
@@ -159,7 +161,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     </div>
 
-                    <FlightList flightData={this.state.flightsData} hide={false}></FlightList>
+                    <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={false}></FlightList>
 
                     <button className="nontoggle" id="submitButton" onClick={this.toggle}>Submit</button>
                 </section>
@@ -188,6 +190,13 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     toggleMultiCityFlight = () => {
         this.setState({
             isMultiCity: !this.state.isMultiCity
+        });
+    }
+
+
+    selectedFlightUpdated = (flightSelection: IFlightData) => {
+        this.setState({
+            selectedFlight: flightSelection
         });
     }
 

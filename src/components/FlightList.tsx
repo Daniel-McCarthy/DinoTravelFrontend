@@ -14,6 +14,8 @@ interface IFlightListState {
 interface IFlightListProps {
     flightData: Array<IFlightData>
     hide: boolean;
+
+    onFlightSelectionUpdate(selectedFlight: IFlightData): void;
 }
 
 export class FlightList extends React.Component<IFlightListProps, IFlightListState> {
@@ -133,8 +135,14 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         return randomInt(100, 600);
     }
 
+    getFlightByID = (id: number): IFlightData | null => {
+        const matchingFlights = this.state.flightData.filter((flight: IFlightData) => { return flight.flight_id === id });
+        return (matchingFlights.length > 0) ? matchingFlights[0] : null;
+    }
+
     selectFlight = (event: React.MouseEvent<HTMLDivElement>) => {
         const selectedFlightID = event.currentTarget.id;
+        this.props.onFlightSelectionUpdate(this.getFlightByID(parseInt(selectedFlightID, 16)))
         this.setState({
             selectedFlight: selectedFlightID
         });
