@@ -36,3 +36,25 @@ export const getAllReservations = async () : Promise<Reservations | Error> => {
     }
 };
 
+
+export const registerReservation = async (reservation: IReservationData): Promise<Response | Error> => {
+    console.log(reservation);
+    console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
+    const options = {
+        'method': 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservation)
+    };
+    try {
+        const responseData: Response = await fetch(reservationsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    } catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error as Error;
+    }
+};
