@@ -5,13 +5,13 @@ const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI
 
 
 export interface IReservationData {
-    reservation_id: number,
+    reservation_id?: number,
     user_id: number,
     trip_type: string,
     outgoing_flight_type: string,
     outgoing_flight_id: number,
-    returning_flight_type: string | undefined,
-    returning_flight_id: number | undefined,
+    returning_flight_type?: string,
+    returning_flight_id?: number,
     price: number
 }
 
