@@ -15,19 +15,24 @@ header nav button {
     margin-right: 15px;
 }
 
+.banner {
+    display: flex;
+}
+
 .logo {
-    width: 170px;
-    height: 150px;
+    width: 220px;
+    height: 200px;
     margin-left: 20px;
 
     display: inline-block;
     margin-right: 10px;
-    content:url("../../assets/dino_travel_logo.png");
+    content:url("../../assets/dino_travel_logo2.png");
 }
 
 .slogan {
     display: inline-block;
-    align-items: center;
+    height: 100%;
+    margin-left: 20px;
 }
 
 nav {
