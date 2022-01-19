@@ -74,23 +74,20 @@ class HomePage extends React.Component {
             });
         };
         this.submitReservation = async () => {
-            const reservations = await (0, reservations_1.getAllReservations)();
-            if (reservations instanceof Error) {
-                this.displayError('Failed to retrieve reservations from Dino Travel.');
+            // Reject submission and warn user if submitting without a flight selection.
+            if (this.state.selectedFlight == null) {
+                this.displayError(`A flight to book must be selected before submission.`);
                 return;
             }
-            // const reservationId = getNextAvailableReservationId(reservations);
             const reservation = {
-                // reservation_id: reservationId,
                 user_id: 1,
                 trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
                 outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                outgoing_flight_id: 1,
-                returning_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                returning_flight_id: 2,
-                price: 502
+                outgoing_flight_id: this.state.selectedFlight.flight_id,
+                returning_flight_type: undefined,
+                returning_flight_id: undefined,
+                price: this.state.selectedFlight.flight_cost
             };
-            // {\"trip_type\":\"ROUND_TRIP\",\"outgoing_flight_type\":\"ECONOMY\",\"returning_flight_type\":\"ECONOMY\",\"returning_flight_id\":2,\"price\":501}
             const response = await (0, reservations_1.registerReservation)(reservation);
             if (response instanceof Error) {
                 this.displayError('Failed to send reservation submission to Dino Travel.');
@@ -104,8 +101,10 @@ class HomePage extends React.Component {
                 this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
             }
         };
-        this.testReservations = () => {
-            (0, reservations_1.getAllReservations)();
+        this.selectedFlightUpdated = (flightSelection) => {
+            this.setState({
+                selectedFlight: flightSelection
+            });
         };
         this.state = {
             flightType: FlightType_1.FlightType.RoundTrip,
@@ -116,7 +115,8 @@ class HomePage extends React.Component {
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType_1.ToastType.InfoToast, message: "" },
             showToast: false,
-            flightsData: []
+            flightsData: [],
+            selectedFlight: null
         };
     }
     render() {
@@ -133,7 +133,7 @@ class HomePage extends React.Component {
                 React.createElement("nav", null,
                     React.createElement("button", { className: "nontoggle" }, "support"),
                     React.createElement("button", { className: "nontoggle" }, "about us"),
-                    React.createElement("button", { className: "nontoggle", onClick: this.testReservations }, "trips"))),
+                    React.createElement("button", { className: "nontoggle" }, "trips"))),
             React.createElement("section", null,
                 React.createElement("div", { id: "filterRow" },
                     React.createElement("h1", null, "Search Flights"),
@@ -161,7 +161,7 @@ class HomePage extends React.Component {
                     React.createElement("div", { className: "dateInputContainer" },
                         React.createElement("h3", null, "Returning"),
                         React.createElement("input", { className: "datePicker", type: "date" }))),
-                React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, hide: false }),
+                React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, onFlightSelectionUpdate: this.selectedFlightUpdated, hide: false }),
                 React.createElement("button", { className: "nontoggle", id: "submitButton", onClick: this.submitReservation }, "Submit")),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
     }
@@ -190,7 +190,6 @@ const getFlightData = async () => {
     console.log(`Retrieving Flight data from: ${flightEndpointURL}`);
     const options = {
         'method': 'GET',
-        // 'mode': 'no-cors' as RequestMode,
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -224,7 +223,7 @@ exports.getFlightData = getFlightData;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getNextAvailableReservationId = exports.registerReservation = exports.getAllReservations = void 0;
+exports.registerReservation = exports.getAllReservations = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const reservationsAPI = '/api/reservations/';
@@ -287,14 +286,6 @@ const registerReservation = async (reservation) => {
     }
 };
 exports.registerReservation = registerReservation;
-const getNextAvailableReservationId = (currentReservations) => {
-    let highestID = -1;
-    for (const reservation of currentReservations)
-        if (reservation.reservation_id > highestID)
-            highestID = reservation.reservation_id;
-    return highestID + 1;
-};
-exports.getNextAvailableReservationId = getNextAvailableReservationId;
 
 
 /***/ }),
@@ -380,8 +371,13 @@ class FlightList extends React.Component {
         this.calculateRandomDummyPrice = () => {
             return (0, utility_1.randomInt)(100, 600);
         };
+        this.getFlightByID = (id) => {
+            const matchingFlights = this.state.flightData.filter((flight) => { return flight.flight_id === id; });
+            return (matchingFlights.length > 0) ? matchingFlights[0] : null;
+        };
         this.selectFlight = (event) => {
             const selectedFlightID = event.currentTarget.id;
+            this.props.onFlightSelectionUpdate(this.getFlightByID(parseInt(selectedFlightID, 16)));
             this.setState({
                 selectedFlight: selectedFlightID
             });
