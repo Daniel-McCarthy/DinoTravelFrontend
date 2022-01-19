@@ -8,7 +8,7 @@ import { getFlightData, IFlightData } from "./api/flights";
 import './styles/HomePage.css';
 import './styles/theme.css';
 import { FlightList } from "./components/FlightList";
-import { getAllReservations, IReservationData, registerReservation, Reservations } from "./api/reservations";
+import { IReservationData, registerReservation } from "./api/reservations";
 
 interface IHomePageState {
     flightType: FlightType;
