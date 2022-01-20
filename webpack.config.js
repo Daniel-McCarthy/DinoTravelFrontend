@@ -32,6 +32,8 @@ module.exports = (env, arg) => {
                 { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
 
                 { test: /\.css$/, use: ['style-loader', 'css-loader'], },
+
+                { test: /\.(jpe?g|png)$/i, type: 'asset/resource' },
             ]
         },
 

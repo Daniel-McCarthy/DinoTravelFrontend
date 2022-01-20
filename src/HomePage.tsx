@@ -9,6 +9,20 @@ import './styles/HomePage.css';
 import './styles/theme.css';
 import { FlightList } from "./components/FlightList";
 import { IReservationData, registerReservation } from "./api/reservations";
+import { ImageCarousel } from "./components/ImageCarousel";
+
+// Import banner images needed to load in Image Carousel
+import * as bannerImage1 from '../assets/banner_images/flight.jpg';
+import * as bannerImage2 from '../assets/banner_images/flight1.jpg';
+import * as bannerImage3 from '../assets/banner_images/flight2.jpg';
+import * as bannerImage4 from '../assets/banner_images/vacation.png';
+import * as bannerImage5 from '../assets/banner_images/vacation1.png';
+import * as bannerImage6 from '../assets/banner_images/vacation2.png';
+import * as bannerImage7 from '../assets/banner_images/vacation3.png';
+import * as bannerImage8 from '../assets/banner_images/vacation4.png';
+const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
+
+
 
 interface IHomePageState {
     flightType: FlightType;
@@ -21,6 +35,8 @@ interface IHomePageState {
     toastMessage: IToastMessage;
     flightsData: Array<IFlightData>;
     selectedFlight: IFlightData | null;
+
+    bannerImages: string[];
 }
 
 interface IHomePageProps {
@@ -47,7 +63,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
             showToast: false,
             flightsData: [],
-            selectedFlight: null
+            selectedFlight: null,
+
+            bannerImages
         }
     }
 
@@ -93,18 +111,23 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return (
             <div>
                 <header>
-                    <div className="banner">
-                        <img className="logo" alt="Dino Travel Logo" />
-                        <div className="slogan">
-                            <h3>Travel More</h3>
-                        </div>
+                    <div id='bannerCarousel'>
+                        <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
                     </div>
+                    <div id="headerContent">
+                        <div className="banner">
+                            <img className="logo" alt="Dino Travel Logo" />
+                            <div className="slogan">
+                                <h3>Travel More</h3>
+                            </div>
+                        </div>
 
-                    <nav>
-                        <button className="nontoggle">support</button>
-                        <button className="nontoggle">about us</button>
-                        <button className="nontoggle">trips</button>
-                    </nav>
+                        <nav>
+                            <button className="nontoggle">support</button>
+                            <button className="nontoggle">about us</button>
+                            <button className="nontoggle">trips</button>
+                        </nav>
+                    </div>
                 </header>
                 <section>
                     <div id="filterRow">

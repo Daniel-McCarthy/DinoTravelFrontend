@@ -3,7 +3,7 @@ body {
     margin: 0;
 }
 
-header {
+#headerContent {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -26,13 +26,14 @@ header nav button {
 
     display: inline-block;
     margin-right: 10px;
-    content:url("../../assets/dino_travel_logo2.png");
+    content: url("../../assets/dino_travel_logo2.png");
 }
 
 .slogan {
-    display: inline-block;
-    height: 100%;
+    display: flex;
     margin-left: 20px;
+    height: 200px;
+    align-items: center;
 }
 
 nav {
@@ -43,6 +44,15 @@ section {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
+}
+
+/*
+ * Image Carousel Styling
+ */
+
+#bannerCarousel {
+    display: block;
+    width: 100%;
 }
 
 /*
