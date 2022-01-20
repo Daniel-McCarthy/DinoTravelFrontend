@@ -21,6 +21,17 @@ __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
 const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
+const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
+// Import banner images needed to load in Image Carousel
+const bannerImage1 = __webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg");
+const bannerImage2 = __webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg");
+const bannerImage3 = __webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg");
+const bannerImage4 = __webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png");
+const bannerImage5 = __webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png");
+const bannerImage6 = __webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png");
+const bannerImage7 = __webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png");
+const bannerImage8 = __webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png");
+const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
@@ -116,7 +127,8 @@ class HomePage extends React.Component {
             toastMessage: { toastType: ToastType_1.ToastType.InfoToast, message: "" },
             showToast: false,
             flightsData: [],
-            selectedFlight: null
+            selectedFlight: null,
+            bannerImages
         };
     }
     render() {
@@ -126,14 +138,17 @@ class HomePage extends React.Component {
         const multiCityButtonClass = this.state.isMultiCity ? 'selected' : '';
         return (React.createElement("div", null,
             React.createElement("header", null,
-                React.createElement("div", { className: "banner" },
-                    React.createElement("img", { className: "logo", alt: "Dino Travel Logo" }),
-                    React.createElement("div", { className: "slogan" },
-                        React.createElement("h3", null, "Travel More"))),
-                React.createElement("nav", null,
-                    React.createElement("button", { className: "nontoggle" }, "support"),
-                    React.createElement("button", { className: "nontoggle" }, "about us"),
-                    React.createElement("button", { className: "nontoggle" }, "trips"))),
+                React.createElement("div", { id: 'bannerCarousel' },
+                    React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })),
+                React.createElement("div", { id: "headerContent" },
+                    React.createElement("div", { className: "banner" },
+                        React.createElement("img", { className: "logo", alt: "Dino Travel Logo" }),
+                        React.createElement("div", { className: "slogan" },
+                            React.createElement("h3", null, "Travel More"))),
+                    React.createElement("nav", null,
+                        React.createElement("button", { className: "nontoggle" }, "support"),
+                        React.createElement("button", { className: "nontoggle" }, "about us"),
+                        React.createElement("button", { className: "nontoggle" }, "trips")))),
             React.createElement("section", null,
                 React.createElement("div", { id: "filterRow" },
                     React.createElement("h1", null, "Search Flights"),
@@ -415,6 +430,72 @@ exports.FlightList = FlightList;
 
 /***/ }),
 
+/***/ "./src/components/ImageCarousel.tsx":
+/*!******************************************!*\
+  !*** ./src/components/ImageCarousel.tsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ImageCarousel = void 0;
+const React = __webpack_require__(/*! react */ "react");
+__webpack_require__(/*! ../styles/ImageCarousel.css */ "./src/styles/ImageCarousel.css");
+let isMounted = false;
+;
+;
+class ImageCarousel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.changePhotoAfterTime = () => {
+            const newIndex = (this.state.currentIndex + 1) % this.state.imagesToUse.length;
+            setTimeout(() => {
+                if (isMounted === true) {
+                    this.setState({ currentIndex: newIndex });
+                }
+            }, this.state.timeBetweenImageChanges * 1000);
+        };
+        this.setRef = (element) => {
+            if (element != null) {
+                this.imgRef = element;
+            }
+        };
+        this.componentDidMount = () => {
+            isMounted = true;
+        };
+        this.componentWillUnmount = () => {
+            isMounted = false;
+        };
+        this.imgRef = null;
+        const images = [];
+        if (props.image != null) {
+            images[0] = props.image;
+        }
+        else if (props.imagesToUse != null) {
+            for (let i = 0; i < props.imagesToUse.length; i++) {
+                images[i] = props.imagesToUse[i];
+            }
+        }
+        this.state = {
+            imagesToUse: images,
+            currentIndex: 0,
+            timeBetweenImageChanges: !!this.props.timeBetweenImageChanges
+                ? this.props.timeBetweenImageChanges
+                : 10,
+            height: this.props.height,
+        };
+    }
+    render() {
+        return (React.createElement("div", { className: 'carousel' },
+            React.createElement("img", { height: this.state.height, ref: element => { this.setRef(element); }, src: this.state.imagesToUse[this.state.currentIndex], onLoad: this.changePhotoAfterTime })));
+    }
+}
+exports.ImageCarousel = ImageCarousel;
+
+
+/***/ }),
+
 /***/ "./src/components/ToastMessage.tsx":
 /*!*****************************************!*\
   !*** ./src/components/ToastMessage.tsx ***!
@@ -614,11 +695,43 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../../assets/dino_travel_logo.png */ "./assets/dino_travel_logo.png"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../../assets/dino_travel_logo2.png */ "./assets/dino_travel_logo2.png"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content:url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,+CAAgD;AACpD;;AAEA;IACI,qBAAqB;IACrB,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,oBAAoB;AACxB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\nheader {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.logo {\r\n    width: 170px;\r\n    height: 150px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content:url(\"../../assets/dino_travel_logo.png\");\r\n}\r\n\r\n.slogan {\r\n    display: inline-block;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;IACd,WAAW;AACf;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,gBAAgB;IAChB,oBAAoB;AACxB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton {\r\n    width: 150px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n\r\n#submitButton {\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/ImageCarousel.css":
+/*!****************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/ImageCarousel.css ***!
+  \****************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
+// Imports
+
+
+
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"), __webpack_require__.b);
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\r\n    background-color: black;\r\n    display: flex;\r\n\r\n    /* filter: blur(8px);\r\n    -webkit-filter: blur(8px); */\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n    background-attachment: fixed;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n\r\n.carousel img {\r\n    mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    opacity: 0.7;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ImageCarousel.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,aAAa;;IAEb;gCAC4B;IAC5B,yDAA+D;IAC/D,4BAA4B;IAC5B,2BAA2B;IAC3B,4BAA4B;IAC5B,sBAAsB;AAC1B;;AAEA;IACI,yHAAyH;IACzH,iIAAiI;IACjI,iBAAiB;IACjB,kBAAkB;IAClB,YAAY;AAChB","sourcesContent":[".carousel {\r\n    background-color: black;\r\n    display: flex;\r\n\r\n    /* filter: blur(8px);\r\n    -webkit-filter: blur(8px); */\r\n    background-image: url(\"../../assets/banner_images/flight2.jpg\");\r\n    background-attachment: fixed;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n\r\n.carousel img {\r\n    mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    opacity: 0.7;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -22718,6 +22831,61 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./src/styles/ImageCarousel.css":
+/*!**************************************!*\
+  !*** ./src/styles/ImageCarousel.css ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_ImageCarousel_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./ImageCarousel.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/ImageCarousel.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_ImageCarousel_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_ImageCarousel_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_ImageCarousel_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_ImageCarousel_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/styles/Toast.css":
 /*!******************************!*\
   !*** ./src/styles/Toast.css ***!
@@ -22828,14 +22996,102 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./assets/dino_travel_logo.png":
-/*!*************************************!*\
-  !*** ./assets/dino_travel_logo.png ***!
-  \*************************************/
+/***/ "./assets/banner_images/flight.jpg":
+/*!*****************************************!*\
+  !*** ./assets/banner_images/flight.jpg ***!
+  \*****************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
-module.exports = __webpack_require__.p + "7c8861366f29da5f5c54.png";
+module.exports = __webpack_require__.p + "82f404f038f9af09017f.jpg";
+
+/***/ }),
+
+/***/ "./assets/banner_images/flight1.jpg":
+/*!******************************************!*\
+  !*** ./assets/banner_images/flight1.jpg ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "8ba7b76fe172d54c94b1.jpg";
+
+/***/ }),
+
+/***/ "./assets/banner_images/flight2.jpg":
+/*!******************************************!*\
+  !*** ./assets/banner_images/flight2.jpg ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "2a750cd5d7cf23ea5b38.jpg";
+
+/***/ }),
+
+/***/ "./assets/banner_images/vacation.png":
+/*!*******************************************!*\
+  !*** ./assets/banner_images/vacation.png ***!
+  \*******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "7e32c9673859c33db5d9.png";
+
+/***/ }),
+
+/***/ "./assets/banner_images/vacation1.png":
+/*!********************************************!*\
+  !*** ./assets/banner_images/vacation1.png ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "9136aebeffdd4f8fec73.png";
+
+/***/ }),
+
+/***/ "./assets/banner_images/vacation2.png":
+/*!********************************************!*\
+  !*** ./assets/banner_images/vacation2.png ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "b9079e99eecc0572f9ba.png";
+
+/***/ }),
+
+/***/ "./assets/banner_images/vacation3.png":
+/*!********************************************!*\
+  !*** ./assets/banner_images/vacation3.png ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "ab0499413241736d9cf6.png";
+
+/***/ }),
+
+/***/ "./assets/banner_images/vacation4.png":
+/*!********************************************!*\
+  !*** ./assets/banner_images/vacation4.png ***!
+  \********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "d46da574bd942483c818.png";
+
+/***/ }),
+
+/***/ "./assets/dino_travel_logo2.png":
+/*!**************************************!*\
+  !*** ./assets/dino_travel_logo2.png ***!
+  \**************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "8a0ddbc6d5eb51f3f0c0.png";
 
 /***/ }),
 
