@@ -20,6 +20,7 @@ import * as bannerImage5 from '../assets/banner_images/vacation1.png';
 import * as bannerImage6 from '../assets/banner_images/vacation2.png';
 import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
+import moment = require("moment");
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -35,6 +36,8 @@ interface IHomePageState {
     toastMessage: IToastMessage;
     flightsData: Array<IFlightData>;
     selectedFlight: IFlightData | null;
+    departureFlightDate: moment.Moment;
+    returnFlightDate: moment.Moment;
 
     bannerImages: string[];
 }
@@ -64,6 +67,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             showToast: false,
             flightsData: [],
             selectedFlight: null,
+            departureFlightDate: moment(),
+            returnFlightDate: moment(),
 
             bannerImages
         }
@@ -182,7 +187,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         {isRoundTripSelected 
                             ? <div className="dateInputContainer">
                                 <h3>Returning</h3>
-                                <input className="datePicker" type="date"></input>
+                                <input className="datePicker" onChange={this.onReturnFlightDateSelected} type="date"></input>
                             </div>
                             : null
                         }
@@ -197,9 +202,19 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             </div>
         )
     }
-
-    onArrivalFlightDateSelected = () => {
+    onArrivalFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newDate = event.currentTarget.value;
+        this.setState({
+            returnFlightDate: moment(newDate, 'YYYY-MM-DD')
+        });
         this.getFlightAPIData();
+    }
+
+    onReturnFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newDate = event.currentTarget.value;
+        this.setState({
+            returnFlightDate: moment(newDate, 'YYYY-MM-DD')
+        });
     }
 
     selectRoundTrip = () => {
