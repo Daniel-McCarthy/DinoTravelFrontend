@@ -230,7 +230,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     selectOneWay = () => {
         this.setState({
-            flightType: FlightType.OneWay
+            flightType: FlightType.OneWay,
+            isMultiCity: false
         });
     }
 
