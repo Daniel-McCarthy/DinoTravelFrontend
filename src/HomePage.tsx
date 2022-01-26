@@ -136,6 +136,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <button className="nontoggle">support</button>
                             <button className="nontoggle">about us</button>
                             <button className="nontoggle">trips</button>
+                            <button className="nontoggle">login</button>
                         </nav>
                     </div>
                 </header>
