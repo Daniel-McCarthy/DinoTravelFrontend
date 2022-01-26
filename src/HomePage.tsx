@@ -36,6 +36,8 @@ interface IHomePageState {
     toastMessage: IToastMessage;
     flightsData: Array<IFlightData>;
     selectedFlight: IFlightData | null;
+    showingFlightList: boolean;
+
     departureFlightDate: moment.Moment;
     returnFlightDate: moment.Moment;
 
@@ -67,6 +69,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             showToast: false,
             flightsData: [],
             selectedFlight: null,
+            showingFlightList: false,
+
             departureFlightDate: moment(),
             returnFlightDate: moment(),
 
@@ -80,7 +84,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             console.log(flights);
 
             this.setState({
-                flightsData: flights
+                flightsData: flights,
+                showingFlightList: true
             })
             return flights;
         } catch (error) {
@@ -193,7 +198,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         }
                     </div>
 
-                    <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={false}></FlightList>
+                    <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={!this.state.showingFlightList}></FlightList>
 
                     <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>
                 </section>

@@ -151,9 +151,11 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     render() {
         const isDataEmpty = this.state.flightData.length === 0;
         return (
-            <div className="flightList">
-                {isDataEmpty ? this.renderNoFlightDataMessage() : this.renderFlightList()}
-            </div>   
+            this.state.isHidden
+                ? null
+                : <div className="flightList">
+                    {isDataEmpty ? this.renderNoFlightDataMessage() : this.renderFlightList()}
+                  </div>   
         )
     }
 }
