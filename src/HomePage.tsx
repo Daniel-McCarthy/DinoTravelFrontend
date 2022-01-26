@@ -179,10 +179,13 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <input className="datePicker" type="date" onChange={this.onArrivalFlightDateSelected}></input>
                         </div>
                         
-                        <div className="dateInputContainer">
-                            <h3>Returning</h3>
-                            <input className="datePicker" type="date"></input>
-                        </div>
+                        {isRoundTripSelected 
+                            ? <div className="dateInputContainer">
+                                <h3>Returning</h3>
+                                <input className="datePicker" type="date"></input>
+                            </div>
+                            : null
+                        }
                     </div>
 
                     <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={false}></FlightList>
