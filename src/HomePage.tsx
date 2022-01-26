@@ -187,13 +187,15 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                         <div className="dateInputContainer">
                             <h3>Departing</h3>
-                            <input className="datePicker" type="date" onChange={this.onArrivalFlightDateSelected}></input>
+                            {/* Placeholder is used as a fallback on browsers that don't support the datepicker, e.g. Safari and IE */}
+                            <input className="datePicker" type="date" onChange={this.onArrivalFlightDateSelected} placeholder="yyyy-mm-dd"></input>
                         </div>
                         
                         {isRoundTripSelected 
                             ? <div className="dateInputContainer">
                                 <h3>Returning</h3>
-                                <input className="datePicker" onChange={this.onReturnFlightDateSelected} type="date"></input>
+                                {/* Placeholder is used as a fallback on browsers that don't support the datepicker, e.g. Safari and IE */}
+                                <input className="datePicker" onChange={this.onReturnFlightDateSelected} type="date" placeholder="yyyy-mm-dd"></input>
                             </div>
                             : null
                         }
