@@ -21,6 +21,7 @@ import * as bannerImage6 from '../assets/banner_images/vacation2.png';
 import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
+import { MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -30,7 +31,6 @@ interface IHomePageState {
     flightClass: FlightClass;
     numAdultTravelers: number;
     numChildTravelers: number;
-    isMultiCity: boolean;
     // Error/Message Toast display and configuration
     showToast: boolean;
     toastMessage: IToastMessage;
@@ -63,7 +63,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             flightClass: FlightClass.EconomyClass,
             numAdultTravelers: 0,
             numChildTravelers: 0,
-            isMultiCity: true,
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
             showToast: false,
@@ -115,9 +114,11 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     render() {
         const isRoundTripSelected = this.state.flightType === FlightType.RoundTrip;
+        const isMultiCitySelected = this.state.flightType === FlightType.MultiCity;
+        const isOneWaySelected = this.state.flightType === FlightType.OneWay;
         const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
-        const oneWayButtonClass = !isRoundTripSelected ? 'selected' : '';
-        const multiCityButtonClass = this.state.isMultiCity ? 'selected' : '';
+        const oneWayButtonClass = isOneWaySelected ? 'selected' : '';
+        const multiCityButtonClass = isMultiCitySelected ? 'selected' :  '';
         return (
             <div>
                 <header>
@@ -146,7 +147,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         <div className="flightTypeFilters">
                             <button className={roundTripButtonClass} onClick={this.selectRoundTrip}>Round Trip</button>
                             <button className={oneWayButtonClass} onClick={this.selectOneWay}>One-Way</button>
-                            <button className={multiCityButtonClass} onClick={this.toggleMultiCityFlight}>Multi-City</button>
+                            <button className={multiCityButtonClass} onClick={this.selectMultiCityFlight}>Multi-City</button>
                         </div>
 
                         <div className="filterDropdowns">
@@ -233,14 +234,13 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     selectOneWay = () => {
         this.setState({
-            flightType: FlightType.OneWay,
-            isMultiCity: false
+            flightType: FlightType.OneWay
         });
     }
 
-    toggleMultiCityFlight = () => {
+    selectMultiCityFlight = () => {
         this.setState({
-            isMultiCity: !this.state.isMultiCity
+            flightType: FlightType.MultiCity
         });
     }
 
