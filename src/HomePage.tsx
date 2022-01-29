@@ -204,19 +204,28 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={!this.state.showingFlightList}></FlightList>
 
-                    <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>
+                    <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
 
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
             </div>
         )
     }
+
+    renderSubmitButton = () => {
+        return <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>
+    }
+
+    onSearchClicked = () => {
+        // Must verify filters are set in order to search
+        this.getFlightAPIData();
+    }
+
     onArrivalFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newDate = event.currentTarget.value;
         this.setState({
             returnFlightDate: moment(newDate, 'YYYY-MM-DD')
         });
-        this.getFlightAPIData();
     }
 
     onReturnFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
