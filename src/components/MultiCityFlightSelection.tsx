@@ -65,7 +65,7 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
                                 <div className="flightDate">
                                     <h3>{isFirst ? "Departing" : " "}</h3>
                                     {/* Placeholder is used as a fallback on browsers that don't support the datepicker, e.g. Safari and IE */}
-                                    <input className="datePicker" type="date" placeholder="yyyy-mm-dd"></input>
+                                    <input className="datePicker" type="date" placeholder="yyyy-mm-dd" onChange={this.onFlightDateChanged} accessKey={index.toString()} />
                                 </div>
                                 <div className="addRemoveButtons">
                                     <div className="addRemoveSpacer">
@@ -88,6 +88,17 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
             goingTo: '',
             depatureDate: moment()
         })
+        this.updateFlightsState(flights);
+    }
+
+    onFlightDateChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const dateInput: HTMLInputElement = event.target;
+        const rowNumber = parseInt(dateInput.accessKey);
+        const newDate = dateInput.value;
+        const flights = this.state.flights;
+        flights[rowNumber].depatureDate = moment(newDate, 'YYYY-MM-DD');
+        // Update flights data with modified array data
+        // Flight associated with row has been updated with new flight date.
         this.updateFlightsState(flights);
     }
 
