@@ -88,9 +88,7 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
             goingTo: '',
             depatureDate: moment()
         })
-        this.setState({
-            flights
-        });
+        this.updateFlightsState(flights);
     }
 
     onRemoveFlightClicked = (event: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
@@ -104,9 +102,7 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
         const flights = this.state.flights.filter((_flight, index) => {
             return index !== flightRowNumber;
         });
-        this.setState({
-            flights
-        });
+        this.updateFlightsState(flights);
     }
 
     updateDepartureAirport = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,5 +113,13 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
         
         // Update flight that matches input index to new departure airport selection
         flights[flightRowNumber].leavingFrom = newAirportSelection;
+        this.updateFlightsState(flights);
+    }
+
+    updateFlightsState = (newFlights: Flight[]) => {
+        this.setState({
+            flights: newFlights
+        });
+        this.props.onFlightSelectionsChanged(newFlights);
     }
 }
