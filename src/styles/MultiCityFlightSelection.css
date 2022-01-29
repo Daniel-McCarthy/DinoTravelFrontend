@@ -1,0 +1,50 @@
+.addRemoveButtons {
+    /* height: 40px; */
+}
+
+.addRemoveSpacer {
+    width: 535px;
+    display: inline-block;
+}
+
+.buttonLabel {
+    color: rgb(93, 190, 207);
+    /* padding-top: 20px; */
+    margin-right: 40px;
+    font-weight:600;
+}
+
+.multiCityFlightSelectionContainer {
+    margin-top: 30px;
+}
+
+.multiCityFlightSelectionContainer input {
+    height: 50px;
+    width: 220px;
+    border-radius: 3px;
+    margin-right: 40px;
+}
+
+.flightLabel {
+    margin-bottom: 6px;
+    font-weight: lighter;
+    font-size: 14px;
+}
+
+.multiCityFlightSelectionContainer h3 {
+    color: black;
+}
+
+.multiCityFlightSelectionContainer .datePicker {
+    width: 150px;
+    margin-bottom: 8px;
+    margin-top: 0px;
+}
+
+.flightDestination {
+    display: inline-block;
+}
+
+.flightDate {
+    display: inline-block;
+}
