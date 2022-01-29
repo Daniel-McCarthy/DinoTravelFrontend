@@ -60,7 +60,7 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
                                 <div className="flightDestination">
                                     <h3 className='flightLabel'>Flight {index}</h3>
                                     <input className="leavingInput" placeholder="Leaving From" accessKey={index.toString()} onChange={this.updateDepartureAirport} />
-                                    <input placeholder="Going To" />
+                                    <input placeholder="Going To" accessKey={index.toString()} onChange={this.updateArrivalAirport} />
                                 </div>
                                 <div className="flightDate">
                                     <h3>{isFirst ? "Departing" : " "}</h3>
@@ -124,6 +124,17 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
         
         // Update flight that matches input index to new departure airport selection
         flights[flightRowNumber].leavingFrom = newAirportSelection;
+        this.updateFlightsState(flights);
+    }
+
+    updateArrivalAirport = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const airportArrivalInput: HTMLInputElement = event.currentTarget as HTMLInputElement;
+        const flightRowNumber = parseInt(airportArrivalInput.accessKey);
+        const newAirportSelection = airportArrivalInput.value;
+        const flights = this.state.flights;
+
+        // Update flight that matches input index to new arrival airport selection
+        flights[flightRowNumber].goingTo = newAirportSelection;
         this.updateFlightsState(flights);
     }
 
