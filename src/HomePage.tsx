@@ -21,7 +21,7 @@ import * as bannerImage6 from '../assets/banner_images/vacation2.png';
 import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
-import { MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
+import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -40,6 +40,10 @@ interface IHomePageState {
 
     departureFlightDate: moment.Moment;
     returnFlightDate: moment.Moment;
+
+    // A copy of any selected flights to search for in multi-city mode.
+    // These flights are passed up from the MultiCityFlightSelection component.
+    mutiCityFlightSelections: Flight[];
 
     bannerImages: string[];
 }
@@ -72,6 +76,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
             departureFlightDate: moment(),
             returnFlightDate: moment(),
+
+            mutiCityFlightSelections: [],
 
             bannerImages
         }
@@ -182,7 +188,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     </div>
 
-                    {isMultiCitySelected ? <MultiCityFlightSelect hide={false} />
+                    {isMultiCitySelected ? <MultiCityFlightSelect hide={false} onFlightSelectionsChanged={this.onMultiCityFlightSelectionChange} />
                         :
                         <div id="userInputRow">
                             <div id="destinationInputs">
@@ -290,6 +296,13 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     selectedFlightUpdated = (flightSelection: IFlightData | null) => {
         this.setState({
             selectedFlight: flightSelection
+        });
+    }
+
+    // This function is called when flight selections are changed in the MultiCityFlightSelection component.
+    onMultiCityFlightSelectionChange = (flightSelections: Flight[]) => {
+        this.setState({
+            mutiCityFlightSelections: flightSelections
         });
     }
 }

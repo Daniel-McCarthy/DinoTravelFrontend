@@ -6,6 +6,7 @@ import '../styles/MultiCityFlightSelection.css';
 
 interface IMultiCityFlightSelectProps {
     hide: boolean;
+    onFlightSelectionsChanged: (flightSelections: Flight[]) => void;
 };
 
 interface IMultiCityFlightSelectState {
@@ -13,7 +14,7 @@ interface IMultiCityFlightSelectState {
     flights: Flight[];
 };
 
-interface Flight {
+export interface Flight {
     id: string
     leavingFrom: string;
     goingTo: string;
