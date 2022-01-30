@@ -12,7 +12,8 @@
       "newLine": "LF",
       "jsx": "react",
       "strict": true,
-      "outDir": "./out"
+      "outDir": "./out",
+      "esModuleInterop": true
   },
   "exclude": [ "node_modules" ],
   "include": [
