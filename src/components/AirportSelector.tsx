@@ -41,6 +41,10 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
             return;
         }
 
+        // Filter out results that are just towns/locations, not airports.
+        const airportsOnlyLocations = flightJSON.filter(location => {
+            return location.subType === 'AIRPORT';
+        });
         
         this.setState({
             hasFirstQueryBeenMade: true,
