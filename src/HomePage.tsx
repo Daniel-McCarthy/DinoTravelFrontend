@@ -22,6 +22,7 @@ import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
 import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
+import { Link } from "react-router-dom";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -133,7 +134,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     </div>
                     <div id="headerContent">
                         <div className="banner">
-                            <img className="logo" alt="Dino Travel Logo" />
+                            <Link to='/'>
+                                <img className="logo" alt="Dino Travel Logo" />
+                            </Link>
                             <div className="slogan">
                                 <h3>Travel More</h3>
                             </div>
@@ -143,7 +146,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <button className="nontoggle">support</button>
                             <button className="nontoggle">about us</button>
                             <button className="nontoggle">trips</button>
-                            <button className="nontoggle">login</button>
+                            <Link to='/login'>
+                                <button className="nontoggle">login</button>
+                            </Link>
                         </nav>
                     </div>
                 </header>
