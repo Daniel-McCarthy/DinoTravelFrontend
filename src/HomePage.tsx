@@ -44,7 +44,7 @@ interface IHomePageState {
 
     // A copy of any selected flights to search for in multi-city mode.
     // These flights are passed up from the MultiCityFlightSelection component.
-    mutiCityFlightSelections: Flight[];
+    multiCityFlightSelections: Flight[];
 
     bannerImages: string[];
 }
@@ -78,7 +78,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             departureFlightDate: moment(),
             returnFlightDate: moment(),
 
-            mutiCityFlightSelections: [],
+            multiCityFlightSelections: [],
 
             bannerImages
         }
@@ -307,7 +307,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     // This function is called when flight selections are changed in the MultiCityFlightSelection component.
     onMultiCityFlightSelectionChange = (flightSelections: Flight[]) => {
         this.setState({
-            mutiCityFlightSelections: flightSelections
+            multiCityFlightSelections: flightSelections
         });
     }
 }
