@@ -602,17 +602,6 @@ class AirportSelector extends React.Component {
             // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
             return (parentElement.compareDocumentPosition(childElement) & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
         };
-        // useClickOutside = (ref, callback) => {
-        //     const handleClick = e => {
-        //         if (ref.current && !ref.current.contains(e.target)) {
-        //         callback();
-        //         }
-        //     };
-        //     useEffect(() => {
-        //         document.addEventListener('click', handleClick, true);
-        //         return () => document.removeEventListener('click', handleClick, true);
-        //     }, []);
-        // };
         this.isQueryEntered = () => {
             const currentQuery = this.state.airportQuery;
             return !!currentQuery && currentQuery.length > 0;
@@ -633,7 +622,8 @@ class AirportSelector extends React.Component {
         };
         this.onDeselectingAirportLocation = () => {
             this.setState({
-                selectedLocation: null
+                selectedLocation: null,
+                airportQuery: ''
             });
         };
         this.renderSelectionInput = () => {
