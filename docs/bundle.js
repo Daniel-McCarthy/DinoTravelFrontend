@@ -442,8 +442,9 @@ const getLocationsForQuery = async (searchQuery) => {
         return json;
     }
     catch (error) {
-        console.error(`Failed to get locations data from API endpoint due to reason: ${error}`);
-        return Response.error();
+        const errorMessage = `Failed to get locations data from API endpoint due to reason: ${error}`;
+        console.error(errorMessage);
+        return Error(errorMessage);
     }
 };
 exports.getLocationsForQuery = getLocationsForQuery;
@@ -605,11 +606,17 @@ class AirportSelector extends React.Component {
         this.updateResultsFromAPI = async () => {
             console.log('Getting results');
             const query = this.state.airportQuery;
-            const response = await (0, locations_1.getLocationsForQuery)(query);
-            const responseJSON = await response.json();
+            const flightJSON = await (0, locations_1.getLocationsForQuery)(query);
+            if (flightJSON instanceof Error) {
+                this.setState({
+                    locationResults: []
+                });
+                console.error(`Failed to get location data from API via AirportSelector component: '${flightJSON.message}`);
+                return;
+            }
             this.setState({
                 hasFirstQueryBeenMade: true,
-                locationResults: responseJSON
+                locationResults: flightJSON
             });
         };
         this.debouncedResultsUpdating = (0, awesome_debounce_promise_1.default)(this.updateResultsFromAPI, 500);
@@ -1908,7 +1915,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".addRemoveButtons {\r\n    /* height: 40px; */\r\n}\r\n\r\n.addRemoveSpacer {\r\n    width: 535px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 150px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/MultiCityFlightSelection.css"],"names":[],"mappings":"AAAA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,qBAAqB;AACzB;;AAEA;IACI,wBAAwB;IACxB,uBAAuB;IACvB,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,oBAAoB;IACpB,eAAe;AACnB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;AACzB","sourcesContent":[".addRemoveButtons {\r\n    /* height: 40px; */\r\n}\r\n\r\n.addRemoveSpacer {\r\n    width: 535px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 150px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".addRemoveSpacer {\r\n    width: 535px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 150px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/MultiCityFlightSelection.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,qBAAqB;AACzB;;AAEA;IACI,wBAAwB;IACxB,uBAAuB;IACvB,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,oBAAoB;IACpB,eAAe;AACnB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;AACzB","sourcesContent":[".addRemoveSpacer {\r\n    width: 535px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 150px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
