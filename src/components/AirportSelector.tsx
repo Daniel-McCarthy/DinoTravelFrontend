@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import AwesomeDebouncePromise from "awesome-debounce-promise";
+
 import '../styles/AirportSelector.css';
 import { getLocationsForQuery, ILocationData } from "../api/locations";
 
@@ -45,4 +47,9 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
             locationResults: airportsOnlyLocations
         });
     };
+
+    // Waits to call the function until it finds that it has not been called again for 500ms.
+    // This allows us to hold off on the call if we're still typing so that we can reduce
+    // unnecessary API calls made to the backend when we haven't finished writing the query.
+    debouncedResultsUpdating = AwesomeDebouncePromise(this.updateResultsFromAPI, 500);
 }
