@@ -91,6 +91,11 @@ class HomePage extends React.Component {
                 }
             });
         };
+        this.onDepartureAirportSelectionUpdated = (selectedAirport) => {
+            this.setState({
+                departureAirport: selectedAirport
+            });
+        };
         this.renderSubmitButton = () => {
             return React.createElement("button", { className: "nontoggle", id: "submitButton", onClick: this.submitReservation }, "Submit");
         };
@@ -161,7 +166,7 @@ class HomePage extends React.Component {
         // This function is called when flight selections are changed in the MultiCityFlightSelection component.
         this.onMultiCityFlightSelectionChange = (flightSelections) => {
             this.setState({
-                mutiCityFlightSelections: flightSelections
+                multiCityFlightSelections: flightSelections
             });
         };
         this.state = {
@@ -175,9 +180,11 @@ class HomePage extends React.Component {
             flightsData: [],
             selectedFlight: null,
             showingFlightList: false,
+            departureAirport: null,
             departureFlightDate: moment(),
+            returnAirport: null,
             returnFlightDate: moment(),
-            mutiCityFlightSelections: [],
+            multiCityFlightSelections: [],
             bannerImages,
             airports: (0, airportNameMapping_1.parseAirports)()
         };
@@ -236,7 +243,7 @@ class HomePage extends React.Component {
                                     React.createElement("h3", null, "Returning"),
                                     React.createElement("input", { className: "datePicker", onChange: this.onReturnFlightDateSelected, type: "date", placeholder: "yyyy-mm-dd" }))
                                 : null),
-                React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From' }),
+                React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From', onAirportSelectionUpdated: this.onDepartureAirportSelectionUpdated }),
                 React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, onFlightSelectionUpdate: this.selectedFlightUpdated, hide: !this.state.showingFlightList }),
                 React.createElement("button", { className: "nontoggle", id: "searchButton", onClick: this.onSearchClicked }, "Search")),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
@@ -283,7 +290,7 @@ class LoginPage extends React.Component {
         this.state = {};
     }
     render() {
-        return (React.createElement("div", null, "Login Page"));
+        return (React.createElement("div", null));
     }
 }
 exports.LoginPage = LoginPage;
@@ -575,13 +582,67 @@ class AirportSelector extends React.Component {
         };
         this.onInputBlur = () => {
             console.log('Blurred');
+            // Check if focus shifted to a child element, if so, keep the selection list open.
+            const currentlyFocusedElement = document.activeElement;
+            const selectorContainerElement = this.selectorContainerRef.current;
+            if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
+                return;
+            }
+            // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
+            // Closing the list since focus is now on an unrelated component or element.
             this.setState({
                 isInputFocused: false
             });
         };
+        this.isElementParentOf = (parentElement, childElement) => {
+            // Uses the Node class to check if a HTMLElement is a descendant of another.
+            // The Node compareDocumentPosition function returns a bitmask containing bits
+            // that encode information about their dom structure. We just want to see if 
+            // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINS (8)
+            // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
+            return (parentElement.compareDocumentPosition(childElement) & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
+        };
+        // useClickOutside = (ref, callback) => {
+        //     const handleClick = e => {
+        //         if (ref.current && !ref.current.contains(e.target)) {
+        //         callback();
+        //         }
+        //     };
+        //     useEffect(() => {
+        //         document.addEventListener('click', handleClick, true);
+        //         return () => document.removeEventListener('click', handleClick, true);
+        //     }, []);
+        // };
         this.isQueryEntered = () => {
             const currentQuery = this.state.airportQuery;
             return !!currentQuery && currentQuery.length > 0;
+        };
+        this.renderSelectedAirport = () => {
+            var _a;
+            const hasPlaceholder = !!this.props.placeholderText;
+            return React.createElement("div", { className: 'airportSelected' },
+                React.createElement("div", { className: 'selectedAirportDetails' },
+                    hasPlaceholder
+                        ? React.createElement("label", { className: "placeholder" },
+                            this.props.placeholderText,
+                            ":")
+                        : null,
+                    React.createElement("label", { className: 'airportName' }, (_a = this.state.selectedLocation) === null || _a === void 0 ? void 0 : _a.detailedName)),
+                React.createElement("div", { className: 'deselectButtonContainer' },
+                    React.createElement("label", { className: 'deselectButton', onClick: this.onDeselectingAirportLocation }, "x")));
+        };
+        this.onDeselectingAirportLocation = () => {
+            this.setState({
+                selectedLocation: null
+            });
+        };
+        this.renderSelectionInput = () => {
+            const shouldShowResults = this.state.isInputFocused && this.state.hasFirstQueryBeenMade && this.isQueryEntered();
+            return React.createElement("div", { className: 'airportSelector', ref: this.selectorContainerRef },
+                React.createElement("input", { placeholder: this.props.placeholderText, onChange: this.onQueryUpdated, onFocus: this.onInputFocus, onBlur: this.onInputBlur }),
+                shouldShowResults
+                    ? this.renderResultsList()
+                    : null);
         };
         this.renderNoResultsMessage = () => {
             return React.createElement("label", { className: 'noResultsMessage' }, "No results found for this query.");
@@ -590,10 +651,33 @@ class AirportSelector extends React.Component {
             return React.createElement("div", { className: "floatBlock" }, this.state.locationResults.length == 0
                 ? this.renderNoResultsMessage()
                 : this.state.locationResults.map((location, index) => {
-                    return index > 10 ? null : React.createElement("label", null,
-                        "test ",
-                        location.address.cityName);
+                    return index > 10
+                        ? null
+                        : this.renderLocationListItem(location);
                 }));
+        };
+        this.renderLocationListItem = (location) => {
+            return React.createElement("div", { className: "locationListItem", onClick: this.onLocationListItemClicked, accessKey: location.iataCode },
+                React.createElement("label", { className: "airportName" }, location.detailedName),
+                React.createElement("label", { className: "cityName" }, location.address.cityName),
+                React.createElement("label", { className: "iataCode" }, location.iataCode));
+        };
+        this.getLocationByIataCode = (iataCode) => {
+            return this.state.locationResults.find(location => {
+                return location.iataCode === iataCode;
+            });
+        };
+        this.onLocationListItemClicked = (event) => {
+            const iataCode = event.currentTarget.accessKey;
+            const locationBeingSelected = this.getLocationByIataCode(iataCode);
+            if (locationBeingSelected === undefined) {
+                console.error(`User clicked a list item from the AirportSelector, however no airport with expected IATA code was found: ${iataCode}`);
+                return;
+            }
+            this.setState({
+                selectedLocation: locationBeingSelected
+            });
+            this.props.onAirportSelectionUpdated(locationBeingSelected);
         };
         this.onQueryUpdated = (event) => {
             const inputElement = event.currentTarget;
@@ -614,26 +698,29 @@ class AirportSelector extends React.Component {
                 console.error(`Failed to get location data from API via AirportSelector component: '${flightJSON.message}`);
                 return;
             }
+            const airportsOnlyLocations = flightJSON.filter(location => {
+                return location.subType === 'AIRPORT';
+            });
             this.setState({
                 hasFirstQueryBeenMade: true,
-                locationResults: flightJSON
+                locationResults: airportsOnlyLocations
             });
         };
         this.debouncedResultsUpdating = (0, awesome_debounce_promise_1.default)(this.updateResultsFromAPI, 500);
+        this.selectorContainerRef = React.createRef();
         this.state = {
-            locationResults: [],
+            locationResults: [{ "type": "location", "subType": "CITY", "name": "LONDON", "detailedName": "LONDON/GB", "iataCode": "LON", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "HEATHROW", "detailedName": "LONDON/GB:HEATHROW", "iataCode": "LHR", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "GATWICK", "detailedName": "LONDON/GB:GATWICK", "iataCode": "LGW", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "STANSTED", "detailedName": "LONDON/GB:STANSTED", "iataCode": "STN", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "LUTON", "detailedName": "LONDON/GB:LUTON", "iataCode": "LTN", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "CITY AIRPORT", "detailedName": "LONDON/GB:CITY AIRPORT", "iataCode": "LCY", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "LONDON ASHFORD", "detailedName": "LYDD/GB:LONDON ASHFORD", "iataCode": "LYX", "address": { "cityName": "LYDD", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "CITY", "name": "LYDD", "detailedName": "LYDD/GB:LONDON ASHFORD", "iataCode": "LYX", "address": { "cityName": "LYDD", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "SOUTHEND", "detailedName": "LONDON/GB:SOUTHEND", "iataCode": "SEN", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "BIGGIN HILL", "detailedName": "LONDON/GB:BIGGIN HILL", "iataCode": "BQH", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "AIRPORT", "name": "AIRPORT", "detailedName": "GROTON NEW LONDON/CT/US:AIRPOR", "iataCode": "GON", "address": { "cityName": "GROTON NEW LONDON", "countryName": "UNITED STATES OF AMERICA" } }, { "type": "location", "subType": "CITY", "name": "GROTON NEW LONDON", "detailedName": "GROTON NEW LONDON/CT/US:AIRPOR", "iataCode": "GON", "address": { "cityName": "GROTON NEW LONDON", "countryName": "UNITED STATES OF AMERICA" } }, { "type": "location", "subType": "AIRPORT", "name": "MAGEE FIELD", "detailedName": "LONDON/CORBIN/KY/US:MAGEE FIEL", "iataCode": "LOZ", "address": { "cityName": "LONDON/CORBIN", "countryName": "UNITED STATES OF AMERICA" } }, { "type": "location", "subType": "CITY", "name": "LONDON/CORBIN", "detailedName": "LONDON/CORBIN/KY/US:MAGEE FIEL", "iataCode": "LOZ", "address": { "cityName": "LONDON/CORBIN", "countryName": "UNITED STATES OF AMERICA" } }, { "type": "location", "subType": "AIRPORT", "name": "LONDON OXFORD", "detailedName": "OXFORD/GB:LONDON OXFORD", "iataCode": "OXF", "address": { "cityName": "OXFORD", "countryName": "UNITED KINGDOM" } }, { "type": "location", "subType": "CITY", "name": "OXFORD", "detailedName": "OXFORD/GB:LONDON OXFORD", "iataCode": "OXF", "address": { "cityName": "OXFORD", "countryName": "UNITED KINGDOM" } }],
             isInputFocused: false,
-            airportQuery: '',
-            hasFirstQueryBeenMade: false
+            airportQuery: '  ',
+            hasFirstQueryBeenMade: true,
+            selectedLocation: { "type": "location", "subType": "AIRPORT", "name": "HEATHROW", "detailedName": "LONDON/GB:HEATHROW", "iataCode": "LHR", "address": { "cityName": "LONDON", "countryName": "UNITED KINGDOM" } } //null
         };
     }
     render() {
-        const shouldShowResults = this.state.isInputFocused && this.state.hasFirstQueryBeenMade && this.isQueryEntered();
-        return (React.createElement("div", { className: 'airportSelector' },
-            React.createElement("input", { placeholder: this.props.placeholderText, onChange: this.onQueryUpdated, onFocus: this.onInputFocus, onBlur: this.onInputBlur }),
-            shouldShowResults
-                ? this.renderResultsList()
-                : null));
+        const hasSelection = !!this.state.selectedLocation;
+        return (React.createElement("div", null, hasSelection
+            ? this.renderSelectedAirport()
+            : this.renderSelectionInput()));
     }
 }
 exports.AirportSelector = AirportSelector;
@@ -1797,7 +1884,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".airportSelector input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */\r\n}\r\n\r\n.floatBlock {\r\n    background-color: rgb(236, 236, 236);\r\n    /* min-height: 100px; */\r\n    min-width: 220px;\r\n    border-radius: 3px;\r\n    margin-top: 3px;\r\n    position: absolute;\r\n}\r\n\r\n.floatBlock .noResultsMessage {\r\n    display: block;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n    font-size: small;\r\n    text-align: center;\r\n    font-weight: bold;\r\n    margin-top: 10px;\r\n    margin-bottom: 10px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/AirportSelector.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,sBAAsB,EAAE,iEAAiE;AAC7F;;AAEA;IACI,oCAAoC;IACpC,uBAAuB;IACvB,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,kBAAkB;AACtB;;AAEA;IACI,cAAc;IACd,gBAAgB;IAChB,mBAAmB;IACnB,gBAAgB;IAChB,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,mBAAmB;AACvB","sourcesContent":[".airportSelector input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */\r\n}\r\n\r\n.floatBlock {\r\n    background-color: rgb(236, 236, 236);\r\n    /* min-height: 100px; */\r\n    min-width: 220px;\r\n    border-radius: 3px;\r\n    margin-top: 3px;\r\n    position: absolute;\r\n}\r\n\r\n.floatBlock .noResultsMessage {\r\n    display: block;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n    font-size: small;\r\n    text-align: center;\r\n    font-weight: bold;\r\n    margin-top: 10px;\r\n    margin-bottom: 10px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".airportSelector input, .airportSelected {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */\r\n}\r\n\r\n.floatBlock {\r\n    background-color: rgb(243, 243, 243);\r\n    border: solid 1px rgb(138, 138, 138);\r\n    min-width: 220px;\r\n    max-width: 220px;\r\n    border-radius: 3px;\r\n    margin-top: 3px;\r\n    position: absolute;\r\n}\r\n\r\n.floatBlock .noResultsMessage {\r\n    display: block;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n    font-size: small;\r\n    text-align: center;\r\n    font-weight: bold;\r\n    margin-top: 10px;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.locationListItem {\r\n    font-size: small;\r\n    display: block;\r\n    padding: 5px;\r\n    border-bottom: solid 2px darkgray;\r\n}\r\n\r\n.locationListItem:hover {\r\n    background-color: rgb(250, 250, 250);\r\n}\r\n\r\n.locationListItem .airportName {\r\n    display: block;\r\n}\r\n\r\n.locationListItem .iataCode, .airportSelected .iataCode {\r\n    margin-left: 15px;\r\n    font-style: italic;\r\n    font-weight: bold;\r\n}\r\n\r\n.selectedAirportDetails {\r\n    width: 90%;\r\n    display: inline-block;\r\n    padding: 2px;\r\n}\r\n\r\n.deselectButtonContainer {\r\n    display: inline-block;  \r\n}\r\n\r\n.deselectButtonContainer .deselectButton {\r\n    font-size: 24px;\r\n    font-weight: normal;\r\n    display: inline-block;\r\n    margin: auto;\r\n    color:rgb(179, 223, 253);\r\n}\r\n\r\n.deselectButtonContainer .deselectButton:hover {\r\n    color: rgb(12, 134, 216);\r\n}\r\n\r\n.airportSelected {\r\n    display: inline-block;\r\n    word-wrap: break-word;\r\n    border: solid 2px rgb(22, 22, 22);\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n}\r\n\r\n.airportSelected .airportName {\r\n    display: block;\r\n}\r\n\r\n.airportSelected .iataCode, .airportSelected .airportCity {\r\n    font-size: 12px;\r\n}\r\n\r\n.airportSelected .placeholder {\r\n    font-weight: bold;\r\n    font-size: 12px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/AirportSelector.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,sBAAsB,EAAE,iEAAiE;AAC7F;;AAEA;IACI,oCAAoC;IACpC,oCAAoC;IACpC,gBAAgB;IAChB,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,kBAAkB;AACtB;;AAEA;IACI,cAAc;IACd,gBAAgB;IAChB,mBAAmB;IACnB,gBAAgB;IAChB,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;IAChB,cAAc;IACd,YAAY;IACZ,iCAAiC;AACrC;;AAEA;IACI,oCAAoC;AACxC;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,iBAAiB;AACrB;;AAEA;IACI,UAAU;IACV,qBAAqB;IACrB,YAAY;AAChB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,eAAe;IACf,mBAAmB;IACnB,qBAAqB;IACrB,YAAY;IACZ,wBAAwB;AAC5B;;AAEA;IACI,wBAAwB;AAC5B;;AAEA;IACI,qBAAqB;IACrB,qBAAqB;IACrB,iCAAiC;IACjC,kCAAkC;IAClC,YAAY;AAChB;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,iBAAiB;IACjB,eAAe;AACnB","sourcesContent":[".airportSelector input, .airportSelected {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */\r\n}\r\n\r\n.floatBlock {\r\n    background-color: rgb(243, 243, 243);\r\n    border: solid 1px rgb(138, 138, 138);\r\n    min-width: 220px;\r\n    max-width: 220px;\r\n    border-radius: 3px;\r\n    margin-top: 3px;\r\n    position: absolute;\r\n}\r\n\r\n.floatBlock .noResultsMessage {\r\n    display: block;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n    font-size: small;\r\n    text-align: center;\r\n    font-weight: bold;\r\n    margin-top: 10px;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.locationListItem {\r\n    font-size: small;\r\n    display: block;\r\n    padding: 5px;\r\n    border-bottom: solid 2px darkgray;\r\n}\r\n\r\n.locationListItem:hover {\r\n    background-color: rgb(250, 250, 250);\r\n}\r\n\r\n.locationListItem .airportName {\r\n    display: block;\r\n}\r\n\r\n.locationListItem .iataCode, .airportSelected .iataCode {\r\n    margin-left: 15px;\r\n    font-style: italic;\r\n    font-weight: bold;\r\n}\r\n\r\n.selectedAirportDetails {\r\n    width: 90%;\r\n    display: inline-block;\r\n    padding: 2px;\r\n}\r\n\r\n.deselectButtonContainer {\r\n    display: inline-block;  \r\n}\r\n\r\n.deselectButtonContainer .deselectButton {\r\n    font-size: 24px;\r\n    font-weight: normal;\r\n    display: inline-block;\r\n    margin: auto;\r\n    color:rgb(179, 223, 253);\r\n}\r\n\r\n.deselectButtonContainer .deselectButton:hover {\r\n    color: rgb(12, 134, 216);\r\n}\r\n\r\n.airportSelected {\r\n    display: inline-block;\r\n    word-wrap: break-word;\r\n    border: solid 2px rgb(22, 22, 22);\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n}\r\n\r\n.airportSelected .airportName {\r\n    display: block;\r\n}\r\n\r\n.airportSelected .iataCode, .airportSelected .airportCity {\r\n    font-size: 12px;\r\n}\r\n\r\n.airportSelected .placeholder {\r\n    font-weight: bold;\r\n    font-size: 12px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
