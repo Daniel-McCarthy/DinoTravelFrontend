@@ -589,7 +589,7 @@ class AirportSelector extends React.Component {
             // Check if focus shifted to a child element, if so, keep the selection list open.
             const currentlyFocusedElement = document.activeElement;
             const selectorContainerElement = this.selectorContainerRef.current;
-            if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(currentlyFocusedElement, selectorContainerElement)) {
+            if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
                 return;
             }
             // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
@@ -602,10 +602,10 @@ class AirportSelector extends React.Component {
             // Uses the Node class to check if a HTMLElement is a descendant of another.
             // The Node compareDocumentPosition function returns a bitmask containing bits
             // that encode information about their dom structure. We just want to see if 
-            // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINS (8)
+            // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINED_BY  (16)
             // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
             const documentComparison = parentElement.compareDocumentPosition(childElement);
-            return (documentComparison & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
+            return (documentComparison & Node.DOCUMENT_POSITION_CONTAINED_BY) !== 0;
         };
         this.isQueryEntered = () => {
             const currentQuery = this.state.airportQuery;
