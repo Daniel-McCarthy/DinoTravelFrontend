@@ -604,7 +604,8 @@ class AirportSelector extends React.Component {
             // that encode information about their dom structure. We just want to see if 
             // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINS (8)
             // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
-            return (parentElement.compareDocumentPosition(childElement) & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
+            const documentComparison = parentElement.compareDocumentPosition(childElement);
+            return (documentComparison & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
         };
         this.isQueryEntered = () => {
             const currentQuery = this.state.airportQuery;
