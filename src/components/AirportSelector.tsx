@@ -77,7 +77,7 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
     render() {
         const hasSelection = !!this.state.selectedLocation;
         return (
-            <div>
+            <div className="airportSelectorElement">
             {hasSelection
                 ? this.renderSelectedAirport()
                 : this.renderSelectionInput()
