@@ -587,11 +587,11 @@ class AirportSelector extends React.Component {
         };
         this.onInputBlur = () => {
             // Check if focus shifted to a child element, if so, keep the selection list open.
-            const currentlyFocusedElement = document.activeElement;
-            const selectorContainerElement = this.selectorContainerRef.current;
-            if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
-                return;
-            }
+            // const currentlyFocusedElement = document.activeElement;
+            // const selectorContainerElement: HTMLDivElement | null = this.selectorContainerRef.current;
+            // if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
+            //     return;
+            // }
             // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
             // Closing the list since focus is now on an unrelated component or element.
             this.debouncedCloseDropdownMenu();
@@ -602,15 +602,15 @@ class AirportSelector extends React.Component {
             });
         };
         this.debouncedCloseDropdownMenu = (0, awesome_debounce_promise_1.default)(this.closeDropdownMenu, 500);
-        this.isElementParentOf = (parentElement, childElement) => {
-            // Uses the Node class to check if a HTMLElement is a descendant of another.
-            // The Node compareDocumentPosition function returns a bitmask containing bits
-            // that encode information about their dom structure. We just want to see if 
-            // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINED_BY  (16)
-            // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
-            const documentComparison = parentElement.compareDocumentPosition(childElement);
-            return (documentComparison & Node.DOCUMENT_POSITION_CONTAINED_BY) !== 0;
-        };
+        // isElementParentOf = (parentElement: Element, childElement: Element) => {
+        //     // Uses the Node class to check if a HTMLElement is a descendant of another.
+        //     // The Node compareDocumentPosition function returns a bitmask containing bits
+        //     // that encode information about their dom structure. We just want to see if 
+        //     // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINED_BY  (16)
+        //     // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
+        //     const documentComparison = parentElement.compareDocumentPosition(childElement);
+        //     return (documentComparison & Node.DOCUMENT_POSITION_CONTAINED_BY) !== 0;
+        // }
         this.isQueryEntered = () => {
             const currentQuery = this.state.airportQuery;
             return !!currentQuery && currentQuery.length > 0;
