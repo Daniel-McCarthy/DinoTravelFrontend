@@ -7,6 +7,8 @@ import { getLocationsForQuery, ILocationData } from "../api/locations";
 
 interface IAirportSelectorState {
     locationResults: ILocationData[];
+
+    selectedLocation: ILocationData | null;
 }
 
 interface IAirportSelectorProps {
@@ -19,14 +21,31 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
 
         this.state = {
             locationResults: [],
+            selectedLocation: null
         }
     }
 
     render() {
+        const hasSelection = !!this.state.selectedLocation;
         return (
             <div>
+            {hasSelection
+                ? this.renderSelectedAirport()
+                : this.renderSelectionInput()
+            }
             </div>
         )
+    }
+
+    renderSelectedAirport = () => {
+        return <div className='airportSelected'>
+        </div>;
+    };
+
+
+    renderSelectionInput = () => {
+        return <div className='airportSelector' ref={this.selectorContainerRef}>
+                </div>
     }
 
     updateResultsFromAPI = async () => {
