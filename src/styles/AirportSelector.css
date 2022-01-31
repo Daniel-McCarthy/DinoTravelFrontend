@@ -1,0 +1,96 @@
+.airportSelector input, .airportSelected {
+    height: 60px;
+    width: 240px;
+    border-radius: 3px;
+    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */
+}
+
+.floatBlock {
+    background-color: rgb(243, 243, 243);
+    border: solid 1px rgb(138, 138, 138);
+    min-width: 240px;
+    max-width: 240px;
+    border-radius: 3px;
+    margin-top: 3px;
+    position: absolute;
+}
+
+.floatBlock .noResultsMessage {
+    display: block;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: small;
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.locationListItem {
+    font-size: small;
+    display: block;
+    padding: 5px;
+    border-bottom: solid 2px darkgray;
+}
+
+.locationListItem:hover {
+    background-color: rgb(250, 250, 250);
+}
+
+.locationListItem .airportName {
+    display: block;
+}
+
+.locationListItem .iataCode, .airportSelected .iataCode {
+    margin-left: 15px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.selectedAirportDetails {
+    width: 90%;
+    display: inline-block;
+    padding-left: 2px;
+}
+
+.deselectButtonContainer {
+    display: inline-block; 
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.deselectButtonContainer .deselectButton {
+    font-size: 24px;
+    font-weight: normal;
+    display: inline-block;
+    margin: auto;
+    color:rgb(179, 223, 253);
+}
+
+.deselectButtonContainer .deselectButton:hover {
+    color: rgb(12, 134, 216);
+}
+
+.airportSelected {
+    display: flex;
+    word-wrap: break-word;
+    border: solid 2px rgb(22, 22, 22);
+    background-color: rgb(59, 77, 145);
+    color: white;
+}
+
+.airportSelected .airportName {
+    font-size: 12px;
+    display: block;
+}
+
+.airportSelected .iataCode, .airportSelected .airportCity {
+    font-size: 12px;
+}
+
+.airportSelected .placeholder {
+    font-weight: bold;
+    font-size: 12px;
+}

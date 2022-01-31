@@ -8,12 +8,15 @@ import { getLocationsForQuery, ILocationData } from "../api/locations";
 interface IAirportSelectorState {
     locationResults: ILocationData[];
     isInputFocused: boolean;
+    airportQuery: string;
     hasFirstQueryBeenMade: boolean; // So that we don't show the user that no results were found upon initially typing
 
     selectedLocation: ILocationData | null;
 }
 
 interface IAirportSelectorProps {
+    placeholderText?: string;
+    onAirportSelectionUpdated: (selectedLocation: ILocationData) => void;
 }
 
 export class AirportSelector extends React.Component<IAirportSelectorProps, IAirportSelectorState> {
@@ -28,6 +31,7 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
         this.state = {
             locationResults: [],
             isInputFocused: false,
+            airportQuery: '',
             hasFirstQueryBeenMade: false,
             selectedLocation: null
         }
@@ -65,6 +69,11 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
         return (parentElement.compareDocumentPosition(childElement) & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
     }
 
+    isQueryEntered = (): boolean => {
+        const currentQuery = this.state.airportQuery;
+        return !!currentQuery && currentQuery.length > 0;
+    }
+
     render() {
         const hasSelection = !!this.state.selectedLocation;
         return (
@@ -78,15 +87,96 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
     }
 
     renderSelectedAirport = () => {
+        const hasPlaceholder = !!this.props.placeholderText;
         return <div className='airportSelected'>
+            <div className='selectedAirportDetails'>
+                {hasPlaceholder
+                    ? <label className="placeholder">{this.props.placeholderText}:</label>
+                    : null}
+                <label className='airportName'>{this.state.selectedLocation?.name}</label>
+                <label className='airportCity'>{this.state.selectedLocation?.address.cityName}</label>
+                {/* <label className='airportCountry'>{this.state.selectedLocation?.address.countryName}</label> */}
+                {/* <label className='iataCode'>{this.state.selectedLocation?.iataCode}</label> */}
+            </div>
+            <div className='deselectButtonContainer'>
+                <label className='deselectButton' onClick={this.onDeselectingAirportLocation}>x</label>
+            </div>
         </div>;
     };
 
+    onDeselectingAirportLocation = () => {
+        this.setState({
+            selectedLocation: null,
+            airportQuery: ''
+        });
+    };
 
     renderSelectionInput = () => {
+        const shouldShowResults = this.state.isInputFocused && this.state.hasFirstQueryBeenMade && this.isQueryEntered();
         return <div className='airportSelector' ref={this.selectorContainerRef}>
+                    <input placeholder={this.props.placeholderText} onChange={this.onQueryUpdated} onFocus={this.onInputFocus} onBlur={this.onInputBlur} />
+                    { shouldShowResults
+                        ? this.renderResultsList()
+                        : null
+                    }
                 </div>
     }
+
+    renderNoResultsMessage = () => {
+        return <label className='noResultsMessage'>No results found for this query.</label>
+    };
+
+    renderResultsList = () => {
+        return <div className="floatBlock">
+            {this.state.locationResults.length == 0
+                ? this.renderNoResultsMessage()
+                : this.state.locationResults.map((location, index) => {
+                    return index > 10
+                        ? null
+                        : this.renderLocationListItem(location)
+                })
+            }
+
+        </div>
+    };
+
+    renderLocationListItem = (location: ILocationData) => {
+        return <div className="locationListItem" onClick={this.onLocationListItemClicked} accessKey={location.iataCode}>
+            <label className="airportName">{location.name}</label>
+            <label className="cityName">{location.address.cityName}</label>
+            <label className="iataCode">{location.iataCode}</label>
+        </div>
+    };
+
+    getLocationByIataCode = (iataCode: string): ILocationData | undefined => {
+        return this.state.locationResults.find(location => {
+            return location.iataCode === iataCode;
+        });
+    };
+
+    onLocationListItemClicked = (event: React.MouseEvent<HTMLDivElement>) => {
+        const iataCode = event.currentTarget.accessKey;
+        const locationBeingSelected: ILocationData | undefined = this.getLocationByIataCode(iataCode);
+
+        if (locationBeingSelected === undefined) {
+            console.error(`User clicked a list item from the AirportSelector, however no airport with expected IATA code was found: ${iataCode}`)
+            return;
+        }
+
+        this.setState({
+            selectedLocation: locationBeingSelected
+        });
+        this.props.onAirportSelectionUpdated(locationBeingSelected);
+    };
+
+    onQueryUpdated = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const inputElement: HTMLInputElement = event.currentTarget;
+        const newQuery = inputElement.value;
+        this.setState({
+            airportQuery: newQuery
+        });
+        this.debouncedResultsUpdating();
+    };
 
     updateResultsFromAPI = async () => {
         console.log('Getting search results from AirportSelector component');
