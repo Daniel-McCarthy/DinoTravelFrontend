@@ -585,7 +585,7 @@ class AirportSelector extends React.Component {
                 isInputFocused: true
             });
         };
-        this.onInputBlur = () => {
+        this.onAirportSelectorBlur = () => {
             // Check if focus shifted to a child element, if so, keep the selection list open.
             const currentlyFocusedElement = document.activeElement;
             const selectorContainerElement = this.selectorContainerRef.current;
@@ -614,7 +614,7 @@ class AirportSelector extends React.Component {
         this.renderSelectedAirport = () => {
             var _a, _b;
             const hasPlaceholder = !!this.props.placeholderText;
-            return React.createElement("div", { className: 'airportSelected' },
+            return React.createElement("div", { className: 'airportSelected', onBlur: this.onAirportSelectorBlur },
                 React.createElement("div", { className: 'selectedAirportDetails' },
                     hasPlaceholder
                         ? React.createElement("label", { className: "placeholder" },
@@ -635,7 +635,7 @@ class AirportSelector extends React.Component {
         this.renderSelectionInput = () => {
             const shouldShowResults = this.state.isInputFocused && this.state.hasFirstQueryBeenMade && this.isQueryEntered();
             return React.createElement("div", { className: 'airportSelector', ref: this.selectorContainerRef },
-                React.createElement("input", { placeholder: this.props.placeholderText, onChange: this.onQueryUpdated, onFocus: this.onInputFocus, onBlur: this.onInputBlur }),
+                React.createElement("input", { placeholder: this.props.placeholderText, onChange: this.onQueryUpdated, onFocus: this.onInputFocus }),
                 shouldShowResults
                     ? this.renderResultsList()
                     : null);
