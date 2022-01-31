@@ -594,10 +594,14 @@ class AirportSelector extends React.Component {
             }
             // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
             // Closing the list since focus is now on an unrelated component or element.
+            this.debouncedCloseDropdownMenu();
+        };
+        this.closeDropdownMenu = () => {
             this.setState({
                 isInputFocused: false
             });
         };
+        this.debouncedCloseDropdownMenu = (0, awesome_debounce_promise_1.default)(this.closeDropdownMenu, 500);
         this.isElementParentOf = (parentElement, childElement) => {
             // Uses the Node class to check if a HTMLElement is a descendant of another.
             // The Node compareDocumentPosition function returns a bitmask containing bits
