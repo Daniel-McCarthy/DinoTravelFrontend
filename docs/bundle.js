@@ -96,6 +96,11 @@ class HomePage extends React.Component {
                 departureAirport: selectedAirport
             });
         };
+        this.onArrivalAirportSelectionUpdated = (selectedAirport) => {
+            this.setState({
+                returnAirport: selectedAirport
+            });
+        };
         this.renderSubmitButton = () => {
             return React.createElement("button", { className: "nontoggle", id: "submitButton", onClick: this.submitReservation }, "Submit");
         };
@@ -233,8 +238,8 @@ class HomePage extends React.Component {
                     :
                         React.createElement("div", { id: "userInputRow" },
                             React.createElement("div", { id: "destinationInputs" },
-                                React.createElement("input", { className: "leavingInput", placeholder: "Leaving From" }),
-                                React.createElement("input", { placeholder: "Going To" })),
+                                React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From', onAirportSelectionUpdated: this.onDepartureAirportSelectionUpdated }),
+                                React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Going To', onAirportSelectionUpdated: this.onArrivalAirportSelectionUpdated })),
                             React.createElement("div", { className: "dateInputContainer" },
                                 React.createElement("h3", null, "Departing"),
                                 React.createElement("input", { className: "datePicker", type: "date", onChange: this.onArrivalFlightDateSelected, placeholder: "yyyy-mm-dd" })),
@@ -243,7 +248,6 @@ class HomePage extends React.Component {
                                     React.createElement("h3", null, "Returning"),
                                     React.createElement("input", { className: "datePicker", onChange: this.onReturnFlightDateSelected, type: "date", placeholder: "yyyy-mm-dd" }))
                                 : null),
-                React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From', onAirportSelectionUpdated: this.onDepartureAirportSelectionUpdated }),
                 React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, onFlightSelectionUpdate: this.selectedFlightUpdated, hide: !this.state.showingFlightList }),
                 React.createElement("button", { className: "nontoggle", id: "searchButton", onClick: this.onSearchClicked }, "Search")),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
@@ -575,17 +579,17 @@ class AirportSelector extends React.Component {
     constructor(props) {
         super(props);
         this.onInputFocus = () => {
-            console.log('Focused');
+            // When the input element is focused, we set that in state so we know
+            // to display the results list (if a sufficient query is entered).
             this.setState({
                 isInputFocused: true
             });
         };
         this.onInputBlur = () => {
-            console.log('Blurred');
             // Check if focus shifted to a child element, if so, keep the selection list open.
             const currentlyFocusedElement = document.activeElement;
             const selectorContainerElement = this.selectorContainerRef.current;
-            if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
+            if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(currentlyFocusedElement, selectorContainerElement)) {
                 return;
             }
             // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
@@ -649,7 +653,7 @@ class AirportSelector extends React.Component {
         };
         this.renderLocationListItem = (location) => {
             return React.createElement("div", { className: "locationListItem", onClick: this.onLocationListItemClicked, accessKey: location.iataCode },
-                React.createElement("label", { className: "airportName" }, location.detailedName),
+                React.createElement("label", { className: "airportName" }, location.name),
                 React.createElement("label", { className: "cityName" }, location.address.cityName),
                 React.createElement("label", { className: "iataCode" }, location.iataCode));
         };
@@ -679,7 +683,7 @@ class AirportSelector extends React.Component {
             this.debouncedResultsUpdating();
         };
         this.updateResultsFromAPI = async () => {
-            console.log('Getting results');
+            console.log('Getting search results from AirportSelector component');
             const query = this.state.airportQuery;
             const flightJSON = await (0, locations_1.getLocationsForQuery)(query);
             if (flightJSON instanceof Error) {
@@ -689,6 +693,7 @@ class AirportSelector extends React.Component {
                 console.error(`Failed to get location data from API via AirportSelector component: '${flightJSON.message}`);
                 return;
             }
+            // Filter out results that are just towns/locations, not airports.
             const airportsOnlyLocations = flightJSON.filter(location => {
                 return location.subType === 'AIRPORT';
             });
@@ -697,6 +702,9 @@ class AirportSelector extends React.Component {
                 locationResults: airportsOnlyLocations
             });
         };
+        // Waits to call the function until it finds that it has not been called again for 500ms.
+        // This allows us to hold off on the call if we're still typing so that we can reduce
+        // unnecessary API calls made to the backend when we haven't finished writing the query.
         this.debouncedResultsUpdating = (0, awesome_debounce_promise_1.default)(this.updateResultsFromAPI, 500);
         this.selectorContainerRef = React.createRef();
         this.state = {
@@ -709,7 +717,7 @@ class AirportSelector extends React.Component {
     }
     render() {
         const hasSelection = !!this.state.selectedLocation;
-        return (React.createElement("div", null, hasSelection
+        return (React.createElement("div", { className: "airportSelectorElement" }, hasSelection
             ? this.renderSelectedAirport()
             : this.renderSelectionInput()));
     }
@@ -1344,7 +1352,6 @@ exports.getStateInitials = getStateInitials;
 const isValidState = (state) => {
     const matches = Object.values(State).filter(validState => validState === state);
     return matches.length > 0;
-    // return Object.values(State).includes(state);
 };
 exports.isValidState = isValidState;
 
@@ -1934,7 +1941,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;IACd,WAAW;AACf;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,gBAAgB;IAChB,oBAAoB;AACxB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,YAAY;AAChB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    margin-right: 40px;\r\n    height: 50px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    /* width: 220px; */\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    display: inline-block; /* Allows AirportSelector elements to appear in a row */\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;IACd,WAAW;AACf;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,gBAAgB;IAChB,oBAAoB;AACxB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,kBAAkB;IAClB,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,qBAAqB,EAAE,uDAAuD;AAClF","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    /* width: 220px; */\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    display: inline-block; /* Allows AirportSelector elements to appear in a row */\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
