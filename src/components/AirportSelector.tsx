@@ -49,7 +49,7 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
         // Check if focus shifted to a child element, if so, keep the selection list open.
         const currentlyFocusedElement = document.activeElement;
         const selectorContainerElement: HTMLDivElement | null = this.selectorContainerRef.current;
-        if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
+        if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(currentlyFocusedElement, selectorContainerElement)) {
             return;
         }
 
