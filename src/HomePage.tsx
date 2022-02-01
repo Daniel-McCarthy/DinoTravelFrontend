@@ -143,7 +143,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
 
                         <nav>
-                            <button className="nontoggle">support</button>
+                            <Link to='/support' >
+                                <button className="nontoggle">support</button>
+                            </Link>
                             <button className="nontoggle">about us</button>
                             <button className="nontoggle">trips</button>
                             <Link to='/login'>
