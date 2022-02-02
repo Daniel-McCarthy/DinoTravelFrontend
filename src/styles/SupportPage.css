@@ -1,5 +1,4 @@
 main {
-    width: 80%;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -10,10 +9,7 @@ main {
     text-align: center;
 }
 
-.supportPageButtons {
-    justify-content: space-between;
-}
-
 #content {
-    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
 }
