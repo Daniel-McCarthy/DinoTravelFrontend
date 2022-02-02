@@ -106,11 +106,16 @@ section h1 {
  */
 
 #destinationInputs {
-    display: inline-block;
+    display: flex;
 }
 
 #userInputRow {
     margin-top: 30px;
+    display: flex;
+}
+
+#destinationInputs .verticalSpacer {
+    height: 60px;
 }
 
 #userInputRow .datePicker {
@@ -130,12 +135,20 @@ section h1 {
 }
 
 #userInputRow input {
-    /* width: 220px; */
     border-radius: 3px;
     margin-right: 40px;
     height: 60px;
 }
 
+#userInputRow .airportSelectorElement {
+    margin-right: 40px;
+}
+
 .airportSelectorElement {
-    display: inline-block; /* Allows AirportSelector elements to appear in a row */
+    margin-top: auto;
+}
+
+.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {
+    height: 125px;
+    display: flex;
 }
