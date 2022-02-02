@@ -137,9 +137,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return (
             <div>
                 <header>
-                    <div id='bannerCarousel'>
-                        <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
-                    </div>
                     <div id="headerContent">
                         <div className="banner">
                             <Link to='/'>
@@ -233,6 +230,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
+
+                <div id='bannerCarousel'>
+                    <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
+                </div>
 
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
             </div>
