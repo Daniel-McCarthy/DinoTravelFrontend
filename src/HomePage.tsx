@@ -23,6 +23,8 @@ import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
 import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
 import { Link } from "react-router-dom";
+import { AirportSelector } from "./components/AirportSelector";
+import { ILocationData } from "./api/locations";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -36,10 +38,14 @@ interface IHomePageState {
     showToast: boolean;
     toastMessage: IToastMessage;
     flightsData: Array<IFlightData>;
+
+    // Selected Flight location from the FlightList component
     selectedFlight: IFlightData | null;
     showingFlightList: boolean;
 
+    departureAirport: ILocationData | null;
     departureFlightDate: moment.Moment;
+    returnAirport: ILocationData | null;
     returnFlightDate: moment.Moment;
 
     // A copy of any selected flights to search for in multi-city mode.
@@ -75,7 +81,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             selectedFlight: null,
             showingFlightList: false,
 
+            departureAirport: null,
             departureFlightDate: moment(),
+            returnAirport: null,
             returnFlightDate: moment(),
 
             multiCityFlightSelections: [],
@@ -129,9 +137,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return (
             <div>
                 <header>
-                    <div id='bannerCarousel'>
-                        <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
-                    </div>
                     <div id="headerContent">
                         <div className="banner">
                             <Link to='/'>
@@ -168,7 +173,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                                 <h3>Number of Adult Travelers:</h3>
                                 <input
                                     type="number"
-                                    placeholder="0"
+                                    placeholder="1"
                                     step={1}
                                     max={10}
                                     min={0}
@@ -199,18 +204,22 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         :
                         <div id="userInputRow">
                             <div id="destinationInputs">
-                                <input className="leavingInput" placeholder="Leaving From" />
-                                <input placeholder="Going To" />
+                                <div className="leavingAirportSelectorContainer">
+                                    <AirportSelector placeholderText='Leaving From' onAirportSelectionUpdated={this.onDepartureAirportSelectionUpdated} />
+                                </div>
+                                <div className="arrivingAirportSelectorContainer">
+                                    <AirportSelector placeholderText='Going To' onAirportSelectionUpdated={this.onArrivalAirportSelectionUpdated} />
+                                </div>
                             </div>
                             <div className="dateInputContainer">
-                                <h3>Departing</h3>
+                                <h3 className='verticalSpacer'>Departing</h3>
                                 {/* Placeholder is used as a fallback on browsers that don't support the datepicker, e.g. Safari and IE */}
                                 <input className="datePicker" type="date" onChange={this.onArrivalFlightDateSelected} placeholder="yyyy-mm-dd"></input>
                             </div>
                             
                             {isRoundTripSelected 
                                 ? <div className="dateInputContainer">
-                                    <h3>Returning</h3>
+                                    <h3 className='verticalSpacer'>Returning</h3>
                                     {/* Placeholder is used as a fallback on browsers that don't support the datepicker, e.g. Safari and IE */}
                                     <input className="datePicker" onChange={this.onReturnFlightDateSelected} type="date" placeholder="yyyy-mm-dd"></input>
                                 </div>
@@ -224,10 +233,26 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
 
+                <div id='bannerCarousel'>
+                    <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
+                </div>
+
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
             </div>
         )
     }
+
+    onDepartureAirportSelectionUpdated = (selectedAirport: ILocationData | null) => {
+        this.setState({
+            departureAirport: selectedAirport
+        });
+    };
+
+    onArrivalAirportSelectionUpdated = (selectedAirport: ILocationData | null) => {
+        this.setState({
+            returnAirport: selectedAirport
+        });
+    };
 
     renderSubmitButton = () => {
         return <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>

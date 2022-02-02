@@ -46,28 +46,18 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
     };
 
     onInputBlur = () => {
-        // Check if focus shifted to a child element, if so, keep the selection list open.
-        const currentlyFocusedElement = document.activeElement;
-        const selectorContainerElement: HTMLDivElement | null = this.selectorContainerRef.current;
-        if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(currentlyFocusedElement, selectorContainerElement)) {
-            return;
-        }
-
         // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
         // Closing the list since focus is now on an unrelated component or element.
+        this.debouncedCloseDropdownMenu();
+    }
+
+    closeDropdownMenu = () => {
         this.setState({
             isInputFocused: false
         });
     }
 
-    isElementParentOf = (parentElement: Element, childElement: Element) => {
-        // Uses the Node class to check if a HTMLElement is a descendant of another.
-        // The Node compareDocumentPosition function returns a bitmask containing bits
-        // that encode information about their dom structure. We just want to see if 
-        // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINS (8)
-        // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
-        return (parentElement.compareDocumentPosition(childElement) & Node.DOCUMENT_POSITION_CONTAINS) !== 0;
-    }
+    debouncedCloseDropdownMenu = AwesomeDebouncePromise(this.closeDropdownMenu, 500);
 
     isQueryEntered = (): boolean => {
         const currentQuery = this.state.airportQuery;
@@ -136,7 +126,6 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
                         : this.renderLocationListItem(location)
                 })
             }
-
         </div>
     };
 
