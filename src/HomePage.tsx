@@ -171,7 +171,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                                 <h3>Number of Adult Travelers:</h3>
                                 <input
                                     type="number"
-                                    placeholder="0"
+                                    placeholder="1"
                                     step={1}
                                     max={10}
                                     min={0}
