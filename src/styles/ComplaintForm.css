@@ -26,3 +26,7 @@ textarea {
     border-color: #d8dee9;
     background-color: #fcfcfc;
 }
+
+form button {
+    width: 230px;
+}
