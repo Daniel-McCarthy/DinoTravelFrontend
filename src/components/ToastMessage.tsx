@@ -48,14 +48,27 @@ export class ToastMessage extends React.Component<IToastProps, IToastState> {
         }
     }
 
+    closeToast = () => {
+        this.setState({
+            show: false
+        });
+    }
+
     render() {
-        const visibilityClass = this.state.show ? 'fadeAway' : 'invisible'
-        const toastClass = `toast ${this.state.toastType} ${visibilityClass}`;
+        const toastClass = `toast ${this.state.toastType}`;
 
         return (
-            <div className={toastClass}>
-                <h3>{this.state.message}</h3>
+            <div className='toastContainer'>
+                {this.state.show ?
+                    <div className={toastClass}>
+                        <h3>{this.state.message}</h3>
+                        <label onClick={this.closeToast} className="closeButton">x</label>
+                    </div>
+                    : null
+                }
             </div>
         )
     }
+
+
 }
