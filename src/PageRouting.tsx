@@ -3,6 +3,7 @@ import * as React from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { HomePage } from "./HomePage";
 import { LoginPage } from "./LoginPage";
+import { TripsPage } from "./TripsPage";
 
 interface IPageRoutingProps {
 
@@ -22,6 +23,7 @@ export class PageRouting extends React.Component {
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/login" element={<LoginPage/>} />
+                    <Route path="/trips" element={<TripsPage/>} />
                 </Routes>
             </Router>
         )
