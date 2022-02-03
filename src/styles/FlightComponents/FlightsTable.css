@@ -1,0 +1,12 @@
+table {
+    padding-bottom: 200px;
+}
+table th {
+    display: flexbox;
+    padding-right: 70px;
+}
+
+table td {
+    display: flexbox;
+    padding-top: 15px;
+}
