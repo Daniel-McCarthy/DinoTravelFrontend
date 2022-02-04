@@ -53,6 +53,7 @@ const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_image
 const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 const MultiCityFlightSelection_1 = __webpack_require__(/*! ./components/MultiCityFlightSelection */ "./src/components/MultiCityFlightSelection.tsx");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const AirportSelector_1 = __webpack_require__(/*! ./components/AirportSelector */ "./src/components/AirportSelector.tsx");
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 class HomePage extends React.Component {
     constructor(props) {
@@ -87,6 +88,16 @@ class HomePage extends React.Component {
                     message,
                     toastType: ToastType_1.ToastType.SuccessToast
                 }
+            });
+        };
+        this.onDepartureAirportSelectionUpdated = (selectedAirport) => {
+            this.setState({
+                departureAirport: selectedAirport
+            });
+        };
+        this.onArrivalAirportSelectionUpdated = (selectedAirport) => {
+            this.setState({
+                returnAirport: selectedAirport
             });
         };
         this.renderSubmitButton = () => {
@@ -173,7 +184,9 @@ class HomePage extends React.Component {
             flightsData: [],
             selectedFlight: null,
             showingFlightList: false,
+            departureAirport: null,
             departureFlightDate: moment(),
+            returnAirport: null,
             returnFlightDate: moment(),
             multiCityFlightSelections: [],
             bannerImages
@@ -188,8 +201,6 @@ class HomePage extends React.Component {
         const multiCityButtonClass = isMultiCitySelected ? 'selected' : '';
         return (React.createElement("div", null,
             React.createElement("header", null,
-                React.createElement("div", { id: 'bannerCarousel' },
-                    React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })),
                 React.createElement("div", { id: "headerContent" },
                     React.createElement("div", { className: "banner" },
                         React.createElement(react_router_dom_1.Link, { to: '/' },
@@ -212,7 +223,7 @@ class HomePage extends React.Component {
                     React.createElement("div", { className: "filterDropdowns" },
                         React.createElement("div", { className: "travelersInput" },
                             React.createElement("h3", null, "Number of Adult Travelers:"),
-                            React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
+                            React.createElement("input", { type: "number", placeholder: "1", step: 1, max: 10, min: 0 })),
                         React.createElement("div", { className: "travelersInput" },
                             React.createElement("h3", null, "Number of Child Travelers:"),
                             React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
@@ -223,18 +234,22 @@ class HomePage extends React.Component {
                     :
                         React.createElement("div", { id: "userInputRow" },
                             React.createElement("div", { id: "destinationInputs" },
-                                React.createElement("input", { className: "leavingInput", placeholder: "Leaving From" }),
-                                React.createElement("input", { placeholder: "Going To" })),
+                                React.createElement("div", { className: "leavingAirportSelectorContainer" },
+                                    React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From', onAirportSelectionUpdated: this.onDepartureAirportSelectionUpdated })),
+                                React.createElement("div", { className: "arrivingAirportSelectorContainer" },
+                                    React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Going To', onAirportSelectionUpdated: this.onArrivalAirportSelectionUpdated }))),
                             React.createElement("div", { className: "dateInputContainer" },
-                                React.createElement("h3", null, "Departing"),
+                                React.createElement("h3", { className: 'verticalSpacer' }, "Departing"),
                                 React.createElement("input", { className: "datePicker", type: "date", onChange: this.onArrivalFlightDateSelected, placeholder: "yyyy-mm-dd" })),
                             isRoundTripSelected
                                 ? React.createElement("div", { className: "dateInputContainer" },
-                                    React.createElement("h3", null, "Returning"),
+                                    React.createElement("h3", { className: 'verticalSpacer' }, "Returning"),
                                     React.createElement("input", { className: "datePicker", onChange: this.onReturnFlightDateSelected, type: "date", placeholder: "yyyy-mm-dd" }))
                                 : null),
                 React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, onFlightSelectionUpdate: this.selectedFlightUpdated, hide: !this.state.showingFlightList }),
                 React.createElement("button", { className: "nontoggle", id: "searchButton", onClick: this.onSearchClicked }, "Search")),
+            React.createElement("div", { id: 'bannerCarousel' },
+                React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
     }
 }
@@ -270,16 +285,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LoginPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_google_login_1 = __importDefault(__webpack_require__(/*! react-google-login */ "./node_modules/react-google-login/dist/google-login.js"));
+const responseGoogle = (response) => {
+    console.log('FAILURE');
+    console.log(response);
+};
+function onSignIn(googleUser) {
+    const profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
     render() {
-        return (React.createElement("div", null));
+        return (React.createElement(react_google_login_1.default, { clientId: "1042234633479-gpprc2adcpltfjnaij7gib55ko91441n.apps.googleusercontent.com", buttonText: "Login", onSuccess: onSignIn, onFailure: responseGoogle, cookiePolicy: 'single_host_origin' }));
     }
 }
 exports.LoginPage = LoginPage;
@@ -381,6 +411,73 @@ exports.getFlightData = getFlightData;
 
 /***/ }),
 
+/***/ "./src/api/locations.ts":
+/*!******************************!*\
+  !*** ./src/api/locations.ts ***!
+  \******************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getLocationsForQuery = exports.getAllLocations = void 0;
+const baseURL = 'purpledinoapi.link';
+const port = '8080';
+const locationsAPI = '/api/locations';
+const locationsEndpointURL = `https://www.${baseURL}:${port}${locationsAPI}`;
+;
+;
+const getAllLocations = async () => {
+    console.log(`Retrieving all Locations data from: '${locationsEndpointURL}'`);
+    const options = {
+        'method': 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    try {
+        const responseData = await fetch(locationsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from /locations endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from /locations endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get locations data from API endpoint due to reason: ${error}`);
+    }
+};
+exports.getAllLocations = getAllLocations;
+const getLocationsForQuery = async (searchQuery) => {
+    const locationsEndpointWithQuery = `${locationsEndpointURL}?keyword=${searchQuery}`;
+    console.log(`Retrieving Locations data from: ${locationsEndpointWithQuery} for query: '${searchQuery}'`);
+    const options = {
+        'method': 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    try {
+        const responseData = await fetch(locationsEndpointWithQuery, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from /locations endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from /locations endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        const errorMessage = `Failed to get locations data from API endpoint due to reason: ${error}`;
+        console.error(errorMessage);
+        return Error(errorMessage);
+    }
+};
+exports.getLocationsForQuery = getLocationsForQuery;
+
+
+/***/ }),
+
 /***/ "./src/api/reservations.ts":
 /*!*********************************!*\
   !*** ./src/api/reservations.ts ***!
@@ -437,6 +534,184 @@ const registerReservation = async (reservation) => {
     }
 };
 exports.registerReservation = registerReservation;
+
+
+/***/ }),
+
+/***/ "./src/components/AirportSelector.tsx":
+/*!********************************************!*\
+  !*** ./src/components/AirportSelector.tsx ***!
+  \********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AirportSelector = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const awesome_debounce_promise_1 = __importDefault(__webpack_require__(/*! awesome-debounce-promise */ "./node_modules/awesome-debounce-promise/dist/index.es.js"));
+__webpack_require__(/*! ../styles/AirportSelector.css */ "./src/styles/AirportSelector.css");
+const locations_1 = __webpack_require__(/*! ../api/locations */ "./src/api/locations.ts");
+class AirportSelector extends React.Component {
+    constructor(props) {
+        super(props);
+        this.onInputFocus = () => {
+            // When the input element is focused, we set that in state so we know
+            // to display the results list (if a sufficient query is entered).
+            this.setState({
+                isInputFocused: true
+            });
+        };
+        this.onInputBlur = () => {
+            // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
+            // Closing the list since focus is now on an unrelated component or element.
+            this.debouncedCloseDropdownMenu();
+        };
+        this.closeDropdownMenu = () => {
+            this.setState({
+                isInputFocused: false
+            });
+        };
+        this.debouncedCloseDropdownMenu = (0, awesome_debounce_promise_1.default)(this.closeDropdownMenu, 500);
+        this.isQueryEntered = () => {
+            const currentQuery = this.state.airportQuery;
+            return !!currentQuery && currentQuery.length > 0;
+        };
+        this.renderSelectedAirport = () => {
+            var _a, _b;
+            const hasPlaceholder = !!this.props.placeholderText;
+            return React.createElement("div", { className: 'airportSelected' },
+                React.createElement("div", { className: 'selectedAirportDetails' },
+                    hasPlaceholder
+                        ? React.createElement("label", { className: "placeholder" },
+                            this.props.placeholderText,
+                            ":")
+                        : null,
+                    React.createElement("label", { className: 'airportName' }, (_a = this.state.selectedLocation) === null || _a === void 0 ? void 0 : _a.name),
+                    React.createElement("label", { className: 'airportCity' }, (_b = this.state.selectedLocation) === null || _b === void 0 ? void 0 : _b.address.cityName)),
+                React.createElement("div", { className: 'deselectButtonContainer' },
+                    React.createElement("label", { className: 'deselectButton', onClick: this.onDeselectingAirportLocation }, "x")));
+        };
+        this.onDeselectingAirportLocation = () => {
+            this.setState({
+                selectedLocation: null,
+                airportQuery: ''
+            });
+        };
+        this.renderSelectionInput = () => {
+            const shouldShowResults = this.state.isInputFocused && this.state.hasFirstQueryBeenMade && this.isQueryEntered();
+            return React.createElement("div", { className: 'airportSelector', ref: this.selectorContainerRef },
+                React.createElement("input", { placeholder: this.props.placeholderText, onChange: this.onQueryUpdated, onFocus: this.onInputFocus, onBlur: this.onInputBlur }),
+                shouldShowResults
+                    ? this.renderResultsList()
+                    : null);
+        };
+        this.renderNoResultsMessage = () => {
+            return React.createElement("label", { className: 'noResultsMessage' }, "No results found for this query.");
+        };
+        this.renderResultsList = () => {
+            return React.createElement("div", { className: "floatBlock" }, this.state.locationResults.length == 0
+                ? this.renderNoResultsMessage()
+                : this.state.locationResults.map((location, index) => {
+                    return index > 10
+                        ? null
+                        : this.renderLocationListItem(location);
+                }));
+        };
+        this.renderLocationListItem = (location) => {
+            return React.createElement("div", { className: "locationListItem", onClick: this.onLocationListItemClicked, accessKey: location.iataCode },
+                React.createElement("label", { className: "airportName" }, location.name),
+                React.createElement("label", { className: "cityName" }, location.address.cityName),
+                React.createElement("label", { className: "iataCode" }, location.iataCode));
+        };
+        this.getLocationByIataCode = (iataCode) => {
+            return this.state.locationResults.find(location => {
+                return location.iataCode === iataCode;
+            });
+        };
+        this.onLocationListItemClicked = (event) => {
+            const iataCode = event.currentTarget.accessKey;
+            const locationBeingSelected = this.getLocationByIataCode(iataCode);
+            if (locationBeingSelected === undefined) {
+                console.error(`User clicked a list item from the AirportSelector, however no airport with expected IATA code was found: ${iataCode}`);
+                return;
+            }
+            this.setState({
+                selectedLocation: locationBeingSelected
+            });
+            this.props.onAirportSelectionUpdated(locationBeingSelected);
+        };
+        this.onQueryUpdated = (event) => {
+            const inputElement = event.currentTarget;
+            const newQuery = inputElement.value;
+            this.setState({
+                airportQuery: newQuery
+            });
+            this.debouncedResultsUpdating();
+        };
+        this.updateResultsFromAPI = async () => {
+            console.log('Getting search results from AirportSelector component');
+            const query = this.state.airportQuery;
+            const flightJSON = await (0, locations_1.getLocationsForQuery)(query);
+            if (flightJSON instanceof Error) {
+                this.setState({
+                    locationResults: []
+                });
+                console.error(`Failed to get location data from API via AirportSelector component: '${flightJSON.message}`);
+                return;
+            }
+            // Filter out results that are just towns/locations, not airports.
+            const airportsOnlyLocations = flightJSON.filter(location => {
+                return location.subType === 'AIRPORT';
+            });
+            this.setState({
+                hasFirstQueryBeenMade: true,
+                locationResults: airportsOnlyLocations
+            });
+        };
+        // Waits to call the function until it finds that it has not been called again for 500ms.
+        // This allows us to hold off on the call if we're still typing so that we can reduce
+        // unnecessary API calls made to the backend when we haven't finished writing the query.
+        this.debouncedResultsUpdating = (0, awesome_debounce_promise_1.default)(this.updateResultsFromAPI, 500);
+        this.selectorContainerRef = React.createRef();
+        this.state = {
+            locationResults: [],
+            isInputFocused: false,
+            airportQuery: '',
+            hasFirstQueryBeenMade: false,
+            selectedLocation: null
+        };
+    }
+    render() {
+        const hasSelection = !!this.state.selectedLocation;
+        return (React.createElement("div", { className: "airportSelectorElement" }, hasSelection
+            ? this.renderSelectedAirport()
+            : this.renderSelectionInput()));
+    }
+}
+exports.AirportSelector = AirportSelector;
 
 
 /***/ }),
@@ -1022,6 +1297,33 @@ exports.randomInt = randomInt;
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/AirportSelector.css":
+/*!******************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/AirportSelector.css ***!
+  \******************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".airportSelector input, .airportSelected {\r\n    height: 60px;\r\n    width: 240px;\r\n    border-radius: 3px;\r\n    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */\r\n}\r\n\r\n.floatBlock {\r\n    background-color: rgb(243, 243, 243);\r\n    border: solid 1px rgb(138, 138, 138);\r\n    min-width: 240px;\r\n    max-width: 240px;\r\n    border-radius: 3px;\r\n    margin-top: 3px;\r\n    position: absolute;\r\n}\r\n\r\n.floatBlock .noResultsMessage {\r\n    display: block;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n    font-size: small;\r\n    text-align: center;\r\n    font-weight: bold;\r\n    margin-top: 10px;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.locationListItem {\r\n    font-size: small;\r\n    display: block;\r\n    padding: 5px;\r\n    border-bottom: solid 2px darkgray;\r\n}\r\n\r\n.locationListItem:hover {\r\n    background-color: rgb(250, 250, 250);\r\n}\r\n\r\n.locationListItem .airportName {\r\n    display: block;\r\n}\r\n\r\n.locationListItem .iataCode, .airportSelected .iataCode {\r\n    margin-left: 15px;\r\n    font-style: italic;\r\n    font-weight: bold;\r\n}\r\n\r\n.selectedAirportDetails {\r\n    width: 90%;\r\n    display: inline-block;\r\n    padding-left: 2px;\r\n}\r\n\r\n.deselectButtonContainer {\r\n    display: inline-block; \r\n    height: 100%;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.deselectButtonContainer .deselectButton {\r\n    font-size: 24px;\r\n    font-weight: normal;\r\n    display: inline-block;\r\n    margin: auto;\r\n    color:rgb(179, 223, 253);\r\n}\r\n\r\n.deselectButtonContainer .deselectButton:hover {\r\n    color: rgb(12, 134, 216);\r\n}\r\n\r\n.airportSelected {\r\n    display: flex;\r\n    word-wrap: break-word;\r\n    border: solid 2px rgb(22, 22, 22);\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n}\r\n\r\n.airportSelected .airportName {\r\n    font-size: 12px;\r\n    display: block;\r\n}\r\n\r\n.airportSelected .iataCode, .airportSelected .airportCity {\r\n    font-size: 12px;\r\n}\r\n\r\n.airportSelected .placeholder {\r\n    font-weight: bold;\r\n    font-size: 12px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/AirportSelector.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,sBAAsB,EAAE,iEAAiE;AAC7F;;AAEA;IACI,oCAAoC;IACpC,oCAAoC;IACpC,gBAAgB;IAChB,gBAAgB;IAChB,kBAAkB;IAClB,eAAe;IACf,kBAAkB;AACtB;;AAEA;IACI,cAAc;IACd,gBAAgB;IAChB,mBAAmB;IACnB,gBAAgB;IAChB,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;IAChB,cAAc;IACd,YAAY;IACZ,iCAAiC;AACrC;;AAEA;IACI,oCAAoC;AACxC;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,iBAAiB;AACrB;;AAEA;IACI,UAAU;IACV,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,aAAa;IACb,uBAAuB;IACvB,mBAAmB;AACvB;;AAEA;IACI,eAAe;IACf,mBAAmB;IACnB,qBAAqB;IACrB,YAAY;IACZ,wBAAwB;AAC5B;;AAEA;IACI,wBAAwB;AAC5B;;AAEA;IACI,aAAa;IACb,qBAAqB;IACrB,iCAAiC;IACjC,kCAAkC;IAClC,YAAY;AAChB;;AAEA;IACI,eAAe;IACf,cAAc;AAClB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,iBAAiB;IACjB,eAAe;AACnB","sourcesContent":[".airportSelector input, .airportSelected {\r\n    height: 60px;\r\n    width: 240px;\r\n    border-radius: 3px;\r\n    box-sizing: border-box; /* Fixes inconsistency with input sizing between firefox/chrome */\r\n}\r\n\r\n.floatBlock {\r\n    background-color: rgb(243, 243, 243);\r\n    border: solid 1px rgb(138, 138, 138);\r\n    min-width: 240px;\r\n    max-width: 240px;\r\n    border-radius: 3px;\r\n    margin-top: 3px;\r\n    position: absolute;\r\n}\r\n\r\n.floatBlock .noResultsMessage {\r\n    display: block;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n    font-size: small;\r\n    text-align: center;\r\n    font-weight: bold;\r\n    margin-top: 10px;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.locationListItem {\r\n    font-size: small;\r\n    display: block;\r\n    padding: 5px;\r\n    border-bottom: solid 2px darkgray;\r\n}\r\n\r\n.locationListItem:hover {\r\n    background-color: rgb(250, 250, 250);\r\n}\r\n\r\n.locationListItem .airportName {\r\n    display: block;\r\n}\r\n\r\n.locationListItem .iataCode, .airportSelected .iataCode {\r\n    margin-left: 15px;\r\n    font-style: italic;\r\n    font-weight: bold;\r\n}\r\n\r\n.selectedAirportDetails {\r\n    width: 90%;\r\n    display: inline-block;\r\n    padding-left: 2px;\r\n}\r\n\r\n.deselectButtonContainer {\r\n    display: inline-block; \r\n    height: 100%;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n}\r\n\r\n.deselectButtonContainer .deselectButton {\r\n    font-size: 24px;\r\n    font-weight: normal;\r\n    display: inline-block;\r\n    margin: auto;\r\n    color:rgb(179, 223, 253);\r\n}\r\n\r\n.deselectButtonContainer .deselectButton:hover {\r\n    color: rgb(12, 134, 216);\r\n}\r\n\r\n.airportSelected {\r\n    display: flex;\r\n    word-wrap: break-word;\r\n    border: solid 2px rgb(22, 22, 22);\r\n    background-color: rgb(59, 77, 145);\r\n    color: white;\r\n}\r\n\r\n.airportSelected .airportName {\r\n    font-size: 12px;\r\n    display: block;\r\n}\r\n\r\n.airportSelected .iataCode, .airportSelected .airportCity {\r\n    font-size: 12px;\r\n}\r\n\r\n.airportSelected .placeholder {\r\n    font-weight: bold;\r\n    font-size: 12px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/FlightList.css":
 /*!*************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/FlightList.css ***!
@@ -1074,7 +1376,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    /* width: 220px; */\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    display: inline-block; /* Allows AirportSelector elements to appear in a row */\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;IACd,WAAW;AACf;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,gBAAgB;IAChB,oBAAoB;AACxB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,kBAAkB;IAClB,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,qBAAqB,EAAE,uDAAuD;AAClF","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: inline-block;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    /* width: 220px; */\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    display: inline-block; /* Allows AirportSelector elements to appear in a row */\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: flex;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n    display: flex;\r\n}\r\n\r\n#destinationInputs .verticalSpacer {\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .airportSelectorElement {\r\n    margin-right: 40px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    margin-top: auto;\r\n}\r\n\r\n.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {\r\n    height: 125px;\r\n    display: flex;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;IACd,WAAW;AACf;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,aAAa;AACjB;;AAEA;IACI,gBAAgB;IAChB,aAAa;AACjB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,gBAAgB;IAChB,oBAAoB;AACxB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,aAAa;IACb,aAAa;AACjB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: flex;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n    display: flex;\r\n}\r\n\r\n#destinationInputs .verticalSpacer {\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .airportSelectorElement {\r\n    margin-right: 40px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    margin-top: auto;\r\n}\r\n\r\n.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {\r\n    height: 125px;\r\n    display: flex;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1495,6 +1797,209 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
+/***/ "./node_modules/awesome-debounce-promise/dist/index.es.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/awesome-debounce-promise/dist/index.es.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var debounce_promise__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! debounce-promise */ "./node_modules/debounce-promise/dist/index.js");
+/* harmony import */ var debounce_promise__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(debounce_promise__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var awesome_only_resolves_last_promise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! awesome-only-resolves-last-promise */ "./node_modules/awesome-only-resolves-last-promise/dist/index.es.js");
+
+
+
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+
+var DefaultOptions = {
+    // One distinct debounced function is created per key and added to an internal cache
+    // By default, the key is null, which means that all the calls
+    // will share the same debounced function
+    key: function () {
+        var _args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            _args[_i] = arguments[_i];
+        }
+        return null;
+    },
+    // By default, a debounced function will only resolve
+    // the last promise it returned
+    // Former calls will stay unresolved, so that you don't have
+    // to handle concurrency issues in your code
+    // Setting this to false means all returned promises will resolve to the last result
+    onlyResolvesLast: true,
+};
+// We create a debouncing function cache, because when wrapping the original function,
+// we may actually want to route the function call to different debounced functions depending function paameters
+var DebounceCache = /** @class */ (function () {
+    function DebounceCache(config) {
+        this.config = config;
+        this.debounceSingleton = null;
+        this.debounceCache = {}; // when key feature is used
+    }
+    DebounceCache.prototype._createDebouncedFunction = function () {
+        var debouncedFunc = debounce_promise__WEBPACK_IMPORTED_MODULE_0___default()(this.config.func, this.config.wait, this.config.options); // TODO TS
+        if (this.config.options.onlyResolvesLast) {
+            debouncedFunc = (0,awesome_only_resolves_last_promise__WEBPACK_IMPORTED_MODULE_1__.onlyResolvesLast)(debouncedFunc);
+        }
+        return {
+            func: debouncedFunc,
+        };
+    };
+    DebounceCache.prototype.getDebouncedFunction = function (args) {
+        var _a;
+        var key = (_a = this.config.options).key.apply(_a, args);
+        if (key === null || typeof key === 'undefined') {
+            if (!this.debounceSingleton) {
+                this.debounceSingleton = this._createDebouncedFunction();
+            }
+            return this.debounceSingleton;
+        }
+        else {
+            if (!this.debounceCache[key]) {
+                this.debounceCache[key] = this._createDebouncedFunction();
+            }
+            return this.debounceCache[key];
+        }
+    };
+    return DebounceCache;
+}());
+function AwesomeDebouncePromise(func, wait, options) {
+    var finalOptions = __assign({}, DefaultOptions, options);
+    var debounceCache = new DebounceCache({
+        func: func,
+        wait: wait,
+        options: finalOptions,
+    });
+    var AwesomeDebouncePromiseWrapper = (function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        var debouncedFn = debounceCache.getDebouncedFunction(args).func;
+        return debouncedFn.apply(void 0, args);
+    }); // TODO fix TS
+    /*
+    AwesomeDebouncePromiseWrapper.cancel = (key?: string) => {
+  
+    };
+    */
+    return AwesomeDebouncePromiseWrapper;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AwesomeDebouncePromise);
+
+
+/***/ }),
+
+/***/ "./node_modules/awesome-imperative-promise/dist/index.es.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/awesome-imperative-promise/dist/index.es.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createImperativePromise": () => (/* binding */ createImperativePromise)
+/* harmony export */ });
+function createImperativePromise(promiseArg) {
+    var resolve = null;
+    var reject = null;
+    var wrappedPromise = new Promise(function (_resolve, _reject) {
+        resolve = _resolve;
+        reject = _reject;
+    });
+    promiseArg && promiseArg.then(function (val) {
+        resolve && resolve(val);
+    }, function (error) {
+        reject && reject(error);
+    });
+    return {
+        promise: wrappedPromise,
+        resolve: function (value) {
+            resolve && resolve(value);
+        },
+        reject: function (reason) {
+            reject && reject(reason);
+        },
+        cancel: function () {
+            resolve = null;
+            reject = null;
+        }
+    };
+}
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/awesome-only-resolves-last-promise/dist/index.es.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/awesome-only-resolves-last-promise/dist/index.es.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "onlyResolvesLast": () => (/* binding */ onlyResolvesLast)
+/* harmony export */ });
+/* harmony import */ var awesome_imperative_promise__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! awesome-imperative-promise */ "./node_modules/awesome-imperative-promise/dist/index.es.js");
+
+
+// see https://stackoverflow.com/a/54825370/82609
+function onlyResolvesLast(asyncFunction) {
+    var cancelPrevious = null;
+    var wrappedFunction = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        cancelPrevious && cancelPrevious();
+        var initialPromise = asyncFunction.apply(void 0, args);
+        var _a = (0,awesome_imperative_promise__WEBPACK_IMPORTED_MODULE_0__.createImperativePromise)(initialPromise), promise = _a.promise, cancel = _a.cancel;
+        cancelPrevious = cancel;
+        return promise;
+    };
+    return wrappedFunction; // TODO fix TS
+}
+
+
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/runtime/api.js":
 /*!*****************************************************!*\
   !*** ./node_modules/css-loader/dist/runtime/api.js ***!
@@ -1675,6 +2180,89 @@ module.exports = function (item) {
 
   return [content].join("\n");
 };
+
+/***/ }),
+
+/***/ "./node_modules/debounce-promise/dist/index.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/debounce-promise/dist/index.js ***!
+  \*****************************************************/
+/***/ ((module) => {
+
+"use strict";
+
+
+/* global setTimeout, clearTimeout */
+
+module.exports = function debounce(fn) {
+  var wait = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+  var lastCallAt = void 0;
+  var deferred = void 0;
+  var timer = void 0;
+  var pendingArgs = [];
+  return function debounced() {
+    var currentWait = getWait(wait);
+    var currentTime = new Date().getTime();
+
+    var isCold = !lastCallAt || currentTime - lastCallAt > currentWait;
+
+    lastCallAt = currentTime;
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    if (isCold && options.leading) {
+      return options.accumulate ? Promise.resolve(fn.call(this, [args])).then(function (result) {
+        return result[0];
+      }) : Promise.resolve(fn.call.apply(fn, [this].concat(args)));
+    }
+
+    if (deferred) {
+      clearTimeout(timer);
+    } else {
+      deferred = defer();
+    }
+
+    pendingArgs.push(args);
+    timer = setTimeout(flush.bind(this), currentWait);
+
+    if (options.accumulate) {
+      var argsIndex = pendingArgs.length - 1;
+      return deferred.promise.then(function (results) {
+        return results[argsIndex];
+      });
+    }
+
+    return deferred.promise;
+  };
+
+  function flush() {
+    var thisDeferred = deferred;
+    clearTimeout(timer);
+
+    Promise.resolve(options.accumulate ? fn.call(this, pendingArgs) : fn.apply(this, pendingArgs[pendingArgs.length - 1])).then(thisDeferred.resolve, thisDeferred.reject);
+
+    pendingArgs = [];
+    deferred = null;
+  }
+};
+
+function getWait(wait) {
+  return typeof wait === 'function' ? wait() : wait;
+}
+
+function defer() {
+  var deferred = {};
+  deferred.promise = new Promise(function (resolve, reject) {
+    deferred.resolve = resolve;
+    deferred.reject = reject;
+  });
+  return deferred;
+}
+
 
 /***/ }),
 
@@ -22848,6 +23436,16 @@ typeof d?d:I(d)},push:z,replace:A,go:y,back:function(){y(-1)},forward:function()
 
 /***/ }),
 
+/***/ "./node_modules/react-google-login/dist/google-login.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/react-google-login/dist/google-login.js ***!
+  \**************************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+!function(e,t){ true?module.exports=t(__webpack_require__(/*! react */ "react")):0}("undefined"!=typeof self?self:this,(function(e){return o={},t.m=n=[function(t){t.exports=e},function(e,t,n){e.exports=n(2)()},function(e,t,n){"use strict";function o(){}function r(){}var i=n(3);r.resetWarningCache=o,e.exports=function(){function e(e,t,n,o,r,a){if(a!==i){var c=Error("Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");throw c.name="Invariant Violation",c}}function t(){return e}var n={array:e.isRequired=e,bool:e,func:e,number:e,object:e,string:e,symbol:e,any:e,arrayOf:t,element:e,elementType:e,instanceOf:t,node:e,objectOf:t,oneOf:t,oneOfType:t,shape:t,exact:t,checkPropTypes:r,resetWarningCache:o};return n.PropTypes=n}},function(e){"use strict";e.exports="SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED"},function(e,t,n){"use strict";function o(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return r(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?r(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function r(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function i(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return a(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?a(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function a(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function c(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return u(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?u(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function u(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function l(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return s(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?s(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function s(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function f(e,t,n,o,r,i){var a=e.getElementsByTagName(t)[0],c=a,u=a;(u=e.createElement(t)).id=n,u.src=o,c&&c.parentNode?c.parentNode.insertBefore(u,c):e.head.appendChild(u),u.onerror=i,u.onload=r}function d(e,t){var n=e.getElementById(t);n&&n.parentNode.removeChild(n)}function p(e){return b.a.createElement("span",{style:{paddingRight:10,fontWeight:500,paddingLeft:e.icon?0:10,paddingTop:10,paddingBottom:10}},e.children)}function g(e){return b.a.createElement("div",{style:{marginRight:10,background:e.active?"#eee":"#fff",padding:10,borderRadius:2}},b.a.createElement("svg",{width:"18",height:"18",xmlns:"http://www.w3.org/2000/svg"},b.a.createElement("g",{fill:"#000",fillRule:"evenodd"},b.a.createElement("path",{d:"M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z",fill:"#EA4335"}),b.a.createElement("path",{d:"M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z",fill:"#4285F4"}),b.a.createElement("path",{d:"M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9.008 9.008 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z",fill:"#FBBC05"}),b.a.createElement("path",{d:"M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z",fill:"#34A853"}),b.a.createElement("path",{fill:"none",d:"M0 0h18v18H0z"}))))}function y(e){var t=i(Object(m.useState)(!1),2),n=t[0],o=t[1],r=i(Object(m.useState)(!1),2),a=r[0],c=r[1],u=e.tag,l=e.type,s=e.className,f=e.disabledStyle,d=e.buttonText,y=e.children,v=e.render,S=e.theme,j=e.icon,O=e.disabled,x=h({onSuccess:e.onSuccess,onAutoLoadFinished:e.onAutoLoadFinished,onRequest:e.onRequest,onFailure:e.onFailure,onScriptLoadFailure:e.onScriptLoadFailure,clientId:e.clientId,cookiePolicy:e.cookiePolicy,loginHint:e.loginHint,hostedDomain:e.hostedDomain,autoLoad:e.autoLoad,isSignedIn:e.isSignedIn,fetchBasicProfile:e.fetchBasicProfile,redirectUri:e.redirectUri,discoveryDocs:e.discoveryDocs,uxMode:e.uxMode,scope:e.scope,accessType:e.accessType,responseType:e.responseType,jsSrc:e.jsSrc,prompt:e.prompt}),I=x.signIn,w=O||!x.loaded;if(v)return v({onClick:I,disabled:w});var k={backgroundColor:"dark"===S?"rgb(66, 133, 244)":"#fff",display:"inline-flex",alignItems:"center",color:"dark"===S?"#fff":"rgba(0, 0, 0, .54)",boxShadow:"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",padding:0,borderRadius:2,border:"1px solid transparent",fontSize:14,fontWeight:"500",fontFamily:"Roboto, sans-serif"},A={cursor:"pointer",backgroundColor:"dark"===S?"#3367D6":"#eee",color:"dark"===S?"#fff":"rgba(0, 0, 0, .54)",opacity:1},_=w?Object.assign({},k,f):a?Object.assign({},k,A):n?Object.assign({},k,{cursor:"pointer",opacity:.9}):k;return b.a.createElement(u,{onMouseEnter:function(){return o(!0)},onMouseLeave:function(){o(!1),c(!1)},onMouseDown:function(){return c(!0)},onMouseUp:function(){return c(!1)},onClick:I,style:_,type:l,disabled:w,className:s},[j&&b.a.createElement(g,{key:1,active:a}),b.a.createElement(p,{icon:j,key:2},y||d)])}n.r(t),n.d(t,"default",(function(){return S})),n.d(t,"GoogleLogin",(function(){return S})),n.d(t,"GoogleLogout",(function(){return O})),n.d(t,"useGoogleLogin",(function(){return h})),n.d(t,"useGoogleLogout",(function(){return j}));var m=n(0),b=n.n(m),h=(n(1),function(e){function t(e){var t=e.getBasicProfile(),n=e.getAuthResponse(!0);e.googleId=t.getId(),e.tokenObj=n,e.tokenId=n.id_token,e.accessToken=n.access_token,e.profileObj={googleId:t.getId(),imageUrl:t.getImageUrl(),email:t.getEmail(),name:t.getName(),givenName:t.getGivenName(),familyName:t.getFamilyName()},i(e)}function n(e){if(e&&e.preventDefault(),P){var n=window.gapi.auth2.getAuthInstance(),o={prompt:L};p(),"code"===_?n.grantOfflineAccess(o).then((function(e){return i(e)}),(function(e){return l(e)})):n.signIn(o).then((function(e){return t(e)}),(function(e){return l(e)}))}}var r=e.onSuccess,i=void 0===r?function(){}:r,a=e.onAutoLoadFinished,c=void 0===a?function(){}:a,u=e.onFailure,l=void 0===u?function(){}:u,s=e.onRequest,p=void 0===s?function(){}:s,g=e.onScriptLoadFailure,y=e.clientId,b=e.cookiePolicy,h=e.loginHint,v=e.hostedDomain,S=e.autoLoad,j=e.isSignedIn,O=e.fetchBasicProfile,x=e.redirectUri,I=e.discoveryDocs,w=e.uxMode,k=e.scope,A=e.accessType,_=e.responseType,E=e.jsSrc,T=void 0===E?"https://apis.google.com/js/api.js":E,L=e.prompt,M=o(Object(m.useState)(!1),2),P=M[0],C=M[1];return Object(m.useEffect)((function(){var e=!1,n=g||l;return f(document,"script","google-login",T,(function(){var o={client_id:y,cookie_policy:b,login_hint:h,hosted_domain:v,fetch_basic_profile:O,discoveryDocs:I,ux_mode:w,redirect_uri:x,scope:k,access_type:A};"code"===_&&(o.access_type="offline"),window.gapi.load("auth2",(function(){var r=window.gapi.auth2.getAuthInstance();r?r.then((function(){e||(j&&r.isSignedIn.get()?(C(!0),c(!0),t(r.currentUser.get())):(C(!0),c(!1)))}),(function(e){l(e)})):window.gapi.auth2.init(o).then((function(n){if(!e){C(!0);var o=j&&n.isSignedIn.get();c(o),o&&t(n.currentUser.get())}}),(function(e){C(!0),c(!1),n(e)}))}))}),(function(e){n(e)})),function(){e=!0,d(document,"google-login")}}),[]),Object(m.useEffect)((function(){S&&n()}),[P]),{signIn:n,loaded:P}});function v(e){var t=l(Object(m.useState)(!1),2),n=t[0],o=t[1],r=l(Object(m.useState)(!1),2),i=r[0],a=r[1],c=e.tag,u=e.type,s=e.className,f=e.disabledStyle,d=e.buttonText,y=e.children,h=e.render,v=e.theme,S=e.icon,O=e.disabled,x=j({jsSrc:e.jsSrc,onFailure:e.onFailure,onScriptLoadFailure:e.onScriptLoadFailure,clientId:e.clientId,cookiePolicy:e.cookiePolicy,loginHint:e.loginHint,hostedDomain:e.hostedDomain,fetchBasicProfile:e.fetchBasicProfile,discoveryDocs:e.discoveryDocs,uxMode:e.uxMode,redirectUri:e.redirectUri,scope:e.scope,accessType:e.accessType,onLogoutSuccess:e.onLogoutSuccess}),I=x.signOut,w=O||!x.loaded;if(h)return h({onClick:I,disabled:w});var k={backgroundColor:"dark"===v?"rgb(66, 133, 244)":"#fff",display:"inline-flex",alignItems:"center",color:"dark"===v?"#fff":"rgba(0, 0, 0, .54)",boxShadow:"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",padding:0,borderRadius:2,border:"1px solid transparent",fontSize:14,fontWeight:"500",fontFamily:"Roboto, sans-serif"},A={cursor:"pointer",backgroundColor:"dark"===v?"#3367D6":"#eee",color:"dark"===v?"#fff":"rgba(0, 0, 0, .54)",opacity:1},_=w?Object.assign({},k,f):i?Object.assign({},k,A):n?Object.assign({},k,{cursor:"pointer",opacity:.9}):k;return b.a.createElement(c,{onMouseEnter:function(){return o(!0)},onMouseLeave:function(){o(!1),a(!1)},onMouseDown:function(){return a(!0)},onMouseUp:function(){return a(!1)},onClick:I,style:_,type:u,disabled:w,className:s},[S&&b.a.createElement(g,{key:1,active:i}),b.a.createElement(p,{icon:S,key:2},y||d)])}y.defaultProps={type:"button",tag:"button",buttonText:"Sign in with Google",scope:"profile email",accessType:"online",prompt:"",cookiePolicy:"single_host_origin",fetchBasicProfile:!0,isSignedIn:!1,uxMode:"popup",disabledStyle:{opacity:.6},icon:!0,theme:"light",onRequest:function(){}};var S=y,j=function(e){var t=e.jsSrc,n=void 0===t?"https://apis.google.com/js/api.js":t,o=e.onFailure,r=e.onScriptLoadFailure,i=e.clientId,a=e.cookiePolicy,u=e.loginHint,l=e.hostedDomain,s=e.fetchBasicProfile,p=e.discoveryDocs,g=e.uxMode,y=e.redirectUri,b=e.scope,h=e.accessType,v=e.onLogoutSuccess,S=c(Object(m.useState)(!1),2),j=S[0],O=S[1],x=Object(m.useCallback)((function(){if(window.gapi){var e=window.gapi.auth2.getAuthInstance();null!=e&&e.then((function(){e.signOut().then((function(){e.disconnect(),v()}))}),(function(e){return o(e)}))}}),[v]);return Object(m.useEffect)((function(){var e=r||o;return f(document,"script","google-login",n,(function(){var t={client_id:i,cookie_policy:a,login_hint:u,hosted_domain:l,fetch_basic_profile:s,discoveryDocs:p,ux_mode:g,redirect_uri:y,scope:b,access_type:h};window.gapi.load("auth2",(function(){window.gapi.auth2.getAuthInstance()?O(!0):window.gapi.auth2.init(t).then((function(){return O(!0)}),(function(t){return e(t)}))}))}),(function(t){e(t)})),function(){d(document,"google-login")}}),[]),{signOut:x,loaded:j}};v.defaultProps={type:"button",tag:"button",buttonText:"Logout of Google",disabledStyle:{opacity:.6},icon:!0,theme:"light",jsSrc:"https://apis.google.com/js/api.js"};var O=v}],t.c=o,t.d=function(e,n,o){t.o(e,n)||Object.defineProperty(e,n,{enumerable:!0,get:o})},t.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.t=function(e,n){if(1&n&&(e=t(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(t.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var r in e)t.d(o,r,function(t){return e[t]}.bind(null,r));return o},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=4);function t(e){if(o[e])return o[e].exports;var r=o[e]={i:e,l:!1,exports:{}};return n[e].call(r.exports,r,r.exports,t),r.l=!0,r.exports}var n,o}));
+
+/***/ }),
+
 /***/ "./node_modules/react-router-dom/index.js":
 /*!************************************************!*\
   !*** ./node_modules/react-router-dom/index.js ***!
@@ -25445,6 +26043,61 @@ function version(uuid) {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (version);
+
+/***/ }),
+
+/***/ "./src/styles/AirportSelector.css":
+/*!****************************************!*\
+  !*** ./src/styles/AirportSelector.css ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./AirportSelector.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/AirportSelector.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
 
 /***/ }),
 
