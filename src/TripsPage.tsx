@@ -10,7 +10,7 @@ import * as bannerImage5 from '../assets/banner_images/vacation1.png';
 import * as bannerImage6 from '../assets/banner_images/vacation2.png';
 import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
-import FlightsTable from "./components/FlightPage/FlightsTable";
+import FlightsTable from "./components/TripsPage/FlightsTable";
 
 import './styles/TripsPage.css'
 
