@@ -13,6 +13,7 @@ interface IToastProps {
     toastType: ToastType;
     message: string;
     show: boolean;
+    onToastClosed: () => void;
 }
 
 export class ToastMessage extends React.Component<IToastProps, IToastState> {
@@ -29,19 +30,19 @@ export class ToastMessage extends React.Component<IToastProps, IToastState> {
 
     componentDidUpdate(prevProps: IToastProps) {
         // Update show/hide state when props updates from parent component.
-        if (prevProps.show !== this.props.show) {
+        if (prevProps.show !== this.props.show || this.state.show !== this.props.show) {
             this.setState({
                 show: this.props.show
             });
         }
 
-        if (prevProps.message !== this.props.message) {
+        if (prevProps.message !== this.props.message || this.state.message !== this.props.message) {
             this.setState({
                 message: this.props.message
             })
         }
 
-        if (prevProps.toastType !== this.props.toastType) {
+        if (prevProps.toastType !== this.props.toastType || this.state.toastType !== this.props.toastType) {
             this.setState({
                 toastType: this.props.toastType
             })
@@ -49,9 +50,7 @@ export class ToastMessage extends React.Component<IToastProps, IToastState> {
     }
 
     closeToast = () => {
-        this.setState({
-            show: false
-        });
+        this.props.onToastClosed();
     }
 
     render() {
