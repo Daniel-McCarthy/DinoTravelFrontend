@@ -37,6 +37,14 @@ export default function ComplaintForm() {
         }
     }
 
+    const onToastClosed = () => {
+        setToast({
+            message: "",
+            toastType: ToastType.InfoToast,
+            show: false
+        });
+    }
+
     return (
         <>
             <form id="formComplaint">
@@ -73,7 +81,7 @@ export default function ComplaintForm() {
                 </p>
             </form>
 
-            <ToastMessage toastType={toast.toastType} show={toast.show} message={toast.message}></ToastMessage>
+            <ToastMessage toastType={toast.toastType} show={toast.show} message={toast.message} onToastClosed={onToastClosed}></ToastMessage>
         </>
     );
 }
