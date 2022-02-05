@@ -1,43 +1,34 @@
 import React from 'react';
+import '../../styles/Policies.css';
 
 export default function Policies() {
     return (
         <>
             <div id="policies">
-                <div className="Policy1">
-                    <h2>Policy Title 1</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                        sed do eiusmod tempor incididunt ut labore et dolore magna 
-                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis 
-                        aute irure dolor in reprehenderit in voluptate velit esse cillum 
-                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est 
-                        laborum.</p>
+                <div className="salesPolicy">
+                    <h2>Sales Policy</h2>
+                    <p>Sales are final in most cases. Refunds will be given out through
+                        Dino Travel credit. Please see the Refund Policy for more information.
+                    </p>
                 </div>
 
-                <div className="Policy2">
-                    <h2>Policy Title 2</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                        sed do eiusmod tempor incididunt ut labore et dolore magna 
-                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis 
-                        aute irure dolor in reprehenderit in voluptate velit esse cillum 
-                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est 
-                        laborum.</p>
+                <div className="cancellationPolicy">
+                    <h2>Cancellation Policy</h2>
+                    <p>Reservations may be cancelled by the user who initially created the reservation. 
+                        Please contact us if the user is unable to access their reservations.
+                    </p>
                 </div>
 
-                <div className="Policy3">
-                    <h2>Policy Title 3</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                        sed do eiusmod tempor incididunt ut labore et dolore magna 
-                        aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-                        ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis 
-                        aute irure dolor in reprehenderit in voluptate velit esse cillum 
-                        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat 
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est 
-                        laborum.</p>
+                <div className="refundPolicy">
+                    <h2>Refund Policy</h2>
+                    <p>Refunds will be payed out through Dino Travel credit. 
+                        For any refund on an eligible reservation, please wait 
+                        up to 48 hours for the refund to process. Reservations are eligible for a refund if:
+                        <ul>
+                            <li>there are more than 24 hours before the flight departs</li>
+                            <li>the flight has been cancelled by the airline and they have not offered a replacement flight</li>
+                        </ul>
+                    </p>
                 </div>
             </div>  
         </>
