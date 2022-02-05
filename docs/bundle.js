@@ -50,7 +50,6 @@ const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_image
 const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
 const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
 const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
-const airportNameMapping_1 = __webpack_require__(/*! ./lib/airportNameMapping */ "./src/lib/airportNameMapping.ts");
 const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 const MultiCityFlightSelection_1 = __webpack_require__(/*! ./components/MultiCityFlightSelection */ "./src/components/MultiCityFlightSelection.tsx");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
@@ -190,8 +189,7 @@ class HomePage extends React.Component {
             returnAirport: null,
             returnFlightDate: moment(),
             multiCityFlightSelections: [],
-            bannerImages,
-            airports: (0, airportNameMapping_1.parseAirports)()
+            bannerImages
         };
     }
     render() {
@@ -203,8 +201,6 @@ class HomePage extends React.Component {
         const multiCityButtonClass = isMultiCitySelected ? 'selected' : '';
         return (React.createElement("div", null,
             React.createElement("header", null,
-                React.createElement("div", { id: 'bannerCarousel' },
-                    React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })),
                 React.createElement("div", { id: "headerContent" },
                     React.createElement("div", { className: "banner" },
                         React.createElement(react_router_dom_1.Link, { to: '/' },
@@ -227,7 +223,7 @@ class HomePage extends React.Component {
                     React.createElement("div", { className: "filterDropdowns" },
                         React.createElement("div", { className: "travelersInput" },
                             React.createElement("h3", null, "Number of Adult Travelers:"),
-                            React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
+                            React.createElement("input", { type: "number", placeholder: "1", step: 1, max: 10, min: 0 })),
                         React.createElement("div", { className: "travelersInput" },
                             React.createElement("h3", null, "Number of Child Travelers:"),
                             React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
@@ -252,6 +248,8 @@ class HomePage extends React.Component {
                                 : null),
                 React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, onFlightSelectionUpdate: this.selectedFlightUpdated, hide: !this.state.showingFlightList }),
                 React.createElement("button", { className: "nontoggle", id: "searchButton", onClick: this.onSearchClicked }, "Search")),
+            React.createElement("div", { id: 'bannerCarousel' },
+                React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
     }
 }
@@ -287,16 +285,31 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LoginPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_google_login_1 = __importDefault(__webpack_require__(/*! react-google-login */ "./node_modules/react-google-login/dist/google-login.js"));
+const responseGoogle = (response) => {
+    console.log('FAILURE');
+    console.log(response);
+};
+function onSignIn(googleUser) {
+    const profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
     render() {
-        return (React.createElement("div", null));
+        return (React.createElement(react_google_login_1.default, { clientId: "1042234633479-gpprc2adcpltfjnaij7gib55ko91441n.apps.googleusercontent.com", buttonText: "Login", onSuccess: onSignIn, onFailure: responseGoogle, cookiePolicy: 'single_host_origin' }));
     }
 }
 exports.LoginPage = LoginPage;
@@ -477,7 +490,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerReservation = exports.getAllReservations = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
-const reservationsAPI = '/api/reservations/';
+const reservationsAPI = '/api/reservations';
 const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
 const getAllReservations = async () => {
     console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
@@ -498,22 +511,6 @@ const getAllReservations = async () => {
     }
 };
 exports.getAllReservations = getAllReservations;
-// export const getReservationByID = async (id: number) => {
-//     console.log(`Retrieving reservation data associated with id (${id}) from: ${reservationsIdEndpointURL}`);
-//     const options = {
-//         'method': 'GET'
-//     };
-//     try {
-//         const responseData: Response = await fetch(reservationsIdEndpointURL, options);
-//         const statusCode = responseData.status;
-//         console.log(`Recieved response from ${reservationsIdEndpointURL} endpoint with status: '${statusCode}'`);
-//         const json = await responseData.json();
-//         console.log(`JSON recieved from ${reservationsIdEndpointURL} endpoint: '${JSON.stringify(json)}'`);
-//         return json;
-//     } catch (error) {
-//         console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
-//     }
-// };
 const registerReservation = async (reservation) => {
     console.log(reservation);
     console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
@@ -588,12 +585,6 @@ class AirportSelector extends React.Component {
             });
         };
         this.onInputBlur = () => {
-            // Check if focus shifted to a child element, if so, keep the selection list open.
-            // const currentlyFocusedElement = document.activeElement;
-            // const selectorContainerElement: HTMLDivElement | null = this.selectorContainerRef.current;
-            // if (!!selectorContainerElement && !!currentlyFocusedElement && this.isElementParentOf(selectorContainerElement, currentlyFocusedElement)) {
-            //     return;
-            // }
             // The focus has been lost on the Selector input and the new focus element is not a child of the AirportSelector.
             // Closing the list since focus is now on an unrelated component or element.
             this.debouncedCloseDropdownMenu();
@@ -604,15 +595,6 @@ class AirportSelector extends React.Component {
             });
         };
         this.debouncedCloseDropdownMenu = (0, awesome_debounce_promise_1.default)(this.closeDropdownMenu, 500);
-        // isElementParentOf = (parentElement: Element, childElement: Element) => {
-        //     // Uses the Node class to check if a HTMLElement is a descendant of another.
-        //     // The Node compareDocumentPosition function returns a bitmask containing bits
-        //     // that encode information about their dom structure. We just want to see if 
-        //     // the parent contains the child, so we check if the Node.DOCUMENT_POSITION_CONTAINED_BY  (16)
-        //     // bit is set in the mask or not. If it is, the the child element DOES descend from the parent.
-        //     const documentComparison = parentElement.compareDocumentPosition(childElement);
-        //     return (documentComparison & Node.DOCUMENT_POSITION_CONTAINED_BY) !== 0;
-        // }
         this.isQueryEntered = () => {
             const currentQuery = this.state.airportQuery;
             return !!currentQuery && currentQuery.length > 0;
@@ -1236,135 +1218,6 @@ exports.flightTypeAsJsonLabel = flightTypeAsJsonLabel;
 
 /***/ }),
 
-/***/ "./src/enums/State.ts":
-/*!****************************!*\
-  !*** ./src/enums/State.ts ***!
-  \****************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isValidState = exports.getStateInitials = exports.StateInitialsMapping = exports.State = void 0;
-var State;
-(function (State) {
-    State["Alabama"] = "Alabama";
-    State["Alaska"] = "Alaska";
-    State["Arizona"] = "Arizona";
-    State["Arkansas"] = "Arkansas";
-    State["California"] = "California";
-    State["Colorado"] = "Colorado";
-    State["Connecticut"] = "Connecticut";
-    State["Delaware"] = "Delaware";
-    State["Florida"] = "Florida";
-    State["Georgia"] = "Georgia";
-    State["Hawaii"] = "Hawaii";
-    State["Idaho"] = "Idaho";
-    State["Illinois"] = "Illinois";
-    State["Indiana"] = "Indiana";
-    State["Iowa"] = "Iowa";
-    State["Kansas"] = "Kansas";
-    State["Kentucky"] = "Kentucky";
-    State["Louisiana"] = "Louisiana";
-    State["Maine"] = "Maine";
-    State["Maryland"] = "Maryland";
-    State["Massachusetts"] = "Massachusetts";
-    State["Michigan"] = "Michigan";
-    State["Minnesota"] = "Minnesota";
-    State["Mississippi"] = "Mississippi";
-    State["Missouri"] = "Missouri";
-    State["Montana"] = "Montana";
-    State["Nebraska"] = "Nebraska";
-    State["Nevada"] = "Nevada";
-    State["NewHampshire"] = "New Hampshire";
-    State["NewJersey"] = "New Jersey";
-    State["NewMexico"] = "New Mexico";
-    State["NewYork"] = "New York";
-    State["NorthCarolina"] = "North Carolina";
-    State["NorthDakota"] = "North Dakota";
-    State["Ohio"] = "Ohio";
-    State["Oklahoma"] = "Oklahoma";
-    State["Oregon"] = "Oregon";
-    State["Pennsylvania"] = "Pennsylvania";
-    State["RhodeIsland"] = "Rhode Island";
-    State["SouthCarolina"] = "South Carolina";
-    State["SouthDakota"] = "South Dakota";
-    State["Tennessee"] = "Tennessee";
-    State["Texas"] = "Texas";
-    State["Utah"] = "Utah";
-    State["Vermont"] = "Vermont";
-    State["Virginia"] = "Virginia";
-    State["Washington"] = "Washington";
-    State["WestVirginia"] = "West Virginia";
-    State["Wisconsin"] = "Wisconsin";
-    State["Wyoming"] = "Wyoming";
-})(State = exports.State || (exports.State = {}));
-var StateInitialsMapping;
-(function (StateInitialsMapping) {
-    StateInitialsMapping["Alabama"] = "AL";
-    StateInitialsMapping["Alaska"] = "AK";
-    StateInitialsMapping["Arizona"] = "AZ";
-    StateInitialsMapping["Arkansas"] = "AR";
-    StateInitialsMapping["California"] = "CA";
-    StateInitialsMapping["Colorado"] = "CO";
-    StateInitialsMapping["Connecticut"] = "CT";
-    StateInitialsMapping["Delaware"] = "DE";
-    StateInitialsMapping["Florida"] = "FL";
-    StateInitialsMapping["Georgia"] = "GA";
-    StateInitialsMapping["Hawaii"] = "HI";
-    StateInitialsMapping["Idaho"] = "ID";
-    StateInitialsMapping["Illinois"] = "IL";
-    StateInitialsMapping["Indiana"] = "IN";
-    StateInitialsMapping["Iowa"] = "IA";
-    StateInitialsMapping["Kansas"] = "KS";
-    StateInitialsMapping["Kentucky"] = "KY";
-    StateInitialsMapping["Louisiana"] = "LA";
-    StateInitialsMapping["Maine"] = "ME";
-    StateInitialsMapping["Maryland"] = "MD";
-    StateInitialsMapping["Massachusetts"] = "MA";
-    StateInitialsMapping["Michigan"] = "MI";
-    StateInitialsMapping["Minnesota"] = "MN";
-    StateInitialsMapping["Mississippi"] = "MS";
-    StateInitialsMapping["Missouri"] = "MO";
-    StateInitialsMapping["Montana"] = "MT";
-    StateInitialsMapping["Nebraska"] = "NE";
-    StateInitialsMapping["Nevada"] = "NV";
-    StateInitialsMapping["New Hampshire"] = "NH";
-    StateInitialsMapping["New Jersey"] = "NJ";
-    StateInitialsMapping["New Mexico"] = "NM";
-    StateInitialsMapping["New York"] = "NY";
-    StateInitialsMapping["North Carolina"] = "NC";
-    StateInitialsMapping["North Dakota"] = "ND";
-    StateInitialsMapping["Ohio"] = "OH";
-    StateInitialsMapping["Oklahoma"] = "OK";
-    StateInitialsMapping["Oregon"] = "OR";
-    StateInitialsMapping["Pennsylvania"] = "PA";
-    StateInitialsMapping["Rhode Island"] = "RI";
-    StateInitialsMapping["South Carolina"] = "SC";
-    StateInitialsMapping["South Dakota"] = "SD";
-    StateInitialsMapping["Tennessee"] = "TN";
-    StateInitialsMapping["Texas"] = "TX";
-    StateInitialsMapping["Utah"] = "UT";
-    StateInitialsMapping["Vermont"] = "VT";
-    StateInitialsMapping["Virginia"] = "VA";
-    StateInitialsMapping["Washington"] = "WA";
-    StateInitialsMapping["West Virginia"] = "WV";
-    StateInitialsMapping["Wisconsin"] = "WI";
-    StateInitialsMapping["Wyoming"] = "WY";
-})(StateInitialsMapping = exports.StateInitialsMapping || (exports.StateInitialsMapping = {}));
-const getStateInitials = (state) => {
-    return StateInitialsMapping[state];
-};
-exports.getStateInitials = getStateInitials;
-const isValidState = (state) => {
-    const matches = Object.values(State).filter(validState => validState === state);
-    return matches.length > 0;
-};
-exports.isValidState = isValidState;
-
-
-/***/ }),
-
 /***/ "./src/enums/ToastType.ts":
 /*!********************************!*\
   !*** ./src/enums/ToastType.ts ***!
@@ -1419,431 +1272,6 @@ const ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "react-dom"))
 // components depending on the url give, simulating multiple pages.
 const PageRouting_1 = __webpack_require__(/*! ./PageRouting */ "./src/PageRouting.tsx");
 ReactDOM.render(React.createElement(PageRouting_1.PageRouting, null), document.getElementById("DinoTravelEntryPoint"));
-
-
-/***/ }),
-
-/***/ "./src/lib/airportNameMapping.ts":
-/*!***************************************!*\
-  !*** ./src/lib/airportNameMapping.ts ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-// interface IAirport {
-//     airportIdentifier: string
-//     airportName: string;
-//     airportCity: string;
-//     airportState: string;
-// }
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.parseAirports = void 0;
-const State_1 = __webpack_require__(/*! ../enums/State */ "./src/enums/State.ts");
-// export const airportNameMapping = new Map();
-// airportNameMapping.set("ABR",     )
-// const parseAndSetAirportMappings = () => {
-// }
-// /*
-//  * Airport names/information retrieved from 'https://www.skygod.com/airport-codes/'
-//  */
-const airportRawInfo = [
-    `Aberdeen Regional Airport;Aberdeen;South Dakota;ABR`,
-    `Abilene Regional Airport;Abilene;Texas;ABI`,
-    `Abraham Lincoln Capital Airport;Springfield;Illinois;SPI`,
-    `Akron-Canton Regional Airport;Akron / Canton;Ohio;CAK`,
-    `Albany International Airport;Albany;New York;ALB`,
-    `Albert J. Ellis Airport;Jacksonville;North Carolina;OAJ`,
-    `Albuquerque International Sunport;Albuquerque;New Mexico;ABQ`,
-    `Alexandria International Airport;Alexandria;Louisiana;AEX`,
-    `Alpena County Regional Airport;Alpena;Michigan;APN`,
-    `Aniak Airport;Aniak;Alaska;ANI`,
-    `Antonio B. Won Pat International Airport;Agana / Tamuning;Guam;GUM`,
-    `Antonio Rivera Rodríguez Airport;Vieques;Puerto Rico;VQS`,
-    `Appleton International Airport;Appleton;Wisconsin;ATW`,
-    `Arcata Airport;Arcata / Eureka;California;ACV`,
-    `Arnold Palmer Regional Airport;Latrobe;Pennsylvania;LBE`,
-    `Asheville Regional Airport;Asheville;North Carolina;AVL`,
-    `Aspen-Pitkin County Airport;Aspen;Colorado;ASE`,
-    `Atlantic City International Airport;Atlantic City;New Jersey;ACY`,
-    `Augusta Regional Airport;Augusta;Georgia;AGS`,
-    `Austin-Bergstrom International Airport;Austin;Texas;AUS`,
-    `Baltimore/Washington International Thurgood Marshall Airport;Baltimore / Glen Burnie;Maryland;BWI`,
-    `Bangor International Airport;Bangor;Maine;BGR`,
-    `Barkley Regional Airport;Paducah;Kentucky;PAH`,
-    `Barnstable Municipal Airport;Hyannis;Massachusetts;HYA`,
-    `Baton Rouge Metropolitan Airport;Baton Rouge;Louisiana;BTR`,
-    `Bellingham International Airport;Bellingham;Washington;BLI`,
-    `Bemidji Regional Airport;Bemidji;Minnesota;BJI`,
-    `Benjamín Rivera Noriega Airport;Culebra;Puerto Rico;CPX`,
-    `Bert Mooney Airport;Butte;Montana;BTM`,
-    `Bethel Airport;Bethel;Alaska;BET`,
-    `Bill and Hillary Clinton National Airport;Little Rock;Arkansas;LIT`,
-    `Billings Logan International Airport;Billings;Montana;BIL`,
-    `Birmingham–Shuttlesworth International Airport;Birmingham;Alabama;BHM`,
-    `Bishop International Airport;Flint;Michigan;FNT`,
-    `Bismarck Municipal Airport;Bismarck;North Dakota;BIS`,
-    `Block Island State Airport;Block Island / New Shoreham;Rhode Island;BID`,
-    `Blue Grass Airport;Lexington;Kentucky;LEX`,
-    `Bob Hope Airport;Burbank;California;BUR`,
-    `Boise Airport;Boise;Idaho;BOI`,
-    `Boulder City Municipal Airport;Boulder City;Nevada;BLD`,
-    `Bozeman Yellowstone International Airport;Bozeman;Montana;BZN`,
-    `Bradley International Airport;Hartford;Connecticut;BDL`,
-    `Brainerd Lakes Regional Airport;Brainerd;Minnesota;BRD`,
-    `Brownsville/South Padre Island International Airport;Brownsville;Texas;BRO`,
-    `Brunswick Golden Isles Airport;Brunswick;Georgia;BQK`,
-    `Buffalo Niagara International Airport;Buffalo;New York;BUF`,
-    `Burlington International Airport;Burlington;Vermont;BTV`,
-    `Capital Region International Airport;Lansing;Michigan;LAN`,
-    `Casper/Natrona County International Airport;Casper;Wyoming;CPR`,
-    `Cedar City Regional Airport;Cedar City;Utah;CDC`,
-    `Central Illinois Regional Airport at Bloomington-Normal;Bloomington / Normal;Illinois;BMI`,
-    `Central Nebraska Regional Airport;Grand Island;Nebraska;GRI`,
-    `Central Wisconsin Airport;Mosinee;Wisconsin;CWA`,
-    `Charles M. Schulz–Sonoma County Airport;Santa Rosa;California;STS`,
-    `Charleston International Airport / Charleston AFB;Charleston;South Carolina;CHS`,
-    `Charlotte/Douglas International Airport;Charlotte;North Carolina;CLT`,
-    `Charlottesville–Albemarle Airport;Charlottesville;Virginia;CHO`,
-    `Chattanooga Metropolitan Airport;Chattanooga;Tennessee;CHA`,
-    `Cherry Capital Airport;Traverse City;Michigan;TVC`,
-    `Cheyenne Regional Airport;Cheyenne;Wyoming;CYS`,
-    `Chicago Midway International Airport;Chicago;Illinois;MDW`,
-    `Chicago O'Hare International Airport;Chicago;Illinois;ORD`,
-    `Chicago Rockford International Airport;Rockford;Illinois;RFD`,
-    `Chico Municipal Airport;Chico;California;CIC`,
-    `Chippewa County International Airport;Sault Ste. Marie;Michigan;CIU`,
-    `Chippewa Valley Regional Airport;Eau Claire;Wisconsin;EAU`,
-    `Cincinnati Municipal Lunken Airport;Cincinnati;Ohio;LUK`,
-    `Cincinnati/Northern Kentucky International Airport;Cincinnati / Covington;Kentucky;CVG`,
-    `City of Colorado Springs Municipal Airport;Colorado Springs;Colorado;COS`,
-    `Cleveland-Hopkins International Airport;Cleveland;Ohio;CLE`,
-    `Coastal Carolina Regional Airport;New Bern;North Carolina;EWN`,
-    `Columbia Metropolitan Airport;Columbia;South Carolina;CAE`,
-    `Columbia Regional Airport;Columbia;Missouri;COU`,
-    `Columbus Metropolitan Airport;Columbus;Georgia;CSG`,
-    `Concord Regional Airport;Concord;North Carolina;USA`,
-    `Corpus Christi International Airport;Corpus Christi / Kingsville;Texas;CRP`,
-    `Dallas Love Field;Dallas;Texas;DAL`,
-    `Dallas/Fort Worth International Airport;Dallas-Fort Worth;Texas;DFW`,
-    `Dane County Regional Airport;Madison;Wisconsin;MSN`,
-    `Daniel K. Inouye International Airport;Honolulu;Hawaii;HNL`,
-    `Daytona Beach International Airport;Daytona Beach;Florida;DAB`,
-    `Deadhorse Airport;Deadhorse / Prudhoe Bay;Alaska;SCC`,
-    `Del Norte County Airport;Crescent City;California;CEC`,
-    `Delta County Airport;Escanaba;Michigan;ESC`,
-    `Denver International Airport;Denver;Colorado;DEN`,
-    `Des Moines International Airport;Des Moines;Iowa;DSM`,
-    `Destin–Fort Walton Beach Airport / Eglin Air Force Base;Valparaiso;Florida;VPS`,
-    `Detroit Metropolitan Wayne County Airport;Detroit / Romulus;Michigan;DTW`,
-    `Dickinson Theodore Roosevelt Regional Airport;Dickinson;North Dakota;DIK`,
-    `Dillingham Airport;Dillingham;Alaska;DLG`,
-    `Dothan Regional Airport;Dothan;Alabama;DHN`,
-    `Dubuque Regional Airport;Dubuque;Iowa;DBQ`,
-    `Duluth International Airport;Duluth;Minnesota;DLH`,
-    `Durango-La Plata County Airport;Durango;Colorado;DRO`,
-    `Eagle County Regional Airport;Eagle;Colorado;EGE`,
-    `East Texas Regional Airport;Longview;Texas;GGG`,
-    `Easterwood Airport;College Station;Texas;CLL`,
-    `Edward G. Pitka Sr. Airport;Galena;Alaska;GAL`,
-    `El Paso International Airport;El Paso;Texas;ELP`,
-    `Elko Regional Airport;Elko;Nevada;EKO`,
-    `Elmira/Corning Regional Airport;Elmira / Corning;New York;ELM`,
-    `Eppley Airfield;Omaha;Nebraska;OMA`,
-    `Erie International Airport;Erie;Pennsylvania;ERI`,
-    `Eugene Airport;Eugene;Oregon;EUG`,
-    `Evansville Regional Airport;Evansville;Indiana;EVV`,
-    `Fairbanks International Airport;Fairbanks;Alaska;FAI`,
-    `Falls International Airport;International Falls;Minnesota;INL`,
-    `Fayetteville Regional Airport;Fayetteville;North Carolina;FAY`,
-    `Fernando Luis Ribas Dominicci Airport;San Juan / Miramar;Puerto Rico;SIG`,
-    `Flagstaff Pulliam Airport;Flagstaff;Arizona;FLG`,
-    `Florence Regional Airport;Florence;South Carolina;FLO`,
-    `Ford Airport;Iron Mountain / Kingsford;Michigan;IMT`,
-    `Fort Lauderdale–Hollywood International Airport;Fort Lauderdale;Florida;FLL`,
-    `Fort Smith Regional Airport;Fort Smith;Arkansas;FSM`,
-    `Fort Wayne International Airport;Fort Wayne;Indiana;FWA`,
-    `Fresno Yosemite International Airport;Fresno;California;FAT`,
-    `Friday Harbor Airport;Friday Harbor;Washington;FRD`,
-    `Friedman Memorial Airport;Hailey;Idaho;SUN`,
-    `Gainesville Regional Airport;Gainesville;Florida;GNV`,
-    `Garden City Regional Airport;Garden City;Kansas;GCK`,
-    `Gen. Edward Lawrence Logan International Airport;Boston;Massachusetts;BOS`,
-    `General Mitchell International Airport;Milwaukee;Wisconsin;MKE`,
-    `General Wayne A. Downing Peoria International Airport;Peoria;Illinois;PIA`,
-    `George Bush Intercontinental Airport;Houston;Texas;IAH`,
-    `Gerald R. Ford International Airport;Grand Rapids;Michigan;GRR`,
-    `Gillette-Campbell County Airport;Gillette;Wyoming;GCC`,
-    `Glacier Park International Airport;Kalispell;Montana;FCA`,
-    `Golden Triangle Regional Airport;Columbus / West Point / Starkville;Mississippi;GTR`,
-    `Grand Canyon National Park Airport;Grand Canyon / Tusayan;Arizona;GCN`,
-    `Grand Canyon West Airport;Peach Springs;Arizona;GCW`,
-    `Grand Forks International Airport;Grand Forks;North Dakota;GFK`,
-    `Grand Junction Regional Airport;Grand Junction;Colorado;GJT`,
-    `Great Falls International Airport;Great Falls;Montana;GTF`,
-    `Greater Binghamton Airport;Binghamton;New York;BGM`,
-    `Greater Rochester International Airport;Rochester;New York;ROC`,
-    `Green Bay–Austin Straubel International Airport;Green Bay;Wisconsin;GRB`,
-    `Greenbrier Valley Airport;Lewisburg;West Virginia;LWB`,
-    `Greenville-Spartanburg International Airport;Greenville;South Carolina;GSP`,
-    `Gulfport–Biloxi International Airport;Gulfport / Biloxi;Mississippi;GPT`,
-    `Gunnison-Crested Butte Regional Airport;Gunnison;Colorado;GUC`,
-    `Hagerstown Regional Airport;Hagerstown;Maryland;HGR`,
-    `Harrisburg International Airport;Harrisburg / Middletown;Pennsylvania;MDT`,
-    `Hartsfield–Jackson Atlanta International Airport;Atlanta;Georgia;ATL`,
-    `Hector International Airport;Fargo;North Dakota;FAR`,
-    `Helena Regional Airport;Helena;Montana;HLN`,
-    `Hilo International Airport;Hilo;Hawaii;ITO`,
-    `Hilton Head Airport;Hilton Head Island;South Carolina;HHH`,
-    `Homer Airport;Homer;Alaska;HOM`,
-    `Houghton County Memorial Airport;Hancock / Calumet;Michigan;CMX`,
-    `Huntsville International Airport;Huntsville;Alabama;HSV`,
-    `Idaho Falls Regional Airport;Idaho Falls;Idaho;IDA`,
-    `Indianapolis International Airport;Indianapolis;Indiana;IND`,
-    `Ithaca Tompkins Regional Airport;Ithaca;New York;ITH`,
-    `Jack Brooks Regional Airport;Beaumont / Port Arthur;Texas;BPT`,
-    `Jackson Hole Airport;Jackson;Wyoming;JAC`,
-    `Jackson–Evers International Airport;Jackson;Mississippi;JAN`,
-    `Jacksonville International Airport;Jacksonville;Florida;JAX`,
-    `James M. Cox Dayton International Airport;Dayton;Ohio;DAY`,
-    `John F. Kennedy International Airport;New York;New York;JFK`,
-    `John Glenn Columbus International Airport;Columbus;Ohio;CMH`,
-    `John Wayne Airport;Santa Ana;California;SNA`,
-    `Joplin Regional Airport;Joplin;Missouri;JLN`,
-    `José Aponte de la Torre Airport;Ceiba;Puerto Rico;NRR`,
-    `Juneau International Airport;Juneau;Alaska;JNU`,
-    `Kahului Airport;Kahului;Hawaii;OGG`,
-    `Kalamazoo/Battle Creek International Airport;Kalamazoo / Battle Creek;Michigan;AZO`,
-    `Kansas City International Airport;Kansas City;Missouri;MCI`,
-    `Kenai Municipal Airport;Kenai;Alaska;ENA`,
-    `Ketchikan International Airport;Ketchikan;Alaska;KTN`,
-    `Key West International Airport;Key West;Florida;EYW`,
-    `Killeen-Fort Hood Regional Airport / Robert Gray Army Airfield;Fort Hood / Killeen / Temple;Texas;GRK`,
-    `King County International Airport;Seattle;Washington;BFI`,
-    `King Salmon Airport;King Salmon;Alaska;AKN`,
-    `Knox County Regional Airport;Rockland;Maine;RKD`,
-    `Kodiak Airport;Kodiak;Alaska;ADQ`,
-    `Kona International Airport at Keahole;Kailua-Kona , Hawaii;Hawaii;KOA`,
-    `La Crosse Regional Airport;La Crosse;Wisconsin;LSE`,
-    `Lafayette Regional Airport;Lafayette;Louisiana;LFT`,
-    `LaGuardia Airport;New York;New York;LGA`,
-    `Lake Charles Regional Airport;Lake Charles;Louisiana;LCH`,
-    `Lake Hood Seaplane Base;Anchorage;Alaska;`,
-    `Lanai Airport;Lanai City , Lanai;Hawaii;LNY`,
-    `Laredo International Airport;Laredo;Texas;LRD`,
-    `Laughlin/Bullhead International Airport;Bullhead City;Arizona;IFP`,
-    `Lawton–Fort Sill Regional Airport;Lawton;Oklahoma;LAW`,
-    `Lea County Regional Airport;Hobbs;New Mexico;HOB`,
-    `Lebanon Municipal Airport;Lebanon;New Hampshire;LEB`,
-    `Lehigh Valley International Airport;Allentown;Pennsylvania;ABE`,
-    `Lewiston-Nez Perce County Airport;Lewiston;Idaho;LWS`,
-    `Lihue Airport;Lihue , Kauai;Hawaii;LIH`,
-    `Lincoln Airport;Lincoln;Nebraska;LNK`,
-    `Boston Logan International Airport;East Boston;Massachusetts;BOS`,
-    `Long Beach Airport;Long Beach;California;LGB`,
-    `Long Island MacArthur Airport;Islip;New York;ISP`,
-    `Los Angeles International Airport;Los Angeles;California;LAX`,
-    `Louis Armstrong New Orleans International Airport;New Orleans;Louisiana;MSY`,
-    `Louisville International Airport;Louisville;Kentucky;SDF`,
-    `Lubbock Preston Smith International Airport;Lubbock;Texas;LBB`,
-    `Luis Muñoz Marín International Airport;San Juan / Carolina;Puerto Rico;SJU`,
-    `Lynchburg Regional Airport;Lynchburg;Virginia;LYH`,
-    `Magic Valley Regional Airport;Twin Falls;Idaho;TWF`,
-    `Mammoth Yosemite Airport;Mammoth Lakes;California;MMH`,
-    `Manchester–Boston Regional Airport;Manchester;New Hampshire;MHT`,
-    `Manhattan Regional Airport;Manhattan;Kansas;MHK`,
-    `Martha's Vineyard Airport;Vineyard Haven;Massachusetts;MVY`,
-    `MBS International Airport;Saginaw;Michigan;MBS`,
-    `McAllen Miller International Airport;McAllen;Texas;MFE`,
-    `McCarran International Airport;Las Vegas;Nevada;LAS`,
-    `McClellan–Palomar Airport;Carlsbad;California;CRQ`,
-    `McGhee Tyson Airport;Knoxville;Tennessee;TYS`,
-    `Meadows Field;Bakersfield;California;BFL`,
-    `Melbourne International Airport;Melbourne;Florida;MLB`,
-    `Memphis International Airport;Memphis;Tennessee;MEM`,
-    `Mercedita International Airport;Ponce;Puerto Rico;PSE`,
-    `Merle K. Smith Airport;Cordova;Alaska;CDV`,
-    `Merrill Field;Anchorage;Alaska;MRI`,
-    `Miami International Airport;Miami;Florida;MIA`,
-    `MidAmerica St. Louis Airport / Scott Air Force Base;Belleville;Illinois;BLV`,
-    `Midland International Airport;Midland;Texas;MAF`,
-    `Minneapolis–St. Paul International Airport;Minneapolis;Minnesota;MSP`,
-    `Minot International Airport;Minot;North Dakota;MOT`,
-    `Missoula International Airport;Missoula;Montana;MSO`,
-    `Mobile Regional Airport;Mobile;Alabama;MOB`,
-    `Molokai Airport;Kaunakakai , Molokai;Hawaii;MKK`,
-    `Monroe Regional Airport;Monroe;Louisiana;MLU`,
-    `Monterey Regional Airport;Monterey;California;MRY`,
-    `Montgomery Regional Airport;Montgomery;Alabama;MGM`,
-    `Montrose Regional Airport;Montrose;Colorado;MTJ`,
-    `Morgantown Municipal Airport;Morgantown;West Virginia;MGW`,
-    `Muskegon County Airport;Muskegon;Michigan;MKG`,
-    `Myrtle Beach International Airport;Myrtle Beach;South Carolina;MYR`,
-    `Nantucket Memorial Airport;Nantucket;Massachusetts;ACK`,
-    `Nashville International Airport;Nashville;Tennessee;BNA`,
-    `Newark Liberty International Airport;Newark;New Jersey;EWR`,
-    `Newport News/Williamsburg International Airport;Newport News;Virginia;PHF`,
-    `Niagara Falls International Airport;Niagara Falls;New York;IAG`,
-    `Nome Airport;Nome;Alaska;OME`,
-    `Norfolk International Airport;Norfolk;Virginia;ORF`,
-    `Norman Y. Mineta San José International Airport;San Jose;California;SJC`,
-    `North Central West Virginia Airport;Clarksburg;West Virginia;CKB`,
-    `North Las Vegas Airport;Las Vegas / North Las Vegas;Nevada;VGT`,
-    `Northeast Florida Regional Airport;St. Augustine;Florida;UST`,
-    `Northern Maine Regional Airport at Presque Isle;Presque Isle;Maine;PQI`,
-    `Northwest Arkansas Regional Airport;Fayetteville;Arkansas;XNA`,
-    `Northwest Florida Beaches International Airport;Panama City Beach;Florida;ECP`,
-    `Oakland International Airport;Oakland;California;OAK`,
-    `Ogden-Hinckley Airport;Ogden;Utah;OGD`,
-    `Ontario International Airport;Ontario;California;ONT`,
-    `Orlando International Airport;Orlando;Florida;MCO`,
-    `Orlando Sanford International Airport;Orlando / Sanford;Florida;SFB`,
-    `Owensboro-Daviess County Regional Airport;Owensboro;Kentucky;OWB`,
-    `Page Municipal Airport;Page;Arizona;PGA`,
-    `Palm Beach International Airport;West Palm Beach;Florida;PBI`,
-    `Palm Springs International Airport;Palm Springs;California;PSP`,
-    `Pangborn Memorial Airport;Wenatchee;Washington;EAT`,
-    `Pellston Regional Airport of Emmet County;Pellston;Michigan;PLN`,
-    `Pensacola International Airport;Pensacola;Florida;PNS`,
-    `Petersburg James A. Johnson Airport;Petersburg;Alaska;PSG`,
-    `Philadelphia International Airport;Philadelphia;Pennsylvania;PHL`,
-    `Phoenix Sky Harbor International Airport;Phoenix;Arizona;PHX`,
-    `Phoenix–Mesa Gateway Airport;Mesa;Arizona;AZA`,
-    `Piedmont Triad International Airport;Greensboro;North Carolina;GSO`,
-    `Pitt-Greenville Airport;Greenville;North Carolina;PGV`,
-    `Pittsburgh International Airport;Pittsburgh;Pennsylvania;PIT`,
-    `Plattsburgh International Airport;Plattsburgh;New York;PBG`,
-    `Pocatello Regional Airport;Pocatello / Arbon Valley;Idaho;PIH`,
-    `Portland International Airport;Portland;Oregon;PDX`,
-    `Portland International Jetport;Portland;Maine;PWM`,
-    `Portsmouth International Airport at Pease;Portsmouth;New Hampshire;PSM`,
-    `Provincetown Municipal Airport;Provincetown;Massachusetts;PVC`,
-    `Provo Municipal Airport;Provo;Utah;PVU`,
-    `Pullman/Moscow Regional Airport;Pullman / Moscow, Idaho;Washington;PUW`,
-    `Punta Gorda Airport;Punta Gorda;Florida;PGD`,
-    `Quad City International Airport;Moline;Illinois;MLI`,
-    `Quincy Regional Airport;Quincy;Illinois;UIN`,
-    `Rafael Hernández International Airport;Aguadilla;Puerto Rico;BQN`,
-    `Raleigh-Durham International Airport;Raleigh;North Carolina;RDU`,
-    `Ralph Wien Memorial Airport;Kotzebue;Alaska;OTZ`,
-    `Range Regional Airport;Hibbing;Minnesota;HIB`,
-    `Rapid City Regional Airport;Rapid City;South Dakota;RAP`,
-    `Redding Municipal Airport;Redding;California;RDD`,
-    `Redmond Municipal Airport;Redmond;Oregon;RDM`,
-    `Reno/Tahoe International Airport;Reno;Nevada;RNO`,
-    `Republic Airport;Farmingdale;New York;FRG`,
-    `Rhinelander-Oneida County Airport;Rhinelander;Wisconsin;RHI`,
-    `Richmond International Airport;Richmond;Virginia;RIC`,
-    `Rick Husband Amarillo International Airport;Amarillo;Texas;AMA`,
-    `Rickenbacker International Airport;Columbus;Ohio;LCK`,
-    `Riverton Regional Airport;Riverton;Wyoming;RIW`,
-    `Roanoke Regional Airport;Roanoke;Virginia;ROA`,
-    `Rochester International Airport;Rochester;Minnesota;RST`,
-    `Rogue Valley International-Medford Airport;Medford;Oregon;MFR`,
-    `Ronald Reagan Washington National Airport;Washington, D.C. / Arlington County;Virginia;DCA`,
-    `Roswell International Air Center;Roswell;New Mexico;ROW`,
-    `Sacramento International Airport;Sacramento;California;SMF`,
-    `Salisbury-Ocean City Wicomico Regional Airport;Salisbury;Maryland;SBY`,
-    `Salt Lake City International Airport;Salt Lake City;Utah;SLC`,
-    `San Angelo Regional Airport;San Angelo;Texas;SJT`,
-    `San Antonio International Airport;San Antonio;Texas;SAT`,
-    `San Diego International Airport;San Diego;California;SAN`,
-    `San Francisco International Airport;San Francisco;California;SFO`,
-    `San Luis Obispo County Regional Airport;San Luis Obispo;California;SBP`,
-    `Santa Barbara Municipal Airport;Santa Barbara;California;SBA`,
-    `Santa Fe Regional Airport;Santa Fe;New Mexico;SAF`,
-    `Santa Maria Public Airport;Santa Maria;California;SMX`,
-    `Sarasota–Bradenton International Airport;Sarasota / Bradenton;Florida;SRQ`,
-    `Savannah/Hilton Head International Airport;Savannah;Georgia;SAV`,
-    `Sawyer International Airport;Marquette / Gwinn;Michigan;MQT`,
-    `Seattle–Tacoma International Airport;Seattle / Tacoma ( SeaTac );Washington;SEA`,
-    `Sheridan County Airport;Sheridan;Wyoming;SHR`,
-    `Shreveport Regional Airport;Shreveport;Louisiana;SHV`,
-    `Sidney–Richland Municipal Airport;Sidney;Montana;SDY`,
-    `Sioux Falls Regional Airport;Sioux Falls;South Dakota;FSD`,
-    `Sioux Gateway Airport;Sioux City;Iowa;SUX`,
-    `Sitka Rocky Gutierrez Airport;Sitka;Alaska;SIT`,
-    `Sloulin Field International Airport;Williston;North Dakota;ISN`,
-    `South Bend International Airport;South Bend;Indiana;SBN`,
-    `Southwest Florida International Airport;Fort Myers;Florida;RSW`,
-    `Southwest Georgia Regional Airport;Albany;Georgia;ABY`,
-    `Southwest Oregon Regional Airport;North Bend;Oregon;OTH`,
-    `Southwest Wyoming Regional Airport;Rock Springs;Wyoming;RKS`,
-    `Spokane International Airport;Spokane;Washington;GEG`,
-    `Springfield-Branson National Airport;Springfield;Missouri;SGF`,
-    `St. Cloud Regional Airport;St. Cloud;Minnesota;STC`,
-    `St. George Regional Airport;St. George;Utah;SGU`,
-    `St. Louis Lambert International Airport;St. Louis;Missouri;STL`,
-    `St. Mary's Airport;St. Mary's;Alaska;KSM`,
-    `St. Pete–Clearwater International Airport;St. Petersburg / Clearwater;Florida;PIE`,
-    `Stewart International Airport;Newburgh;New York;SWF`,
-    `Stockton Metropolitan Airport;Stockton;California;SCK`,
-    `Syracuse Hancock International Airport;Syracuse;New York;SYR`,
-    `Tallahassee International Airport;Tallahassee;Florida;TLH`,
-    `Tampa International Airport;Tampa;Florida;TPA`,
-    `Ted Stevens Anchorage International Airport;Anchorage;Alaska;ANC`,
-    `Texarkana Regional Airport;Texarkana;Arkansas;TXK`,
-    `The Eastern Iowa Airport;Cedar Rapids;Iowa;CID`,
-    `Theodore Francis Green State Airport;Providence / Warwick;Rhode Island;PVD`,
-    `Toledo Express Airport;Toledo;Ohio;TOL`,
-    `Topeka Regional Airport;Topeka;Kansas;FOE`,
-    `Trenton Mercer Airport;Trenton;New Jersey;TTN`,
-    `Tri-Cities Airport;Pasco;Washington;PSC`,
-    `Tri-Cities Regional Airport;Bristol / Johnson City / Kingsport;Tennessee;TRI`,
-    `Tri-State Airport;Huntington;West Virginia;HTS`,
-    `Tucson International Airport;Tucson;Arizona;TUS`,
-    `Tulsa International Airport;Tulsa;Oklahoma;TUL`,
-    `Tweed New Haven Regional Airport;New Haven;Connecticut;HVN`,
-    `Tyler Pounds Regional Airport;Tyler;Texas;TYR`,
-    `Unalakleet Airport;Unalakleet;Alaska;UNK`,
-    `Unalaska Airport;Unalaska;Alaska;DUT`,
-    `University of Illinois - Willard Airport;Champaign / Urbana;Illinois;CMI`,
-    `University Park Airport;State College;Pennsylvania;SCE`,
-    `Valdez Airport;Valdez;Alaska;VDZ`,
-    `Valdosta Regional Airport;Valdosta;Georgia;VLD`,
-    `Valley International Airport;Harlingen;Texas;HRL`,
-    `Waco Regional Airport;Waco;Texas;ACT`,
-    `Walla Walla Regional Airport;Walla Walla;Washington;ALW`,
-    `Washington Dulles International Airport;Washington, D.C. / Dulles / Chantilly;Virginia;IAD`,
-    `Waterloo Regional Airport;Waterloo;Iowa;ALO`,
-    `Watertown International Airport;Watertown;New York;ART`,
-    `Westchester County Airport;White Plains;New York;HPN`,
-    `Westerly State Airport;Westerly;Rhode Island;WST`,
-    `Wichita Dwight D. Eisenhower National Airport;Wichita;Kansas;ICT`,
-    `Wichita Falls Municipal Airport / Sheppard Air Force Base;Wichita Falls;Texas;SPS`,
-    `Wiley Post–Will Rogers Memorial Airport;Barrow;Alaska;BRW`,
-    `Wilkes-Barre/Scranton International Airport;Wilkes-Barre / Scranton;Pennsylvania;AVP`,
-    `Will Rogers World Airport;Oklahoma City;Oklahoma;OKC`,
-    `William P. Hobby Airport;Houston;Texas;HOU`,
-    `William R. Fairchild International Airport;Port Angeles;Washington;CLM`,
-    `Williamson County Regional Airport;Marion;Illinois;MWA`,
-    `Williamsport Regional Airport;Williamsport;Pennsylvania;IPT`,
-    `Wilmington Airport;Wilmington;Delaware;ILG`,
-    `Wilmington International Airport;Wilmington;North Carolina;ILM`,
-    `Worcester Regional Airport;Worcester;Massachusetts;ORH`,
-    `Wrangell Airport;Wrangell;Alaska;WRG`,
-    `Yakima Air Terminal;Yakima;Washington;YKM`,
-    `Yakutat Airport;Yakutat;Alaska;YAK`,
-    `Yampa Valley Airport;Hayden;Colorado;HDN`,
-    `Yeager Airport;Charleston;West Virginia;CRW`,
-    `Yellowstone Regional Airport;Cody;Wyoming;COD`,
-    `Youngstown-Warren Regional Airport;Youngstown / Warren;Ohio;YNG`,
-    `Yuma International Airport;Yuma;Arizona;YUM`
-];
-;
-// Parses list of US airports into Airport objects and returns an array of all of them.
-const parseAirports = () => {
-    return airportRawInfo.map(airportText => {
-        const attributes = airportText.split(';');
-        const airportName = attributes[0];
-        const city = attributes[1];
-        const state = attributes[2];
-        const stateInitials = (0, State_1.getStateInitials)(attributes[3]);
-        const airportInitials = attributes[4];
-        return { airportName, city, state, stateInitials, airportInitials };
-    });
-};
-exports.parseAirports = parseAirports;
 
 
 /***/ }),
@@ -24005,6 +23433,16 @@ typeof d?d:I(d)},push:z,replace:A,go:y,back:function(){y(-1)},forward:function()
 
 })));
 
+
+/***/ }),
+
+/***/ "./node_modules/react-google-login/dist/google-login.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/react-google-login/dist/google-login.js ***!
+  \**************************************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+!function(e,t){ true?module.exports=t(__webpack_require__(/*! react */ "react")):0}("undefined"!=typeof self?self:this,(function(e){return o={},t.m=n=[function(t){t.exports=e},function(e,t,n){e.exports=n(2)()},function(e,t,n){"use strict";function o(){}function r(){}var i=n(3);r.resetWarningCache=o,e.exports=function(){function e(e,t,n,o,r,a){if(a!==i){var c=Error("Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");throw c.name="Invariant Violation",c}}function t(){return e}var n={array:e.isRequired=e,bool:e,func:e,number:e,object:e,string:e,symbol:e,any:e,arrayOf:t,element:e,elementType:e,instanceOf:t,node:e,objectOf:t,oneOf:t,oneOfType:t,shape:t,exact:t,checkPropTypes:r,resetWarningCache:o};return n.PropTypes=n}},function(e){"use strict";e.exports="SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED"},function(e,t,n){"use strict";function o(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return r(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?r(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function r(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function i(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return a(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?a(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function a(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function c(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return u(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?u(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function u(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function l(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return s(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?s(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function s(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function f(e,t,n,o,r,i){var a=e.getElementsByTagName(t)[0],c=a,u=a;(u=e.createElement(t)).id=n,u.src=o,c&&c.parentNode?c.parentNode.insertBefore(u,c):e.head.appendChild(u),u.onerror=i,u.onload=r}function d(e,t){var n=e.getElementById(t);n&&n.parentNode.removeChild(n)}function p(e){return b.a.createElement("span",{style:{paddingRight:10,fontWeight:500,paddingLeft:e.icon?0:10,paddingTop:10,paddingBottom:10}},e.children)}function g(e){return b.a.createElement("div",{style:{marginRight:10,background:e.active?"#eee":"#fff",padding:10,borderRadius:2}},b.a.createElement("svg",{width:"18",height:"18",xmlns:"http://www.w3.org/2000/svg"},b.a.createElement("g",{fill:"#000",fillRule:"evenodd"},b.a.createElement("path",{d:"M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z",fill:"#EA4335"}),b.a.createElement("path",{d:"M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z",fill:"#4285F4"}),b.a.createElement("path",{d:"M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9.008 9.008 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z",fill:"#FBBC05"}),b.a.createElement("path",{d:"M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z",fill:"#34A853"}),b.a.createElement("path",{fill:"none",d:"M0 0h18v18H0z"}))))}function y(e){var t=i(Object(m.useState)(!1),2),n=t[0],o=t[1],r=i(Object(m.useState)(!1),2),a=r[0],c=r[1],u=e.tag,l=e.type,s=e.className,f=e.disabledStyle,d=e.buttonText,y=e.children,v=e.render,S=e.theme,j=e.icon,O=e.disabled,x=h({onSuccess:e.onSuccess,onAutoLoadFinished:e.onAutoLoadFinished,onRequest:e.onRequest,onFailure:e.onFailure,onScriptLoadFailure:e.onScriptLoadFailure,clientId:e.clientId,cookiePolicy:e.cookiePolicy,loginHint:e.loginHint,hostedDomain:e.hostedDomain,autoLoad:e.autoLoad,isSignedIn:e.isSignedIn,fetchBasicProfile:e.fetchBasicProfile,redirectUri:e.redirectUri,discoveryDocs:e.discoveryDocs,uxMode:e.uxMode,scope:e.scope,accessType:e.accessType,responseType:e.responseType,jsSrc:e.jsSrc,prompt:e.prompt}),I=x.signIn,w=O||!x.loaded;if(v)return v({onClick:I,disabled:w});var k={backgroundColor:"dark"===S?"rgb(66, 133, 244)":"#fff",display:"inline-flex",alignItems:"center",color:"dark"===S?"#fff":"rgba(0, 0, 0, .54)",boxShadow:"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",padding:0,borderRadius:2,border:"1px solid transparent",fontSize:14,fontWeight:"500",fontFamily:"Roboto, sans-serif"},A={cursor:"pointer",backgroundColor:"dark"===S?"#3367D6":"#eee",color:"dark"===S?"#fff":"rgba(0, 0, 0, .54)",opacity:1},_=w?Object.assign({},k,f):a?Object.assign({},k,A):n?Object.assign({},k,{cursor:"pointer",opacity:.9}):k;return b.a.createElement(u,{onMouseEnter:function(){return o(!0)},onMouseLeave:function(){o(!1),c(!1)},onMouseDown:function(){return c(!0)},onMouseUp:function(){return c(!1)},onClick:I,style:_,type:l,disabled:w,className:s},[j&&b.a.createElement(g,{key:1,active:a}),b.a.createElement(p,{icon:j,key:2},y||d)])}n.r(t),n.d(t,"default",(function(){return S})),n.d(t,"GoogleLogin",(function(){return S})),n.d(t,"GoogleLogout",(function(){return O})),n.d(t,"useGoogleLogin",(function(){return h})),n.d(t,"useGoogleLogout",(function(){return j}));var m=n(0),b=n.n(m),h=(n(1),function(e){function t(e){var t=e.getBasicProfile(),n=e.getAuthResponse(!0);e.googleId=t.getId(),e.tokenObj=n,e.tokenId=n.id_token,e.accessToken=n.access_token,e.profileObj={googleId:t.getId(),imageUrl:t.getImageUrl(),email:t.getEmail(),name:t.getName(),givenName:t.getGivenName(),familyName:t.getFamilyName()},i(e)}function n(e){if(e&&e.preventDefault(),P){var n=window.gapi.auth2.getAuthInstance(),o={prompt:L};p(),"code"===_?n.grantOfflineAccess(o).then((function(e){return i(e)}),(function(e){return l(e)})):n.signIn(o).then((function(e){return t(e)}),(function(e){return l(e)}))}}var r=e.onSuccess,i=void 0===r?function(){}:r,a=e.onAutoLoadFinished,c=void 0===a?function(){}:a,u=e.onFailure,l=void 0===u?function(){}:u,s=e.onRequest,p=void 0===s?function(){}:s,g=e.onScriptLoadFailure,y=e.clientId,b=e.cookiePolicy,h=e.loginHint,v=e.hostedDomain,S=e.autoLoad,j=e.isSignedIn,O=e.fetchBasicProfile,x=e.redirectUri,I=e.discoveryDocs,w=e.uxMode,k=e.scope,A=e.accessType,_=e.responseType,E=e.jsSrc,T=void 0===E?"https://apis.google.com/js/api.js":E,L=e.prompt,M=o(Object(m.useState)(!1),2),P=M[0],C=M[1];return Object(m.useEffect)((function(){var e=!1,n=g||l;return f(document,"script","google-login",T,(function(){var o={client_id:y,cookie_policy:b,login_hint:h,hosted_domain:v,fetch_basic_profile:O,discoveryDocs:I,ux_mode:w,redirect_uri:x,scope:k,access_type:A};"code"===_&&(o.access_type="offline"),window.gapi.load("auth2",(function(){var r=window.gapi.auth2.getAuthInstance();r?r.then((function(){e||(j&&r.isSignedIn.get()?(C(!0),c(!0),t(r.currentUser.get())):(C(!0),c(!1)))}),(function(e){l(e)})):window.gapi.auth2.init(o).then((function(n){if(!e){C(!0);var o=j&&n.isSignedIn.get();c(o),o&&t(n.currentUser.get())}}),(function(e){C(!0),c(!1),n(e)}))}))}),(function(e){n(e)})),function(){e=!0,d(document,"google-login")}}),[]),Object(m.useEffect)((function(){S&&n()}),[P]),{signIn:n,loaded:P}});function v(e){var t=l(Object(m.useState)(!1),2),n=t[0],o=t[1],r=l(Object(m.useState)(!1),2),i=r[0],a=r[1],c=e.tag,u=e.type,s=e.className,f=e.disabledStyle,d=e.buttonText,y=e.children,h=e.render,v=e.theme,S=e.icon,O=e.disabled,x=j({jsSrc:e.jsSrc,onFailure:e.onFailure,onScriptLoadFailure:e.onScriptLoadFailure,clientId:e.clientId,cookiePolicy:e.cookiePolicy,loginHint:e.loginHint,hostedDomain:e.hostedDomain,fetchBasicProfile:e.fetchBasicProfile,discoveryDocs:e.discoveryDocs,uxMode:e.uxMode,redirectUri:e.redirectUri,scope:e.scope,accessType:e.accessType,onLogoutSuccess:e.onLogoutSuccess}),I=x.signOut,w=O||!x.loaded;if(h)return h({onClick:I,disabled:w});var k={backgroundColor:"dark"===v?"rgb(66, 133, 244)":"#fff",display:"inline-flex",alignItems:"center",color:"dark"===v?"#fff":"rgba(0, 0, 0, .54)",boxShadow:"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",padding:0,borderRadius:2,border:"1px solid transparent",fontSize:14,fontWeight:"500",fontFamily:"Roboto, sans-serif"},A={cursor:"pointer",backgroundColor:"dark"===v?"#3367D6":"#eee",color:"dark"===v?"#fff":"rgba(0, 0, 0, .54)",opacity:1},_=w?Object.assign({},k,f):i?Object.assign({},k,A):n?Object.assign({},k,{cursor:"pointer",opacity:.9}):k;return b.a.createElement(c,{onMouseEnter:function(){return o(!0)},onMouseLeave:function(){o(!1),a(!1)},onMouseDown:function(){return a(!0)},onMouseUp:function(){return a(!1)},onClick:I,style:_,type:u,disabled:w,className:s},[S&&b.a.createElement(g,{key:1,active:i}),b.a.createElement(p,{icon:S,key:2},y||d)])}y.defaultProps={type:"button",tag:"button",buttonText:"Sign in with Google",scope:"profile email",accessType:"online",prompt:"",cookiePolicy:"single_host_origin",fetchBasicProfile:!0,isSignedIn:!1,uxMode:"popup",disabledStyle:{opacity:.6},icon:!0,theme:"light",onRequest:function(){}};var S=y,j=function(e){var t=e.jsSrc,n=void 0===t?"https://apis.google.com/js/api.js":t,o=e.onFailure,r=e.onScriptLoadFailure,i=e.clientId,a=e.cookiePolicy,u=e.loginHint,l=e.hostedDomain,s=e.fetchBasicProfile,p=e.discoveryDocs,g=e.uxMode,y=e.redirectUri,b=e.scope,h=e.accessType,v=e.onLogoutSuccess,S=c(Object(m.useState)(!1),2),j=S[0],O=S[1],x=Object(m.useCallback)((function(){if(window.gapi){var e=window.gapi.auth2.getAuthInstance();null!=e&&e.then((function(){e.signOut().then((function(){e.disconnect(),v()}))}),(function(e){return o(e)}))}}),[v]);return Object(m.useEffect)((function(){var e=r||o;return f(document,"script","google-login",n,(function(){var t={client_id:i,cookie_policy:a,login_hint:u,hosted_domain:l,fetch_basic_profile:s,discoveryDocs:p,ux_mode:g,redirect_uri:y,scope:b,access_type:h};window.gapi.load("auth2",(function(){window.gapi.auth2.getAuthInstance()?O(!0):window.gapi.auth2.init(t).then((function(){return O(!0)}),(function(t){return e(t)}))}))}),(function(t){e(t)})),function(){d(document,"google-login")}}),[]),{signOut:x,loaded:j}};v.defaultProps={type:"button",tag:"button",buttonText:"Logout of Google",disabledStyle:{opacity:.6},icon:!0,theme:"light",jsSrc:"https://apis.google.com/js/api.js"};var O=v}],t.c=o,t.d=function(e,n,o){t.o(e,n)||Object.defineProperty(e,n,{enumerable:!0,get:o})},t.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.t=function(e,n){if(1&n&&(e=t(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(t.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var r in e)t.d(o,r,function(t){return e[t]}.bind(null,r));return o},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=4);function t(e){if(o[e])return o[e].exports;var r=o[e]={i:e,l:!1,exports:{}};return n[e].call(r.exports,r,r.exports,t),r.l=!0,r.exports}var n,o}));
 
 /***/ }),
 
