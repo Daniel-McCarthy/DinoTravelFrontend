@@ -25,6 +25,7 @@ import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelec
 import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
+import {GoogleLogin, GoogleLogout} from "react-google-login";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -53,6 +54,12 @@ interface IHomePageState {
     multiCityFlightSelections: Flight[];
 
     bannerImages: string[];
+
+    //Info for user login
+    LoggedIn: boolean,
+    LoginAttempted: boolean,
+    Profile: any,
+    Token: any,
 }
 
 interface IHomePageProps {
@@ -64,6 +71,7 @@ interface IToastMessage {
     toastType: ToastType,
 }
 
+// noinspection DuplicatedCode
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     public constructor(props: IHomePageProps) {
@@ -88,7 +96,12 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
             multiCityFlightSelections: [],
 
-            bannerImages
+            bannerImages,
+
+            LoggedIn: false,
+            LoginAttempted: false,
+            Profile: null,
+            Token: null,
         }
     }
 
@@ -127,6 +140,32 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     }
 
+    onSignInFail = (response: any) => {
+        this.setState({
+            LoginAttempted: true,
+            LoggedIn: false
+        })
+        console.log(response);
+    }
+
+    onSignIn = (googleUser : any) => {
+        //DO NOT SEND USER ID TO BACKEND
+        console.log(googleUser);
+        this.setState({
+            LoginAttempted: true,
+            LoggedIn: true,
+            Profile: googleUser.profileObj,
+            Token: googleUser.tokenObj,
+        })
+    }
+
+    onLogOut = () => {
+        this.setState({
+            LoginAttempted: false,
+            LoggedIn: false,
+        });
+    }
+
     render() {
         const isRoundTripSelected = this.state.flightType === FlightType.RoundTrip;
         const isMultiCitySelected = this.state.flightType === FlightType.MultiCity;
@@ -134,6 +173,47 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
         const oneWayButtonClass = isOneWaySelected ? 'selected' : '';
         const multiCityButtonClass = isMultiCitySelected ? 'selected' :  '';
+
+        //login info
+        const googleClientID = "1042234633479-gpprc2adcpltfjnaij7gib55ko91441n.apps.googleusercontent.com";
+        const isLoggedIn = this.state.LoggedIn;
+        const loginAttempted = this.state.LoginAttempted;
+
+        let response = null;
+        if (loginAttempted) {
+            if (isLoggedIn){
+                response = <div>
+                    <p>Welcome {this.state.Profile.name}, to Purple Dino Travel!</p>
+                    <p>ID {this.state.Profile.googleId}</p>
+                    <img src={this.state.Profile.imageUrl} alt = "profile picture"/>
+                    <p>EMAIL {this.state.Profile.email}</p>
+                    <p>TOKEN ID {this.state.Token.id_token}</p>
+                    <p>SCOPES {this.state.Token.scope}</p>
+                </div>
+            }else{
+                response = <p>Sorry Login has failed.</p>
+            }
+        }
+
+        let LoginButton;
+        if (isLoggedIn) {
+            LoginButton =
+                <GoogleLogout
+                    clientId={googleClientID}
+                    buttonText={"Logout"}
+                    onLogoutSuccess={this.onLogOut}
+                />
+        }else{
+            LoginButton =
+                <GoogleLogin
+                    clientId={googleClientID}
+                    buttonText={"Login"}
+                    onSuccess={this.onSignIn}
+                    onFailure={this.onSignInFail}
+                    cookiePolicy={'single_host_origin'}
+                />;
+        }
+
         return (
             <div>
                 <header>
@@ -151,9 +231,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <button className="nontoggle">support</button>
                             <button className="nontoggle">about us</button>
                             <button className="nontoggle">trips</button>
-                            <Link to='/login'>
-                                <button className="nontoggle">login</button>
-                            </Link>
+                            {LoginButton}
                         </nav>
                     </div>
                 </header>
@@ -230,6 +308,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
+
+                <div>
+                    {response}
+                </div>
 
                 <div id='bannerCarousel'>
                     <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
