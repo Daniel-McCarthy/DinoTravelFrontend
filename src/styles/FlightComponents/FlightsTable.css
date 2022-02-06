@@ -10,3 +10,13 @@ table td {
     display: flexbox;
     padding-top: 15px;
 }
+
+p {
+    padding-bottom: 200px;
+}
+
+table a {
+    text-decoration: none;
+    height: 5px;
+    width: 5px;
+}
