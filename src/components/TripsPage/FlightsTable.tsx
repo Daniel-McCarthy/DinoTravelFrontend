@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ITableData } from '../../TripsPage';
 import PropTypes from 'prop-types';
 
-import '../../styles/FlightComponents/FlightsTable.css'
+import '../../styles/FlightsTable.css'
 
 
 export type TableData = Array<ITableData>;
