@@ -9,19 +9,9 @@
     float: left;
     position: fixed;
     top:0;
-}
 
-.fadeAway {
-    /* Make toast disappear automatically - fade out after 4 seconds */
-    animation: fadeOut 500ms linear 4s;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
+    justify-content: space-between;
 }
-
-@keyframes fadeOut {
-    0% {opacity: 100;}
-    100% {opacity: 0;}
-  }
 
 .invisible {
     opacity: 0;
@@ -45,4 +35,12 @@
 .toast h3 {
     margin-left: 15px;
     font-size: 18px;
+}
+
+.toast .closeButton {
+    font-size: 24px;
+    font-weight: bold;
+    padding-right: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
 }

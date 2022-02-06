@@ -13,6 +13,7 @@ interface IToastProps {
     toastType: ToastType;
     message: string;
     show: boolean;
+    onToastClosed: () => void;
 }
 
 export class ToastMessage extends React.Component<IToastProps, IToastState> {
@@ -29,33 +30,44 @@ export class ToastMessage extends React.Component<IToastProps, IToastState> {
 
     componentDidUpdate(prevProps: IToastProps) {
         // Update show/hide state when props updates from parent component.
-        if (prevProps.show !== this.props.show) {
+        if (prevProps.show !== this.props.show || this.state.show !== this.props.show) {
             this.setState({
                 show: this.props.show
             });
         }
 
-        if (prevProps.message !== this.props.message) {
+        if (prevProps.message !== this.props.message || this.state.message !== this.props.message) {
             this.setState({
                 message: this.props.message
             })
         }
 
-        if (prevProps.toastType !== this.props.toastType) {
+        if (prevProps.toastType !== this.props.toastType || this.state.toastType !== this.props.toastType) {
             this.setState({
                 toastType: this.props.toastType
             })
         }
     }
 
+    closeToast = () => {
+        this.props.onToastClosed();
+    }
+
     render() {
-        const visibilityClass = this.state.show ? 'fadeAway' : 'invisible'
-        const toastClass = `toast ${this.state.toastType} ${visibilityClass}`;
+        const toastClass = `toast ${this.state.toastType}`;
 
         return (
-            <div className={toastClass}>
-                <h3>{this.state.message}</h3>
+            <div className='toastContainer'>
+                {this.state.show ?
+                    <div className={toastClass}>
+                        <h3>{this.state.message}</h3>
+                        <label onClick={this.closeToast} className="closeButton">x</label>
+                    </div>
+                    : null
+                }
             </div>
         )
     }
+
+
 }
