@@ -148,7 +148,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
 
                         <nav>
-                            <button className="nontoggle">support</button>
+                            <Link to='/support' >
+                                <button className="nontoggle">support</button>
+                            </Link>
                             <button className="nontoggle">about us</button>
                             <Link to='/trips'>
                                 <button className="nontoggle">trips</button>
@@ -237,9 +239,15 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
                 </div>
 
-                <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
+                <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message} onToastClosed={this.onToastClosed}></ToastMessage>
             </div>
         )
+    }
+
+    onToastClosed = () => {
+        this.setState({
+            showToast: false
+        });
     }
 
     onDepartureAirportSelectionUpdated = (selectedAirport: ILocationData | null) => {
