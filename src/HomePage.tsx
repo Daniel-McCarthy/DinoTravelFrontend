@@ -72,7 +72,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.state = {
             flightType: FlightType.RoundTrip,
             flightClass: FlightClass.EconomyClass,
-            numAdultTravelers: 0,
+            numAdultTravelers: 1,
             numChildTravelers: 0,
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
@@ -127,6 +127,22 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     }
 
+    onAdultPassengersChanged = (changeEvent: React.ChangeEvent<HTMLInputElement>) => {
+        const adultPassengersInput: HTMLInputElement = changeEvent.target;
+        const newValue = parseInt(adultPassengersInput.value);
+        this.setState({
+            numAdultTravelers: newValue
+        });
+    }
+
+    onChildPassengersChanged = (changeEvent: React.ChangeEvent<HTMLInputElement>) => {
+        const childPassengersInput: HTMLInputElement = changeEvent.target;
+        const newValue = parseInt(childPassengersInput.value);
+        this.setState({
+            numChildTravelers: newValue
+        });
+    }
+
     render() {
         const isRoundTripSelected = this.state.flightType === FlightType.RoundTrip;
         const isMultiCitySelected = this.state.flightType === FlightType.MultiCity;
@@ -171,10 +187,11 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                                 <h3>Number of Adult Travelers:</h3>
                                 <input
                                     type="number"
-                                    placeholder="1"
+                                    value={this.state.numAdultTravelers}
                                     step={1}
                                     max={10}
                                     min={0}
+                                    onChange={this.onAdultPassengersChanged}
                                 />
                             </div>
 
@@ -182,10 +199,11 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                                 <h3>Number of Child Travelers:</h3>
                                 <input
                                     type="number"
-                                    placeholder="0"
+                                    value={this.state.numChildTravelers}
                                     step={1}
                                     max={10}
                                     min={0}
+                                    onChange={this.onChildPassengersChanged}
                                 />
                             </div>
 
