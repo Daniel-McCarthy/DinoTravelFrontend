@@ -6,7 +6,7 @@ import { LoginPage } from "./LoginPage";
 
 interface IPageRoutingProps {
 
-};
+}
 
 export class PageRouting extends React.Component {
     constructor(props: IPageRoutingProps) {
@@ -24,6 +24,9 @@ export class PageRouting extends React.Component {
                     <Route path="/login" element={<LoginPage/>} />
                 </Routes>
             </Router>
+
+
+
         )
     }
 }

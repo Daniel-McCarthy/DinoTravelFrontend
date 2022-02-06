@@ -1,15 +1,13 @@
 import * as React from "react";
-import {GoogleLogin, GoogleLogout} from "react-google-login";
+import {GoogleLogin, GoogleLogout, } from "react-google-login";
 
 
 
 interface ILoginPageState {
     LoggedIn: boolean,
     LoginAttempted: boolean,
-    ID: number,
-    Name: string,
-    ImageURL: string,
-    EmailAddress: string
+    Profile: any,
+    Token: any,
 }
 
 interface ILoginPageProps {
@@ -23,10 +21,8 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
         this.state = {
             LoggedIn: false,
             LoginAttempted: false,
-            ID: 0,
-            Name: "",
-            ImageURL: "",
-            EmailAddress: ""
+            Profile: null,
+            Token: null,
         }
     }
 
@@ -35,37 +31,24 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
             LoginAttempted: true,
             LoggedIn: false
         })
-        console.log('FAILURE');
         console.log(response);
     }
 
     onSignIn = (googleUser : any) => {
+        //DO NOT SEND USER ID TO BACKEND
         console.log(googleUser);
-        const token = googleUser.tokenObj.id_token;
-        console.log(token);
-        const profile = googleUser.getBasicProfile();
         this.setState({
             LoginAttempted: true,
             LoggedIn: true,
-            ID: profile.getId(),
-            Name: profile.getName(),
-            ImageURL: profile.getImageUrl(),
-            EmailAddress: profile.getEmail()
+            Profile: googleUser.profileObj,
+            Token: googleUser.tokenObj,
         })
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
 
     onLogOut = () => {
         this.setState({
             LoginAttempted: false,
             LoggedIn: false,
-            ID: 0,
-            Name: "",
-            ImageURL: "",
-            EmailAddress: ""
         });
     }
 
@@ -78,10 +61,12 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
         if (loginAttempted) {
             if (isLoggedIn){
                 response = <div>
-                    <p>Welcome {this.state.Name}, to Purple Dino Travel!</p>
-                    <p>ID {this.state.ID}</p>
-                    <img src={this.state.ImageURL} alt = "profile picture"/>
-                    <p>EMAIL {this.state.EmailAddress}</p>
+                    <p>Welcome {this.state.Profile.name}, to Purple Dino Travel!</p>
+                    <p>ID {this.state.Profile.googleId}</p>
+                    <img src={this.state.Profile.imageUrl} alt = "profile picture"/>
+                    <p>EMAIL {this.state.Profile.email}</p>
+                    <p>TOKEN ID {this.state.Token.id_token}</p>
+                    <p>SCOPES {this.state.Token.scope}</p>
                 </div>
             }else{
                 response = <p>Sorry Login has failed.</p>
