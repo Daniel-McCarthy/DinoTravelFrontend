@@ -15,8 +15,19 @@ main {
     padding-bottom: 20px;
     margin-right: 60px;
     margin-top: 20px;
-    color: rgb(59, 77, 145);
     text-decoration: none;
     font-size: larger;
     font-weight: 500;
+}
+
+#addFlightLink {
+    color: rgb(59, 77, 145);
+}
+
+.toggleSelected {
+    color: rgb(33, 33, 33);
+}
+
+.toggleUnselected {
+    color: rgb(59, 77, 145);
 }
