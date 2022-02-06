@@ -151,6 +151,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     onSignIn = (googleUser : any) => {
         //DO NOT SEND USER ID TO BACKEND
         console.log(googleUser);
+        localStorage.setItem('name', googleUser.profileObj.name);
         this.setState({
             LoginAttempted: true,
             LoggedIn: true,
@@ -230,14 +231,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         <nav>
                             <button className="nontoggle">support</button>
                             <button className="nontoggle">about us</button>
-                            <Link
-                                to='/login'
-                                state={[this.state.LoggedIn, this.state.Profile, this.state.Token]}
-                            >
+                            <Link to='/login'>
                                 <button className="nontoggle">trips</button>
                             </Link>
-
-
                             {LoginButton}
                         </nav>
                     </div>
