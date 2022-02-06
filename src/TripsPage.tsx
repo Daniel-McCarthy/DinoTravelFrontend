@@ -16,12 +16,41 @@ import './styles/TripsPage.css'
 
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
+const tableData: ITableData = {
+        index: 0,
+        airline: "American",
+        travelerName: "Me",
+        departure: "ORD",
+        arrival: "LAX",
+        departureDate: "12/21/22",
+        class: "Economy",
+        travelerType: "Adult",
+        price: 120,
+        pnr: 2
+    }
+
+const data = [tableData, tableData, tableData]
+
+export interface ITableData {
+    index: number,
+    airline: string,
+    travelerName: string,
+    departure: string,
+    arrival: string,
+    departureDate: string,
+    class: string,
+    travelerType: string,
+    price: number,
+    pnr: number
+}
 
 interface ITripsPageState {
     bannerImages: string[];
+    data: Array<ITableData>
 }
 
 interface ITripsPageProps {
+
 }
 
 export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState> {
@@ -30,10 +59,10 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
         super(props)
 
         this.state = {
-            bannerImages
+            bannerImages,
+            data
         }
     }
-
 
     render() {
         return (
@@ -76,7 +105,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                         </div>
 
                         <div id="flightsTable">
-                            <FlightsTable />
+                            <FlightsTable tableData={data}/>
                         </div>
                     </div>
                     
