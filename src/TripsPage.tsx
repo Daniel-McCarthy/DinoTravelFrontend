@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ImageCarousel } from "./components/ImageCarousel";
+import { getReservationsByUser } from "./api/reservations";
 
 import * as bannerImage1 from '../assets/banner_images/flight.jpg';
 import * as bannerImage2 from '../assets/banner_images/flight1.jpg';
@@ -16,10 +17,11 @@ import './styles/TripsPage.css'
 
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
-const tableData: ITableData = {
+// Temp data
+const tableItem1: ITableData = {
         index: 0,
         airline: "American",
-        travelerName: "Me",
+        travelerName: "Mr Dino",
         departure: "ORD",
         arrival: "LAX",
         departureDate: "12/21/22",
@@ -28,8 +30,20 @@ const tableData: ITableData = {
         price: 120,
         pnr: 2
     }
-
-const data = [tableData, tableData, tableData]
+const tableItem2: ITableData = {
+    index: 1,
+    airline: "American",
+    travelerName: "Mr Dino",
+    departure: "LAX",
+    arrival: "ORD",
+    departureDate: "12/24/22",
+    class: "Economy",
+    travelerType: "Adult",
+    price: 180,
+    pnr: 3
+}
+// Temp data
+const data = [tableItem1, tableItem2]
 
 export interface ITableData {
     index: number,
@@ -46,7 +60,9 @@ export interface ITableData {
 
 interface ITripsPageState {
     bannerImages: string[];
-    data: Array<ITableData>
+    data: Array<ITableData>;
+    cancel: boolean,
+    update: boolean
 }
 
 interface ITripsPageProps {
@@ -60,9 +76,29 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
 
         this.state = {
             bannerImages,
-            data
+            data,
+            cancel : false,
+            update: false,
         }
     }
+
+
+    // Currently unused
+    getUserReservations = async (id: number) => {
+        const response = await getReservationsByUser(id);
+        if (response instanceof Error) {
+            console.error("Error getting reservations");
+            return []
+        } else {
+            console.log(response);
+            return response
+        }
+    }
+
+    // User ID is currently hardcoded to "2"
+    // Would normally pull the current user_id from a prop
+    // Unused since using hardcoded test data
+    // reservations = this.getUserReservations(2);
 
     render() {
         return (
@@ -100,12 +136,18 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
 
                         <div id="manageButtons">
                             <a href="/">Add flight</a>
-                            <a href="javascript: void(0)">Cancel flight</a>
-                            <a href="javascript: void(0)">Update flight</a>
+
+                            <a href="javascript: void(0)" onClick={
+                                () => this.setState({cancel : !this.state.cancel, update: false})
+                            }>Cancel flight</a>
+
+                            <a href="javascript: void(0)" onClick={
+                                () => this.setState({update : !this.state.update, cancel: false})
+                            }>Update flight</a>
                         </div>
 
                         <div id="flightsTable">
-                            <FlightsTable tableData={data}/>
+                            <FlightsTable tableData={data} cancel={this.state.cancel} update={this.state.update} />
                         </div>
                     </div>
                     
