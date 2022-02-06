@@ -15,6 +15,21 @@ export interface IReservationData {
     price: number
 }
 
+// For the time being, I put the new schema into a seperate 
+// interface. I was worried updating the interface above 
+// might break something that was being worked on
+export interface IReservationDataNew {
+    reservation_id?: number,
+    user_id: number,
+    trip_type: string,
+    flight_id: number,
+    traveler_type: string,
+    traveler_name: string,
+    seat_id: string,
+    seat_type: string,
+    price: number
+}
+export type ReservationsNew = Array<IReservationDataNew>;
 
 export type Reservations = Array<IReservationData>;
 
@@ -35,6 +50,28 @@ export const getAllReservations = async () : Promise<Reservations | Error> => {
         return error as Error;
     }
 };
+
+export const getReservationsByUser = async (id: number): Promise<ReservationsNew | Error> => {
+    const options = {
+        'method': 'GET'
+    };
+    const url = reservationsEndpointURL + '/user/id=' + id.toString();
+
+    try {
+        const responseData: Response = await fetch(url, options);
+
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+
+        const json: [IReservationDataNew] = await responseData.json();
+        console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+
+        return json;
+    } catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error as Error;
+    }
+}
 
 
 export const registerReservation = async (reservation: IReservationData): Promise<Response | Error> => {
