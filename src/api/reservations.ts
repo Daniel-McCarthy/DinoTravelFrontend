@@ -55,7 +55,7 @@ export const getReservationsByUser = async (id: number): Promise<ReservationsNew
     const options = {
         'method': 'GET'
     };
-    const url = reservationsEndpointURL + '/user/id=' + id.toString();
+    const url = reservationsEndpointURL + '/user?id=' + id.toString();
 
     try {
         const responseData: Response = await fetch(url, options);
