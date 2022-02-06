@@ -230,7 +230,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <div className="dateInputContainer">
                                 <h3 className='verticalSpacer'>Departing</h3>
                                 {/* Placeholder is used as a fallback on browsers that don't support the datepicker, e.g. Safari and IE */}
-                                <input className="datePicker" type="date" onChange={this.onArrivalFlightDateSelected} placeholder="yyyy-mm-dd"></input>
+                                <input className="datePicker" type="date" onChange={this.onDepartureFlightDateSelected} placeholder="yyyy-mm-dd"></input>
                             </div>
                             
                             {isRoundTripSelected 
@@ -279,10 +279,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.getFlightAPIData();
     }
 
-    onArrivalFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onDepartureFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newDate = event.currentTarget.value;
         this.setState({
-            returnFlightDate: moment(newDate, 'YYYY-MM-DD')
+            departureFlightDate : moment(newDate, 'YYYY-MM-DD')
         });
     }
 
