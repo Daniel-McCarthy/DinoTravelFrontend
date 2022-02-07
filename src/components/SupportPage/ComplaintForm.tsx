@@ -47,7 +47,7 @@ export default function ComplaintForm() {
 
     return (
         <>
-            <form id="formComplaint">
+            <div id="complaint">
                 <p>
                     <label htmlFor="txtFullName">Full Name</label><br></br>
                     <input type="text" id="txtFullName" placeholder="First and Last" onChange={
@@ -79,7 +79,7 @@ export default function ComplaintForm() {
                 <p>
                     <button id="btnSubmit" onClick={validateComplaint}>Submit</button>
                 </p>
-            </form>
+            </div>
 
             <ToastMessage toastType={toast.toastType} show={toast.show} message={toast.message} onToastClosed={onToastClosed}></ToastMessage>
         </>
