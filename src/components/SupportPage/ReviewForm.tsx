@@ -44,7 +44,7 @@ export default function ReviewForm() {
 
     return (
         <>
-            <form id="formReview">
+            <div id="review">
                 <p>
                     <label htmlFor="txtFullName">Full Name</label><br></br>
                     <input type="text" id="txtFullName" placeholder="First and Last" onChange={
@@ -127,10 +127,10 @@ export default function ReviewForm() {
                 </p>
 
                 <p>
-                    <label htmlFor="btnSubmit">We will use your email address to follow-up on account issues, and for no other purpose.</label>
+                    <label htmlFor="btnSubmit">We will use your email address to follow-up on account issues, and for no other purpose.</label><br></br>
                     <button id="btnSubmit" onClick={validateReview}>Submit</button>
                 </p>
-            </form>
+            </div>
 
             <ToastMessage toastType={toast.toastType} show={toast.show} message={toast.message} onToastClosed={onToastClosed}></ToastMessage>
         </>
