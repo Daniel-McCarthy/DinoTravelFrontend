@@ -22,8 +22,9 @@ export interface IEmbeddedReservations {
 export interface IReservationList {
     reservationList: IReservationDataNew[]
 }
+
 // For the time being, I put the new schema into a seperate 
-// interface. I was worried updating the interface above 
+// interface. I was worried updating IReservationData interface above 
 // might break something that was being worked on
 export interface IReservationDataNew {
     reservation_id?: number,
@@ -81,6 +82,30 @@ export const getReservationsByUser = async (id: number): Promise<IEmbeddedReserv
     }
 }
 
+export const getReservationById = async (id: number): Promise<IReservationDataNew | Error> => {
+    const url = reservationsEndpointURL + '/' + id.toString();
+
+    const options = {
+        'method': 'GET'
+    };
+
+    try {
+        const responseData: Response = await fetch(url, options);
+
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+
+        const json: IReservationDataNew = await responseData.json();
+        console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+
+        return json;
+
+    } catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error as Error;
+    }
+}
+
 
 export const registerReservation = async (reservation: IReservationData): Promise<Response | Error> => {
     console.log(reservation);
@@ -103,3 +128,45 @@ export const registerReservation = async (reservation: IReservationData): Promis
         return error as Error;
     }
 };
+
+export const updateReservation = async (reservation: IReservationDataNew, id: number): Promise<Response | Error> => {
+    const url = reservationsEndpointURL + '/' + id.toString();
+
+    const options = {
+        'method': 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reservation)
+    };
+
+    try {
+        const responseData: Response = await fetch(url, options);
+
+        return responseData;
+    } catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error as Error;
+    }
+}
+
+export const deleteReservation = async (id: number) : Promise<Response | Error> => {
+    const options = {
+        'method': 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    try {
+        const url = reservationsEndpointURL + '/' + id.toString();
+        const responseData: Response = await fetch(url, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+
+    } catch (error) {
+        console.error(`Failed to delete reservation data from API endpoint due to reason: ${error}`);
+        return error as Error;
+    }
+}
