@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import { ImageCarousel } from "./components/ImageCarousel";
-import { getReservationsByUser } from "./api/reservations";
+import { getReservationsByUser, IEmbeddedReservations } from "./api/reservations";
+import { getFlightDataById} from "./api/flights";
 
 import * as bannerImage1 from '../assets/banner_images/flight.jpg';
 import * as bannerImage2 from '../assets/banner_images/flight1.jpg';
@@ -16,34 +17,6 @@ import FlightsTable from "./components/TripsPage/FlightsTable";
 import './styles/TripsPage.css'
 
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
-
-// Temp data
-const tableItem1: ITableData = {
-        index: 0,
-        airline: "American",
-        travelerName: "Mr Dino",
-        departure: "ORD",
-        arrival: "LAX",
-        departureDate: "12/21/22",
-        class: "Economy",
-        travelerType: "Adult",
-        price: 120,
-        pnr: 2
-    }
-const tableItem2: ITableData = {
-    index: 1,
-    airline: "American",
-    travelerName: "Mr Dino",
-    departure: "LAX",
-    arrival: "ORD",
-    departureDate: "12/24/22",
-    class: "Economy",
-    travelerType: "Adult",
-    price: 180,
-    pnr: 3
-}
-// Temp data
-const data = [tableItem1, tableItem2]
 
 export interface ITableData {
     index: number,
@@ -76,29 +49,88 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
 
         this.state = {
             bannerImages,
-            data,
-            cancel : false,
+            data: [],
+            cancel: false,
             update: false,
         }
     }
 
-
-    // Currently unused
-    getUserReservations = async (id: number) => {
+    getUserReservations = async (id: number): Promise<IEmbeddedReservations> => {
         const response = await getReservationsByUser(id);
         if (response instanceof Error) {
             console.error("Error getting reservations");
-            return []
+
+            const emptyTableData: IEmbeddedReservations = {
+                _embedded: {reservationList: []}
+            }
+
+            return emptyTableData;
         } else {
             console.log(response);
             return response
         }
     }
 
-    // User ID is currently hardcoded to "2"
+    // User ID is currently hardcoded
     // Would normally pull the current user_id from a prop
-    // Unused since using hardcoded test data
-    // reservations = this.getUserReservations(2);
+    reservations = this.getUserReservations(7);
+
+    createTableData = async () => {
+        const reservations = (await this.reservations)._embedded.reservationList;
+
+        const tableDataItems = [];
+
+        if (reservations === undefined) {
+            return;
+        }
+
+        const values = Object.values(reservations);
+        
+        var index = 0
+        for (var value of values) {
+
+            const flightData = await getFlightDataById(value.flight_id);
+            if (flightData instanceof Error) {
+                return;
+            }
+
+            // Create a row in the table
+            if (value.reservation_id !== undefined) {
+                const tableItem: ITableData = {
+                    index: index,
+                    airline: flightData.flight_provider,
+                    travelerName: value.traveler_name,
+                    departure: flightData.departure_airport,
+                    arrival: flightData.arrival_airport,
+                    departureDate: flightData.arrival_time.substring(0,10),
+                    class: value.seat_type,
+                    travelerType: value.traveler_type,
+                    price: value.price,
+                    pnr: value.reservation_id
+                }
+
+                // Add the finished row to the table
+                tableDataItems.push(tableItem);
+                index = index + 1;
+            }
+        }
+
+        this.setState({
+            data: tableDataItems,
+        });
+
+        console.log(this.state.data);
+
+    }
+
+    setTableData = () => {
+        this.createTableData();
+    }
+
+    componentDidMount() {
+        this.setTableData();
+    }
+
 
     render() {
         return (
@@ -129,7 +161,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                     </div>
                 </header>
                 <main>
-                    <div id="content">
+                    <div id="tripsContent">
                         <div id="tripsPageTitle">
                             <h1>Manage your Trips</h1>
                         </div>
@@ -152,7 +184,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                         </div>
 
                         <div id="flightsTable">
-                            <FlightsTable tableData={data} cancel={this.state.cancel} update={this.state.update} />
+                            <FlightsTable tableData={this.state.data} cancel={this.state.cancel} update={this.state.update} />
                         </div>
                     </div>
                     
