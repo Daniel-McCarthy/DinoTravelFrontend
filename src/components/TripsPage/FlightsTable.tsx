@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ITableData } from '../../TripsPage';
 import PropTypes from 'prop-types';
 
 import '../../styles/FlightsTable.css'
+import { deleteReservation, getReservationById, IReservationDataNew, updateReservation } from '../../api/reservations';
 
 
 export type TableData = Array<ITableData>;
@@ -23,95 +24,108 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
 
     const [data, setData] = useState(tableData);
 
+    useEffect(() => {
+        setData(tableData);
+    });
+
     // Would normally send a /delete request instead
     const handleDelete = (resId: number) => {
         if (window.confirm("Are you sure you want you cancel your flight?")) {
 
-            setData(data.filter(_ => _.pnr !== resId))
+            deleteReservation(resId);
         }
     }
 
-    // Would normally send a /put request instead and use reservation number instead of
-    const handleNameUpdate = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUpdate = async (resId: number) => {
+        const oldReservation = await getReservationById(resId);
 
-        const newName = event.currentTarget.value;
 
-        if (newName !== "") {
-            const currentData = [...data];
-            const updatedItem = {...currentData[index]};
+        // Change to a name the user entered
+        const newName = "Test";
+        
+        if (oldReservation instanceof Error) {
+            return;
+        }
 
-            updatedItem.travelerName = newName;
-            currentData[index] = updatedItem
+        if (newName !== null) {
+            const newReservation: IReservationDataNew = {
+                user_id : oldReservation.user_id,
+                trip_type: oldReservation.trip_type,
+                flight_id: oldReservation.flight_id,
+                traveler_type: oldReservation.traveler_type,
+                traveler_name: newName,
+                seat_id: oldReservation.seat_id,
+                seat_type: oldReservation.seat_type,
+                price: oldReservation.price
+            }
 
-            setData(currentData);
+            await updateReservation(newReservation, resId);
         }
     }
 
     return (
         <>
-            {data.length !== 0 ?
-                <table>
-                    <tr>
-                        {tableHeaders.map((item) => (
-                            <th key={item.title}>
-                                {item.title}
-                            </th>
-                        ))}
-                    </tr>
-                    {data.map((_) => (
-                        <tr>
-                            <td>
-                                {_.index}
-                            </td>
-
-                            <td>
-                                {_.airline}
-                            </td>
-
-                            <td>
-                                {update ?
-                                    <input type="text" placeholder={_.travelerName} onChange={
-                                        (event) => handleNameUpdate(_.index, event)}></input>
-                                    : _.travelerName
-                                }
-                            </td>
-
-                            <td>
-                                {_.departure}
-                            </td>
-
-                            <td>
-                                {_.arrival}
-                            </td>
-
-                            <td>
-                                {_.departureDate}
-                            </td>
-
-                            <td>
-                                {_.class}
-                            </td>
-
-                            <td>
-                                {_.travelerType}
-                            </td>
-
-                            <td>
-                                ${_.price}
-                            </td>
-
-                            <td>
-                                {_.pnr}
-                            </td>
-                            
-                            <td>
-                                {cancel && <a href="javascript: void(0)" onClick={
-                                    () => handleDelete(_.pnr)}>❌</a>}
-                            </td>
-                        </tr>
+            <table>
+                <tr>
+                    {tableHeaders.map((item) => (
+                        <th key={item.title}>
+                            {item.title}
+                        </th>
                     ))}
-                </table>
-            : <p>There are no flights to display.</p>}
+                </tr>
+                {data.map((_) => (
+                    <tr>
+                        <td>
+                            {_.index}
+                        </td>
+
+                        <td>
+                            {_.airline}
+                        </td>
+
+                        <td>
+                            {update ?
+                                <input id="txtNameChange" type="text" placeholder={_.travelerName} onChange={
+                                    () => handleUpdate(_.pnr)}></input>
+                                : _.travelerName
+                            }
+                        </td>
+
+                        <td>
+                            {_.departure}
+                        </td>
+
+                        <td>
+                            {_.arrival}
+                        </td>
+
+                        <td>
+                            {_.departureDate}
+                        </td>
+
+                        <td>
+                            {_.class}
+                        </td>
+
+                        <td>
+                            {_.travelerType}
+                        </td>
+
+                        <td>
+                            ${_.price}
+                        </td>
+
+                        <td>
+                            {_.pnr}
+                        </td>
+                        
+                        <td>
+                            {cancel && <a href="javascript: void(0)" onClick={
+                                () => handleDelete(_.pnr)}>❌</a>}
+                        </td>
+                    </tr>
+                ))}
+            </table>
         </>
     );
 }
