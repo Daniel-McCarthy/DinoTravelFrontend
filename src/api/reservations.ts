@@ -15,6 +15,13 @@ export interface IReservationData {
     price: number
 }
 
+export interface IEmbeddedReservations {
+    _embedded: IReservationList
+}
+
+export interface IReservationList {
+    reservationList: IReservationDataNew[]
+}
 // For the time being, I put the new schema into a seperate 
 // interface. I was worried updating the interface above 
 // might break something that was being worked on
@@ -29,7 +36,7 @@ export interface IReservationDataNew {
     seat_type: string,
     price: number
 }
-export type ReservationsNew = Array<IReservationDataNew>;
+export type ReservationsNew = IEmbeddedReservations;
 
 export type Reservations = Array<IReservationData>;
 
@@ -51,7 +58,7 @@ export const getAllReservations = async () : Promise<Reservations | Error> => {
     }
 };
 
-export const getReservationsByUser = async (id: number): Promise<ReservationsNew | Error> => {
+export const getReservationsByUser = async (id: number): Promise<IEmbeddedReservations | Error> => {
     const options = {
         'method': 'GET'
     };
@@ -63,10 +70,11 @@ export const getReservationsByUser = async (id: number): Promise<ReservationsNew
         const statusCode = responseData.status;
         console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
 
-        const json: [IReservationDataNew] = await responseData.json();
+        const json: IEmbeddedReservations = await responseData.json();
         console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
 
         return json;
+
     } catch (error) {
         console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
         return error as Error;
