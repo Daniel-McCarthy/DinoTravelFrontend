@@ -48,6 +48,9 @@ export class AuthenticationButton extends React.Component<IAuthenticationProps, 
             Profile: googleUser.profileObj,
             Token: googleUser.tokenObj,
         })
+        console.log(googleUser.tokenObj);
+        console.log(googleUser.tokenObj.id_token);
+        console.log(googleUser.tokenObj.refresh);
     }
 
     onLogOut = () => {
@@ -82,6 +85,8 @@ export class AuthenticationButton extends React.Component<IAuthenticationProps, 
                     onSuccess={this.onSignIn}
                     onFailure={this.onSignInFail}
                     cookiePolicy={'single_host_origin'}
+                    accessType={'offline'}
+                    prompt={'consent'}
                 />;
         }
 
