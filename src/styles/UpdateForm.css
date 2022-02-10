@@ -1,3 +1,18 @@
 #updateFormContent {
     padding-bottom: 200px;
 }
+
+.updateFormTitle {
+    color: rgb(59, 77, 145);
+    font-weight: 700;
+    font-size: large;
+    margin-bottom: 10px;
+}
+
+.flightDetails {
+    font-weight: 600;
+}
+
+#newPrice {
+    font-weight: 600;
+}
