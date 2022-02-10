@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { ITableData } from '../../TripsPage';
 import '../../styles/UpdateForm.css'
+import { getReservationById, updateReservation, IReservationDataNew } from '../../api/reservations';
 
 export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
 
@@ -8,7 +9,6 @@ export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
     const [bags, setBags] = useState(3);
     const [name, setName] = useState(updateItem.travelerName);
     const [newPrice, setNewPrice] = useState(updateItem.price);
-
 
     useEffect(() => {
         setBags(3);
@@ -28,6 +28,31 @@ export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
             setBags(bags - 1);
             setNewPrice(newPrice - 50);
         }
+    }
+
+    const handleReservationUpdate = async () => {
+        const existingItem = await getReservationById(updateItem.pnr);
+
+        if (existingItem instanceof Error) {
+            return;
+        }
+
+        const newItem: IReservationDataNew = {
+            user_id: existingItem.user_id, // will change to user_subject
+            trip_type: existingItem.trip_type,
+            flight_id: existingItem.flight_id,
+            traveler_type: existingItem.traveler_type,
+            traveler_name: name,
+            seat_id: existingItem.seat_id,
+            seat_type: existingItem.seat_type,
+            price: newPrice
+        }
+
+        updateReservation(newItem, updateItem.pnr);
+        console.log(name, bags, newPrice);
+
+        await new Promise(r => setTimeout(r, 2000));
+        window.location.reload()
     }
 
     return (
@@ -60,7 +85,7 @@ export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
                     </p>
 
                     <p>
-                        <button id="btnSubmitChanges" style={{width: "300px"}} onClick={() => {window.location.reload()}}>Confirm Changes</button>
+                        <button id="btnSubmitChanges" style={{width: "300px"}} onClick={() => {handleReservationUpdate()}}>Confirm Changes</button>
                     </p>
                 </div>
             </div>
