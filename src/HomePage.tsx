@@ -56,7 +56,7 @@ interface IHomePageState {
 }
 
 interface IHomePageProps {
-
+    userID: number | null;
 }
 
 interface IToastMessage {
@@ -68,6 +68,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     public constructor(props: IHomePageProps) {
         super(props)
+
+        console.log(`HomePage has received the userID of user login session: ${this.props.userID}`)
 
         this.state = {
             flightType: FlightType.RoundTrip,

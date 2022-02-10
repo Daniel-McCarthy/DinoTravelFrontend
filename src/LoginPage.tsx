@@ -13,6 +13,7 @@ interface ILoginPageState {
 }
 
 interface ILoginPageProps {
+    onLoginUserUpdate: (newID: number) => void
 }
 
 export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState> {
@@ -111,7 +112,13 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
             <div>
                 {LoginButton}
                 {response}
+                <button onClick={this.testLogin}>Login Test</button>
             </div>
         )
+    }
+
+    testLogin = () => {
+        const exampleUserID = 10;
+        this.props.onLoginUserUpdate(exampleUserID);
     }
 }
