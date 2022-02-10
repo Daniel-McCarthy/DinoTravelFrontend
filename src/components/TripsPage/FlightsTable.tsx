@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ITableData } from '../../TripsPage';
+import UpdateForm from './UpdateForm';
 import PropTypes from 'prop-types';
 
 import '../../styles/FlightsTable.css'
-import { deleteReservation, getReservationById, IReservationDataNew, updateReservation } from '../../api/reservations';
+import { deleteReservation} from '../../api/reservations';
 
 
 export type TableData = Array<ITableData>;
@@ -22,7 +23,22 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
         {title: "PNR"}, // Equivalent to reservation number
     ]
 
+    const emptyItem: ITableData = {
+        index: -1,
+        airline: "",
+        travelerName: "",
+        departure: "",
+        arrival: "",
+        departureDate: "",
+        class: "",
+        travelerType: "",
+        price: -1,
+        pnr: -1
+    }
+
     const [data, setData] = useState(tableData);
+    const [newItem, setNewItem] = useState(emptyItem);
+    const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
         setData(tableData);
@@ -36,31 +52,22 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
         }
     }
 
-    const handleUpdate = async (resId: number) => {
-        const oldReservation = await getReservationById(resId);
+    // TODO add number of checked bags
+    const handleUpdate = (idx: number, airline: string, name: string, departure: string, arrival: string, departureDate: string, classType: string, travelerType: string, price: number, pnr: number) => {
+        setNewItem({
+            index: idx,
+            airline: airline,
+            travelerName: name,
+            departure: departure,
+            arrival: arrival,
+            departureDate: departureDate,
+            class: classType,
+            travelerType: travelerType,
+            price: price,
+            pnr: pnr
+        });
 
-
-        // Change to a name the user entered
-        const newName = "Test";
-        
-        if (oldReservation instanceof Error) {
-            return;
-        }
-
-        if (newName !== null) {
-            const newReservation: IReservationDataNew = {
-                user_id : oldReservation.user_id,
-                trip_type: oldReservation.trip_type,
-                flight_id: oldReservation.flight_id,
-                traveler_type: oldReservation.traveler_type,
-                traveler_name: newName,
-                seat_id: oldReservation.seat_id,
-                seat_type: oldReservation.seat_type,
-                price: oldReservation.price
-            }
-
-            await updateReservation(newReservation, resId);
-        }
+        setShowForm(true);
     }
 
     return (
@@ -84,11 +91,7 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
                         </td>
 
                         <td>
-                            {update ?
-                                <input id="txtNameChange" type="text" placeholder={_.travelerName} onChange={
-                                    () => handleUpdate(_.pnr)}></input>
-                                : _.travelerName
-                            }
+                            {_.travelerName}
                         </td>
 
                         <td>
@@ -122,10 +125,14 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
                         <td>
                             {cancel && <a href="javascript: void(0)" onClick={
                                 () => handleDelete(_.pnr)}>❌</a>}
+                            
+                            {update && <a href="javascript: void(0)" onClick={
+                                () => handleUpdate(_.index, _.airline, _.travelerName, _.departure, _.arrival, _.departureDate, _.class, _.travelerType, _.price, _.pnr)}>✏️</a>}
                         </td>
                     </tr>
                 ))}
             </table>
+            {update && showForm && <UpdateForm updateItem={newItem} />}
         </>
     );
 }
