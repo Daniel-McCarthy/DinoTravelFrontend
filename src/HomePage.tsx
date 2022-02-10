@@ -25,7 +25,6 @@ import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelec
 import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
-import {AuthenticationButton} from "./components/AuthenticationButton";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -57,7 +56,8 @@ interface IHomePageState {
 }
 
 interface IHomePageProps {
-
+    id_Token: string | null
+    isLoggedIn: boolean
 }
 
 interface IToastMessage {
@@ -153,11 +153,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         <nav>
                             <button className="nontoggle">support</button>
                             <button className="nontoggle">about us</button>
+                            <button className="nontoggle">trips</button>
                             <Link to='/login'>
-                                <button className="nontoggle">trips</button>
+                                <button className="nontoggle">login</button>
                             </Link>
-                            <AuthenticationButton/>
-
                         </nav>
                     </div>
                 </header>
@@ -234,6 +233,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
+
+                <div>
+                    <p>User is {this.props.isLoggedIn ? "Logged In" : "Logged Out"}</p>
+                </div>
 
                 <div id='bannerCarousel'>
                     <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />

@@ -9,6 +9,8 @@ interface IAuthenticationState {
 }
 
 interface IAuthenticationProps {
+    updateIDToken: (NewID: string | null) => void
+    isLoggedIn: boolean
 }
 
 export class AuthenticationButton extends React.Component<IAuthenticationProps, IAuthenticationState> {
@@ -16,11 +18,20 @@ export class AuthenticationButton extends React.Component<IAuthenticationProps, 
     public constructor(props: IAuthenticationProps) {
         super(props)
 
-        this.state = {
-            LoggedIn: localStorage.getItem('LoggedIn') == 'true',
-            LoginAttempted: false,
-            Profile: JSON.parse(localStorage.getItem('Profile') as string),
-            Token: JSON.parse(localStorage.getItem('Token') as string),
+        if (this.props.isLoggedIn){
+            this.state = {
+                LoggedIn: true,
+                LoginAttempted: false,
+                Profile: JSON.parse(localStorage.getItem('Profile') as string),
+                Token: JSON.parse(localStorage.getItem('Token') as string),
+            }
+        }else{
+            this.state = {
+                LoggedIn: false,
+                LoginAttempted: false,
+                Profile: null,
+                Token: null,
+            }
         }
     }
 
@@ -42,15 +53,13 @@ export class AuthenticationButton extends React.Component<IAuthenticationProps, 
         localStorage.setItem('LoginAttempted', 'true');
         localStorage.setItem('Profile', JSON.stringify(googleUser.profileObj));
         localStorage.setItem('Token', JSON.stringify(googleUser.tokenObj));
+        this.props.updateIDToken(googleUser.tokenObj.id_token);
         this.setState({
             LoginAttempted: true,
             LoggedIn: true,
             Profile: googleUser.profileObj,
             Token: googleUser.tokenObj,
         })
-        console.log(googleUser.tokenObj);
-        console.log(googleUser.tokenObj.id_token);
-        console.log(googleUser.tokenObj.refresh);
     }
 
     onLogOut = () => {
@@ -58,6 +67,7 @@ export class AuthenticationButton extends React.Component<IAuthenticationProps, 
         localStorage.setItem('LoginAttempted', 'false');
         localStorage.removeItem('Profile');
         localStorage.removeItem('Token');
+        this.props.updateIDToken(null);
         this.setState({
             LoginAttempted: false,
             LoggedIn: false,
