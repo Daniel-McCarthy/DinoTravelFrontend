@@ -11,22 +11,22 @@ export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
     const [newPrice, setNewPrice] = useState(updateItem.price);
 
     useEffect(() => {
-        setBags(3);
+        setBags(1);
         setName(updateItem.travelerName);
         setNewPrice(updateItem.price);
     }, [updateItem])
 
     const bagChangeAdd = () => {
-        if (bags < 5) {
+        if (bags < 2) {
             setBags(bags + 1);
-            setNewPrice(newPrice + 50);
+            setNewPrice(newPrice + 35);
         }
     }
 
     const bagChangeSub = () => {
         if (bags > 0) {
             setBags(bags - 1);
-            setNewPrice(newPrice - 50);
+            setNewPrice(newPrice - 35);
         }
     }
 
