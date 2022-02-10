@@ -1,12 +1,34 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { ITableData } from '../../TripsPage';
 import '../../styles/UpdateForm.css'
 
 export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
 
-    console.log(updateItem);
+    // Add bags from reservation
+    const [bags, setBags] = useState(3);
+    const [name, setName] = useState(updateItem.travelerName);
+    const [newPrice, setNewPrice] = useState(updateItem.price);
 
 
+    useEffect(() => {
+        setBags(3);
+        setName(updateItem.travelerName);
+        setNewPrice(updateItem.price);
+    }, [updateItem])
+
+    const bagChangeAdd = () => {
+        if (bags < 5) {
+            setBags(bags + 1);
+            setNewPrice(newPrice + 50);
+        }
+    }
+
+    const bagChangeSub = () => {
+        if (bags > 0) {
+            setBags(bags - 1);
+            setNewPrice(newPrice - 50);
+        }
+    }
 
     return (
         <>
@@ -21,21 +43,24 @@ export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
 
                 <div id="updateForm">
                     <p>
-                        <label htmlFor="txtNameChange">Change Traveler's Name</label>
-                        <input type="text" id="txtNameChange" placeholder={updateItem.travelerName}></input>
+                        <label htmlFor="txtNameChange">Change Traveler's Name</label><br></br>
+                        <input type="text" id="txtNameChange" placeholder={updateItem.travelerName} style={{width: "300px", height: "40px"}}
+                        onChange={(event) => setName(event.target.value)}></input>
                     </p>
 
                     <p>
-                        <label htmlFor="numBags">Change Number of Checked Bags</label>
-                        <input type="number" placeholder="0" step={1} max={10} min={0}></input>
+                        <label>Change Number of Checked Bags</label><br></br>
+                        <button onClick={bagChangeSub} style={{width: "30px", height: "30px", marginRight: "20px"}}>-</button>
+                        <span style={{fontSize: "larger"}}>{bags}</span>
+                        <button onClick={bagChangeAdd} style={{width: "30px", height: "30px", marginLeft: "20px"}}>+</button>
+                    </p>
+
+                    <p id="newPrice">
+                        Price: ${newPrice}
                     </p>
 
                     <p>
-                        Price: ${updateItem.price}
-                    </p>
-
-                    <p>
-                        <input type="button" value="Confirm Changes" onClick={() => {window.location.reload()}}></input>
+                        <button id="btnSubmitChanges" style={{width: "300px"}} onClick={() => {window.location.reload()}}>Confirm Changes</button>
                     </p>
                 </div>
             </div>
