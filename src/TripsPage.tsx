@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate} from "react-router-dom";
 import { ImageCarousel } from "./components/ImageCarousel";
 import { getReservationsByUser, IEmbeddedReservations } from "./api/reservations";
 import { getFlightDataById} from "./api/flights";
@@ -137,63 +137,66 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
     render() {
         return (
             <>
-                <header>
-                    <div id="headerContent">
-                        <div className="banner">
-                            <Link to='/'>
-                                <img className="logo" alt="Dino Travel Logo" />
-                            </Link>
-                            <div className="slogan">
-                                <h3>Travel More</h3>
+                {!this.props.isLoggedIn ? <Navigate to="/login" />
+                :<>
+                    <header>
+                        <div id="headerContent">
+                            <div className="banner">
+                                <Link to='/'>
+                                    <img className="logo" alt="Dino Travel Logo" />
+                                </Link>
+                                <div className="slogan">
+                                    <h3>Travel More</h3>
+                                </div>
+                            </div>
+
+                            <nav>
+                                <Link to='/support' >
+                                    <button className="nontoggle">support</button>
+                                </Link>
+                                <button className="nontoggle">about us</button>
+                                <Link to='/trips' >
+                                    <button className="nontoggle">trips</button>    
+                                </Link>
+                                <Link to='/login'>
+                                    <button className="nontoggle">login</button>
+                                </Link>
+                            </nav>
+                        </div>
+                    </header>
+                    <main>
+                        <div id="tripsContent">
+                            <div id="tripsPageTitle">
+                                <h1>Manage your Trips</h1>
+                            </div>
+
+                            <div id="manageButtons">
+                                <a href="/" id="addFlightLink">Add flight</a>
+
+                                {this.state.cancel ? <a href="javascript: void(0)" className="toggleSelected" onClick={
+                                    () => this.setState({cancel : !this.state.cancel, update: false})}>Cancel flight</a>
+                                    :<a href="javascript: void(0)" className="toggleUnselected" onClick={
+                                    () => this.setState({cancel : !this.state.cancel, update: false})}>Cancel flight</a>
+                                }
+
+                                {this.state.update ? <a href="javascript: void(0)" className="toggleSelected" onClick={
+                                    () => this.setState({update : !this.state.update, cancel: false})}>Update flight</a>
+                                    :   <a href="javascript: void(0)" className="toggleUnselected" onClick={
+                                    () => this.setState({update : !this.state.update, cancel: false})}>Update flight</a>
+                                }
+
+                            </div>
+
+                            <div id="flightsTable">
+                                <FlightsTable tableData={this.state.data} cancel={this.state.cancel} update={this.state.update} />
                             </div>
                         </div>
-
-                        <nav>
-                            <Link to='/support' >
-                                <button className="nontoggle">support</button>
-                            </Link>
-                            <button className="nontoggle">about us</button>
-                            <Link to='/trips' >
-                                <button className="nontoggle">trips</button>    
-                            </Link>
-                            <Link to='/login'>
-                                <button className="nontoggle">login</button>
-                            </Link>
-                        </nav>
-                    </div>
-                </header>
-                <main>
-                    <div id="tripsContent">
-                        <div id="tripsPageTitle">
-                            <h1>Manage your Trips</h1>
+                        
+                        <div id='bannerCarousel'>
+                            <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
                         </div>
-
-                        <div id="manageButtons">
-                            <a href="/" id="addFlightLink">Add flight</a>
-
-                            {this.state.cancel ? <a href="javascript: void(0)" className="toggleSelected" onClick={
-                                () => this.setState({cancel : !this.state.cancel, update: false})}>Cancel flight</a>
-                                :<a href="javascript: void(0)" className="toggleUnselected" onClick={
-                                () => this.setState({cancel : !this.state.cancel, update: false})}>Cancel flight</a>
-                            }
-
-                            {this.state.update ? <a href="javascript: void(0)" className="toggleSelected" onClick={
-                                () => this.setState({update : !this.state.update, cancel: false})}>Update flight</a>
-                                :   <a href="javascript: void(0)" className="toggleUnselected" onClick={
-                                () => this.setState({update : !this.state.update, cancel: false})}>Update flight</a>
-                            }
-
-                        </div>
-
-                        <div id="flightsTable">
-                            <FlightsTable tableData={this.state.data} cancel={this.state.cancel} update={this.state.update} />
-                        </div>
-                    </div>
-                    
-                    <div id='bannerCarousel'>
-                        <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
-                    </div>
-                </main>
+                    </main>
+                </>}
             </>
         )
     }
