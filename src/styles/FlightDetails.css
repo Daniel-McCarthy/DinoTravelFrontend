@@ -1,0 +1,42 @@
+#flightDetailsReview {
+    width: 425px;
+}
+
+#flightDetailsReview a {
+    text-decoration: none;
+    color: rgb(59, 77, 145);
+    font-weight: 500;
+}
+
+#detailsHeader h2 {
+    font-size: large;
+}
+
+#departureHeader {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+#arrivalTitle {
+    font-weight: 600;
+}
+#arrivalHeader {
+    margin-bottom: 5px;
+}
+
+#flightInfoContainer {
+    display: flex;
+}
+
+#flightInfoContainer h2 {
+    display: flex;
+    font-size: medium;
+}
+
+#userFlightInfo {
+    width: 200px;
+}
+
+#bagDisclaimer {
+    width: 200px;
+}
