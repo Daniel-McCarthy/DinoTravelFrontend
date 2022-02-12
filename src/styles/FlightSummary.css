@@ -1,0 +1,32 @@
+#flightSummary {
+    width: 300px;
+}
+
+#priceDetailsTable {
+    margin: auto;
+}
+
+#priceDetailsTable th {
+    display: inline;
+    margin-left: 100px;
+}
+
+#totalTable {
+    margin: auto;
+}
+
+#totalTable td {
+    display: inline;
+    font-size: larger;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+#checkoutDisclaimer {
+    font-size: smaller;
+}
+
+#checkoutButton {
+    width: 150px;
+    margin: auto;
+}
