@@ -42,7 +42,7 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
 
     useEffect(() => {
         setData(tableData);
-    });
+    }, [tableData]);
 
     // Would normally send a /delete request instead
     const handleDelete = (resId: number) => {
