@@ -39,7 +39,8 @@ interface ITripsPageState {
 }
 
 interface ITripsPageProps {
-
+    id_Token: string | null
+    isLoggedIn: boolean
 }
 
 export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState> {
@@ -55,6 +56,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
         }
     }
 
+    // Change to use user token.
     getUserReservations = async (id: number): Promise<IEmbeddedReservations> => {
         const response = await getReservationsByUser(id);
         if (response instanceof Error) {

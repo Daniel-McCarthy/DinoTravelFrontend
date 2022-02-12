@@ -49,7 +49,7 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
         return (
             <Router>
                 <Routes>
-                    <Route path="/trips" element={<TripsPage/>} />
+                    <Route path="/trips" element={<TripsPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn}/>} />
                     <Route path="/support" element={<SupportPage/>} />
                     <Route path="/" element={<HomePage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn}/>} />
                     <Route path="/login" element={<LoginPage updateIDToken={this.updateIdToken} isLoggedIn={this.state.isLoggedIn}/>} />
