@@ -72,7 +72,7 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
 
     return (
         <>
-            <table>
+            <table id="flightsTable">
                 <tr>
                     {tableHeaders.map((item) => (
                         <th key={item.title}>

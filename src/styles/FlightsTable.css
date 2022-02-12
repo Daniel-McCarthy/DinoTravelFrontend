@@ -1,13 +1,13 @@
-table {
+#flightsTable {
     padding-bottom: 20px;
 }
 
-table th {
+#flightsTable th {
     display: flexbox;
     padding-right: 70px;
 }
 
-table td {
+#flightsTable td {
     display: flexbox;
     padding-top: 15px;
 }
@@ -23,7 +23,7 @@ table td {
     margin: 0%;
 }
 
-table a {
+#flightsTable a {
     text-decoration: none;
     height: 5px;
     width: 5px;
