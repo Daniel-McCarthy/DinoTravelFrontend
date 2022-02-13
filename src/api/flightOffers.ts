@@ -202,3 +202,34 @@ export const buildFlightAPIUrlFromArguments = (flightOfferArguments: IFlightOffe
 const formatDateForAPI = (date: moment.Moment) => {
     return date.format('YYYY-MM-DD');
 };
+
+export interface IDuration {
+    totalHours: number,
+    totalMinutes: number
+}
+
+export const getTotalFlightTimeFromItinerary = (itinerary: IItinerary): IDuration => {
+    const segments = itinerary.segments;
+    let totalHours = 0;
+    let totalMinutes = 0;
+    segments.forEach(segment => {
+        const durationString = segment.duration;
+        const hoursMatch = durationString.match(/\d+(?=H)/);
+        const minutesMatch = durationString.match(/\d+(?=M)/);
+
+        totalHours += !!hoursMatch ? parseInt(hoursMatch[0]) : 0;
+        totalMinutes += !!minutesMatch ? parseInt(minutesMatch[0]) : 0;
+    });
+
+    // If minutes is an hour or multiple, increase hours and set minutes back down to less than an hour
+    if (totalMinutes >= 60) {
+        const hoursFromMinutes = Math.floor(totalMinutes/60);
+        totalHours += hoursFromMinutes;
+        totalMinutes -= 60 * hoursFromMinutes;
+    }
+    return {
+        totalHours,
+        totalMinutes
+    };
+}
+
