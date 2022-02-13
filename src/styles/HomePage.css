@@ -149,6 +149,7 @@ section h1 {
 }
 
 .leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {
+    width: 320px;
     height: 125px;
     display: flex;
 }
