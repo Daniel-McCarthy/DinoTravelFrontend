@@ -76,8 +76,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
 
                     const airline = getInitialAirlineFromItinerary(flightOffer.itineraries[0]);
                     const takeOffLocationIata = flightOffer.itineraries[0].segments[0].departure.iataCode;
-                    const landingLocationIata = flightOffer.itineraries[0].segments[0].arrival.iataCode;//finalItinerary.segments[finalItinerary.segments.length-1].arrival.iataCode;
-
+                    const landingLocationIata = flightOffer.itineraries[0].segments[0].arrival.iataCode;
 
                     return <div className={`flightRow ${selectionClass}`} onClick={this.selectFlight} id={flightOffer.id}>
                         <table>
