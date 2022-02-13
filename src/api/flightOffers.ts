@@ -235,6 +235,10 @@ export const getTotalFlightTimeFromItinerary = (itinerary: IItinerary): IDuratio
 }
 
 
+const parseFlightTimeFormat = (date: string) => {
+    return moment(date, 'YYYY-MM-DD HH-mm-ss');
+};
+
 export const getInitialAirlineFromItinerary = (itinerary: IItinerary) => {
     const firstFlightSegment = itinerary.segments[0];
     const airlineIataCode = firstFlightSegment.carrierCode;
