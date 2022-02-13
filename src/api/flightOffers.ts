@@ -91,9 +91,9 @@ export interface IPricingOptions {
 
 export interface IFlightOfferArguments {
     departureAirportIataCode: string;
-    returnAirportIataCode: string;
+    returnAirportIataCode?: string;
     departureDate: moment.Moment;
-    returnDate: moment.Moment;
+    returnDate?: moment.Moment;
     numberOfAdults: number;
     numberOfChildren?: number;
     flightClass?: string;
