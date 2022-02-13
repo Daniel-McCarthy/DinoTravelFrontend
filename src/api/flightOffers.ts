@@ -1,4 +1,5 @@
 import moment = require("moment");
+import { getAirlineNameFromIataCode } from "../lib/AirlineMapping";
 
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
@@ -233,3 +234,9 @@ export const getTotalFlightTimeFromItinerary = (itinerary: IItinerary): IDuratio
     };
 }
 
+
+export const getInitialAirlineFromItinerary = (itinerary: IItinerary) => {
+    const firstFlightSegment = itinerary.segments[0];
+    const airlineIataCode = firstFlightSegment.carrierCode;
+    return getAirlineNameFromIataCode(airlineIataCode);
+};
