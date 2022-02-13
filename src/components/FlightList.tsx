@@ -120,8 +120,11 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     }
 
     formatTime = (date: Date): string => {
-        const hour = date.getHours();
+        let hour = date.getHours() + 1; // +1 since 1AM would appear as 0AM otherwise
         let min = date.getMinutes().toString();
+
+        if (hour > 12)
+            hour -= 12; // Format to 12/12 AM/PM structure
 
         // Pad minutes to 2 digits
         if (min.length < 2)
