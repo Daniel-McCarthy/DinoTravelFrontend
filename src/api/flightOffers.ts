@@ -269,7 +269,7 @@ export const getFlightStopsFromItinerary = (itinerary: IItinerary/*, finalStopIa
     return flightStops;
 };
 
-const parseFlightTimeFormat = (date: string) => {
+export const parseFlightTimeFormat = (date: string): moment.Moment => {
     return moment(date, 'YYYY-MM-DD HH-mm-ss');
 };
 
