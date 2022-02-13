@@ -92,7 +92,7 @@ export interface IPricingOptions {
 
 export interface IFlightOfferArguments {
     departureAirportIataCode: string;
-    returnAirportIataCode?: string;
+    arrivalAirportIataCode?: string;
     departureDate: moment.Moment;
     returnDate?: moment.Moment;
     numberOfAdults: number;
@@ -141,11 +141,11 @@ export const buildFlightAPIUrlFromArguments = (flightOfferArguments: IFlightOffe
     let url = flightOffersEndpointURL;
     let queryCount = 0;
 
-    if (!!flightOfferArguments.returnAirportIataCode) {
+    if (!!flightOfferArguments.arrivalAirportIataCode) {
         const querySymbol = queryCount === 0
             ? '?'
             : '&';
-        url += `${querySymbol}${FlightOfferSearchProperties.arrivalAirportCode}=${flightOfferArguments.returnAirportIataCode}`;
+        url += `${querySymbol}${FlightOfferSearchProperties.arrivalAirportCode}=${flightOfferArguments.arrivalAirportIataCode}`;
         queryCount++;
     }
     if (!!flightOfferArguments.departureAirportIataCode) {
