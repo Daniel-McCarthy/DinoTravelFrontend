@@ -3,7 +3,6 @@ import { FlightClass, flightClassAsJsonLabel } from "./enums/FlightClass";
 import { FlightType, flightTypeAsJsonLabel } from "./enums/FlightType";
 import { ToastType } from "./enums/ToastType";
 import { ToastMessage } from "./components/ToastMessage";
-import { getFlightData, IFlightData } from "./api/flights";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
@@ -25,6 +24,7 @@ import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelec
 import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
+import { getFlightOffersWithFilters, IFlightOfferArguments, IFlightOfferData } from "./api/flightOffers";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 
@@ -37,10 +37,10 @@ interface IHomePageState {
     // Error/Message Toast display and configuration
     showToast: boolean;
     toastMessage: IToastMessage;
-    flightsData: Array<IFlightData>;
+    flightOfferData: Array<IFlightOfferData>;
 
     // Selected Flight location from the FlightList component
-    selectedFlight: IFlightData | null;
+    selectedFlightOffer: IFlightOfferData | null;
     showingFlightList: boolean;
 
     departureAirport: ILocationData | null;
@@ -50,7 +50,7 @@ interface IHomePageState {
 
     // A copy of any selected flights to search for in multi-city mode.
     // These flights are passed up from the MultiCityFlightSelection component.
-    multiCityFlightSelections: Flight[];
+    multiCityFlightOfferSelections: Flight[];
 
     bannerImages: string[];
 }
@@ -77,8 +77,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
             showToast: false,
-            flightsData: [],
-            selectedFlight: null,
+            flightOfferData: [],
+            selectedFlightOffer: null,
             showingFlightList: false,
 
             departureAirport: null,
@@ -92,16 +92,34 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         }
     }
 
-    getFlightAPIData = async () => {
+    getFlightOfferAPIData = async () => {
+        if (!this.state.departureAirport || !this.state.returnAirport) {
+            // handle error
+            return;
+        }
+
         try {
-            const flights = await getFlightData();
-            console.log(flights);
+            const flightOfferArguments: IFlightOfferArguments = {
+                departureAirportIataCode: this.state.departureAirport?.iataCode,
+                departureDate: this.state.departureFlightDate,
+                arrivalAirportIataCode: this.state.returnAirport?.iataCode,
+                returnDate: this.state.returnFlightDate,
+                numberOfAdults: this.state.numAdultTravelers,
+                numberOfChildren: this.state.numChildTravelers,
+            };
+            const flightOffers: Array<IFlightOfferData> | Error = await getFlightOffersWithFilters(flightOfferArguments);
+            console.log(flightOffers);
+
+            // So that we can handle it in catch and function can treat 
+            // flight offers as Array<IFlightOfferData>.
+            if (flightOffers instanceof Error) {
+                throw flightOffers;
+            }
 
             this.setState({
-                flightsData: flights,
+                flightOfferData: flightOffers,
                 showingFlightList: true
-            })
-            return flights;
+            });
         } catch (error) {
             this.displayError(`Error: ${JSON.stringify(error)}`);
         }
@@ -216,7 +234,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     </div>
 
-                    {isMultiCitySelected ? <MultiCityFlightSelect hide={false} onFlightSelectionsChanged={this.onMultiCityFlightSelectionChange} />
+                    {isMultiCitySelected ? <MultiCityFlightSelect hide={false} onFlightSelectionsChanged={this.onMultiCityFlightOfferSelectionChange} />
                         :
                         <div id="userInputRow">
                             <div id="destinationInputs">
@@ -244,7 +262,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                         </div>
                     }
 
-                    <FlightList flightData={this.state.flightsData} onFlightSelectionUpdate={this.selectedFlightUpdated} hide={!this.state.showingFlightList}></FlightList>
+                    <FlightList flightOfferData={this.state.flightOfferData} onFlightSelectionUpdate={this.selectedFlightOfferUpdated} hide={!this.state.showingFlightList}></FlightList>
 
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
@@ -276,7 +294,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     onSearchClicked = () => {
         // Must verify filters are set in order to search
-        this.getFlightAPIData();
+        this.getFlightOfferAPIData();
     }
 
     onDepartureFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -313,7 +331,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     submitReservation = async () => {
         // Reject submission and warn user if submitting without a flight selection.
-        if (this.state.selectedFlight == null) {
+        if (this.state.selectedFlightOffer == null) {
             this.displayError(`A flight to book must be selected before submission.`)
             return;
         }
@@ -322,10 +340,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             user_id: 1, // Set as a constant until login/sessions is supported.
             trip_type: flightTypeAsJsonLabel(this.state.flightType),
             outgoing_flight_type: flightClassAsJsonLabel(this.state.flightClass),
-            outgoing_flight_id: this.state.selectedFlight.flight_id,
+            outgoing_flight_id: parseInt(this.state.selectedFlightOffer.id),
             returning_flight_type: undefined, // Empty until return flight selection is supported.
             returning_flight_id: undefined,
-            price: this.state.selectedFlight.flight_cost
+            price: parseFloat(this.state.selectedFlightOffer.price.grandTotal)
         };
         const response: Response | Error = await registerReservation(reservation);
         if (response instanceof Error) {
@@ -341,16 +359,16 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         }
     }
 
-    selectedFlightUpdated = (flightSelection: IFlightData | null) => {
+    selectedFlightOfferUpdated = (flightOfferSelection: IFlightOfferData | null) => {
         this.setState({
-            selectedFlight: flightSelection
+            selectedFlightOffer: flightOfferSelection
         });
     }
 
     // This function is called when flight selections are changed in the MultiCityFlightSelection component.
-    onMultiCityFlightSelectionChange = (flightSelections: Flight[]) => {
+    onMultiCityFlightOfferSelectionChange = (flightOfferSelections: Flight[]) => {
         this.setState({
-            multiCityFlightSelections: flightSelections
+            multiCityFlightOfferSelections: flightOfferSelections
         });
     }
 }
