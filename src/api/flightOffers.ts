@@ -209,6 +209,11 @@ export interface IDuration {
     totalMinutes: number
 }
 
+export interface IFlightStop {
+    duration: IDuration;
+    location: string;
+}
+
 export const getTotalFlightTimeFromItinerary = (itinerary: IItinerary): IDuration => {
     const segments = itinerary.segments;
     let totalHours = 0;
@@ -234,6 +239,35 @@ export const getTotalFlightTimeFromItinerary = (itinerary: IItinerary): IDuratio
     };
 }
 
+export const getFlightStopsFromItinerary = (itinerary: IItinerary/*, finalStopIataCode: string*/): Array<IFlightStop> | null => {
+    const segmentsToDestination = itinerary.segments;
+    if (segmentsToDestination.length <= 1)
+        return null;
+
+    const flightStops: IFlightStop[] = [];
+    segmentsToDestination.forEach((segment, index) => {
+        const hasAnotherSegment = (index + 1) < segmentsToDestination.length;
+
+        if (hasAnotherSegment) {
+            const nextSegment = segmentsToDestination[index+1];
+            const currentArrivalTime = parseFlightTimeFormat(segment.arrival.at);
+            const nextDepartureTime = parseFlightTimeFormat(nextSegment.departure.at);
+    
+            const timeDifferenceInMinutes = Math.abs(currentArrivalTime.diff(nextDepartureTime, 'minutes'));
+            const hourDifference = Math.floor(timeDifferenceInMinutes / 60);
+            const minuteDifference = timeDifferenceInMinutes % 60;
+            
+            flightStops.push({
+                duration: {
+                    totalHours: hourDifference,
+                    totalMinutes: minuteDifference
+                },
+                location: segment.arrival.iataCode
+            });
+        }
+    });
+    return flightStops;
+};
 
 const parseFlightTimeFormat = (date: string) => {
     return moment(date, 'YYYY-MM-DD HH-mm-ss');
