@@ -20,6 +20,7 @@
 
 .flightRow {
     padding-top: 15px;
+    border-bottom: solid lightgray 1px;
 }
 
 .flightRow table td {
