@@ -3,6 +3,8 @@ import { v4 as uuid } from "uuid";
 import * as React from "react";
 
 import '../styles/MultiCityFlightSelection.css';
+import { AirportSelector } from "./AirportSelector";
+import { ILocationData } from "../api/locations";
 
 interface IMultiCityFlightSelectProps {
     hide: boolean;
@@ -16,8 +18,8 @@ interface IMultiCityFlightSelectState {
 
 export interface Flight {
     id: string
-    leavingFrom: string;
-    goingTo: string;
+    leavingFrom: ILocationData | null;
+    goingTo: ILocationData | null;
     depatureDate: moment.Moment;
 };
 
@@ -27,8 +29,8 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
 
         const blankFlight: Flight = {
             id: uuid(),
-            leavingFrom: '',
-            goingTo: '',
+            leavingFrom: null,
+            goingTo: null,
             depatureDate: moment()
         };
         this.state = {
@@ -59,8 +61,8 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
                         return <div key={flight.id}>
                                 <div className="flightDestination">
                                     <h3 className='flightLabel'>Flight {index}</h3>
-                                    <input className="leavingInput" placeholder="Leaving From" accessKey={index.toString()} onChange={this.updateDepartureAirport} />
-                                    <input placeholder="Going To" accessKey={index.toString()} onChange={this.updateArrivalAirport} />
+                                    <AirportSelector placeholderText='Leaving From' rowNumber={index} onAirportSelectionUpdated={this.updateDepartureAirport} />
+                                    <AirportSelector placeholderText='Leaving From' rowNumber={index} onAirportSelectionUpdated={this.updateArrivalAirport} />
                                 </div>
                                 <div className="flightDate">
                                     <h3>{isFirst ? "Departing" : " "}</h3>
@@ -84,8 +86,8 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
         const flights = this.state.flights;
         flights.push({
             id: uuid(),
-            leavingFrom: '',
-            goingTo: '',
+            leavingFrom: null,
+            goingTo: null,
             depatureDate: moment()
         })
         this.updateFlightsState(flights);
@@ -99,6 +101,8 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
         flights[rowNumber].depatureDate = moment(newDate, 'YYYY-MM-DD');
         // Update flights data with modified array data
         // Flight associated with row has been updated with new flight date.
+        
+        // Update component state with changed flights, and update parent with the modification that was made.
         this.updateFlightsState(flights);
     }
 
@@ -113,28 +117,26 @@ export class MultiCityFlightSelect extends React.Component<IMultiCityFlightSelec
         const flights = this.state.flights.filter((_flight, index) => {
             return index !== flightRowNumber;
         });
+
+        // Update component state with changed flights, and update parent with the modification that was made.
         this.updateFlightsState(flights);
     }
 
-    updateDepartureAirport = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const airportDepartureInput: HTMLInputElement = event.currentTarget as HTMLInputElement;
-        const flightRowNumber = parseInt(airportDepartureInput.accessKey);
-        const newAirportSelection = airportDepartureInput.value;
+    updateDepartureAirport = (selectedLocation: ILocationData, rowNumber: number) => {
         const flights = this.state.flights;
         
         // Update flight that matches input index to new departure airport selection
-        flights[flightRowNumber].leavingFrom = newAirportSelection;
+        flights[rowNumber].leavingFrom = selectedLocation;
         this.updateFlightsState(flights);
+
+        // Update component state with changed flights, and update parent with the modification that was made.
     }
 
-    updateArrivalAirport = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const airportArrivalInput: HTMLInputElement = event.currentTarget as HTMLInputElement;
-        const flightRowNumber = parseInt(airportArrivalInput.accessKey);
-        const newAirportSelection = airportArrivalInput.value;
+    updateArrivalAirport = (selectedLocation: ILocationData, rowNumber: number) => {
         const flights = this.state.flights;
 
         // Update flight that matches input index to new arrival airport selection
-        flights[flightRowNumber].goingTo = newAirportSelection;
+        flights[rowNumber].goingTo = selectedLocation;
         this.updateFlightsState(flights);
     }
 
