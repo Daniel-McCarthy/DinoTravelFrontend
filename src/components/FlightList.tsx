@@ -64,9 +64,13 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     assembleFlightListTable = () => {
         return (
             <div>
-                {this.state.flightOfferData.map((flightOffer: IFlightOfferData) => {
-                    const originalTakeOffTime = parseFlightTimeFormat(flightOffer.itineraries[0].segments[0].departure.at);
+                {this.state.flightOfferData.map((flightOffer: IFlightOfferData, index) => {
+                    // Limit number of flgiths being rendered
+                    if (index > 15) {
+                        return null;
+                    }
 
+                    const originalTakeOffTime = parseFlightTimeFormat(flightOffer.itineraries[0].segments[0].departure.at);
                     const finalLandingTime = parseFlightTimeFormat(this.getFinalLandingTimeFromFlightOffer(flightOffer));
 
                     const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(originalTakeOffTime.toString(), finalLandingTime.toString());
