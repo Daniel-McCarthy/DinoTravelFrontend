@@ -83,6 +83,49 @@ export class AboutPage extends React.Component<IAboutPageProps, IAboutPageState>
                                 Whether you travel for business or leisure, you can count on 
                                 DinoTravel to make it hassle-free.
                             </p>
+
+                            <p style={{"fontSize": "12px", "marginTop": "100px"}}>
+                                Created by the Purple Dinos for DePaul's Winter Quarter Senior Capstone Project (CSC394/IS376).<br></br>
+                                <div style={{"display": "inline-block"}}>
+                                    <ul>
+                                        <li>
+                                            Dan McCarthy
+                                        </li>
+                                        <li>
+                                            David Gawel
+                                        </li>
+                                        <li>
+                                            Jackson Meyer
+                                        </li>
+                                        <li>
+                                            Jawan L. Davis
+                                        </li>
+                                        <li>
+                                            Jenna Dahl-Crimmins
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div style={{"display": "inline-block"}}>
+                                    <ul>
+                                        <li>
+                                            Mario DiBartolomeo
+                                        </li>
+                                        <li>
+                                            Muhammad Fahad
+                                        </li>
+                                        <li>
+                                            Nick Clark
+                                        </li>
+                                        <li>
+                                            Philip Reeves
+                                        </li>
+                                        <li>
+                                            Suhaib Mikbel
+                                        </li>
+                                    </ul>
+                                </div>
+                            </p>
                         </div>
                     </div>
                 </main>
