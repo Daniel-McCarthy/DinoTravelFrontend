@@ -424,10 +424,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             }
                         </div>
                     }
+                    <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
+
 
                     <FlightList flightSearchStatus={this.state.searchProgress} flightSelectionType={this.state.flightType} flightOfferData={this.state.flightOfferData} onFlightSelectionUpdate={this.selectedFlightOfferUpdated} hide={!this.state.showingFlightList}></FlightList>
-
-                    <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
 
                 <div id='bannerCarousel'>

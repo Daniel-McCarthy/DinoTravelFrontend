@@ -125,7 +125,14 @@ section h1 {
 #submitButton, #searchButton {
     width: 150px;
     margin-top: 50px;
+}
+
+#submitButton {
     margin-bottom: 100px;
+}
+
+#searchButton {
+    margin-bottom: 20px;
 }
 
 .dateInputContainer {
