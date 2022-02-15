@@ -50,9 +50,13 @@ section {
  * Image Carousel Styling
  */
 
+ #bannerContainer {
+    display: flex;
+}
+
 #bannerCarousel {
-    display: block;
     width: 100%;
+    margin-top: 100vh;
 }
 
 /*

@@ -430,8 +430,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     <FlightList flightSearchStatus={this.state.searchProgress} flightSelectionType={this.state.flightType} flightOfferData={this.state.flightOfferData} onFlightSelectionUpdate={this.selectedFlightOfferUpdated} hide={!this.state.showingFlightList}></FlightList>
                 </section>
 
-                <div id='bannerCarousel'>
-                    <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
+                <div id='bannerContainer'>
+                    <div id='bannerCarousel'>
+                        <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
+                    </div>
                 </div>
 
                 <ToastMessage toastType={this.state.toastMessage.toastType} show={this.state.showToast} message={this.state.toastMessage.message}></ToastMessage>
