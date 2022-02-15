@@ -63,10 +63,27 @@ export class AboutPage extends React.Component<IAboutPageProps, IAboutPageState>
                     </div>
                 </header>
                 <main>
-                    <div id="aboutUsParagraphs">
-                        <p>
-                            ABOUT
-                        </p>
+                    <div id="aboutUsContainer">
+                        <div id="aboutUsTitle">
+                            <h1>About Us</h1>
+                        </div>
+
+                        <div id="aboutUsSection">
+                            <p>
+                                DinoTravel is an easy to use itinerary service that is 
+                                designed to help customers find flights within specific 
+                                price ranges across all airline companies. We want to make 
+                                travel planning simpler and more accessible to the everday person.
+                            </p>
+
+                            <p>
+                                With new services and applications coming out every day, 
+                                it can be hard to keep track of it all. Our application is 
+                                designed to make your traveling experience organized and simple. 
+                                Whether you travel for business or leisure, you can count on 
+                                DinoTravel to make it hassle-free.
+                            </p>
+                        </div>
                     </div>
                 </main>
 
