@@ -151,7 +151,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <Link to='/support' >
                                 <button className="nontoggle">support</button>
                             </Link>
-                            <button className="nontoggle">about us</button>
+                            <Link to='/about'>
+                                <button className="nontoggle">about us</button>
+                            </Link>
                             <button className="nontoggle">trips</button>
                             <Link to='/login'>
                                 <button className="nontoggle">login</button>

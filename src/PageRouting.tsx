@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { AboutPage } from "./AboutPage";
 import { HomePage } from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import { SupportPage } from "./SupportPage";
@@ -24,6 +25,7 @@ export class PageRouting extends React.Component {
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/login" element={<LoginPage/>} />
                     <Route path="/support" element={<SupportPage/>} />
+                    <Route path="/about" element={<AboutPage />} />
                 </Routes>
             </Router>
         )
