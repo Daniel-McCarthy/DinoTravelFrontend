@@ -37,7 +37,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         }
     }
 
-    updateFirstName(newFirstName: string) {
+    updateFirstName = (newFirstName: string) => {
         this.setState({
             firstName: newFirstName,
         })
@@ -47,7 +47,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         this.render();
     }
 
-    updateLastName(newLastName: string) {
+    updateLastName = (newLastName: string) => {
         this.setState({
             lastName: newLastName
         })
@@ -57,7 +57,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         this.render();
     }
 
-    updateBirthday(newBirthday: moment.Moment) {
+    updateBirthday = (newBirthday: moment.Moment) => {
         this.setState({
             birthday: newBirthday
         })
@@ -67,7 +67,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         this.render();
     }
 
-    updateEmail(newEmail: string) {
+    updateEmail = (newEmail: string) =>{
         this.setState({
             email: newEmail
         })
