@@ -73,7 +73,6 @@ interface IHomePageState {
     returnAirport: ILocationData | null;
     returnFlightDate: moment.Moment;
 
-    searchStatusMode: SearchStatus;
     // A copy of any selected flights to search for in multi-city mode.
     // These flights are passed up from the MultiCityFlightSelection component.
     multiCityFlightOfferSelections: Flight[];
@@ -117,7 +116,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             multiCityFlightOfferSelections: [],
             bannerImages,
             currentSearches: [],
-            searchStatusMode: SearchStatus.SettingFilters,
             searchProgress: {
                 searchStatus: SearchStatus.SettingFilters,
                 flightIndexBeingSearched: 0,
