@@ -140,6 +140,10 @@ section h1 {
     margin-bottom: 20px;
 }
 
+#nextFlightButton {
+    margin-top: 30px;
+}
+
 .dateInputContainer {
     display: inline-block;
     width: 180px;

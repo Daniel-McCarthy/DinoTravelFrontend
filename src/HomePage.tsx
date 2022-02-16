@@ -66,6 +66,7 @@ interface IHomePageState {
 
     // Selected Flight location from the FlightList component
     selectedFlightOffer: IFlightOfferData | null;
+    finalizedFlightSelections: IFlightOfferData[];
     showingFlightList: boolean;
     flightListLoading: boolean;
 
@@ -107,6 +108,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             showToast: false,
             flightOfferData: [],
             selectedFlightOffer: null,
+            finalizedFlightSelections: [],
             showingFlightList: false,
             flightListLoading: false,
 
@@ -138,11 +140,39 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return null;
     }
 
+    setCurrentFlightSelected = () => {
+        if (!this.state.selectedFlightOffer) {
+            this.displayError('You must select a flight before moving to the next.');
+            return;
+        }
+
+        const finalizedFlightSelections = this.state.finalizedFlightSelections;
+        const updatedSearches = this.state.currentSearches;
+        for(let i = 0; i < updatedSearches.length; i++) {
+            const currentSearch = updatedSearches[i];
+            if (!currentSearch.hasBeenSearched) {
+                updatedSearches[i].hasBeenSearched = true;
+                finalizedFlightSelections.push(this.state.selectedFlightOffer);
+                
+                break;
+            }
+        }
+
+        this.setState({
+            currentSearches: updatedSearches,
+            finalizedFlightSelections,
+            selectedFlightOffer: null
+        }, () => {
+            this.getFlightOfferAPIData();
+        });
+    }
+
     resetAllSearchDataAndFlightList = () => {
         this.setState({
             showingFlightList: false,
             currentSearches: [],
-            selectedFlightOffer: null
+            selectedFlightOffer: null,
+            finalizedFlightSelections: []
         })
     }
 
@@ -484,8 +514,25 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     };
 
-    renderSubmitButton = () => {
-        return <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>
+    renderNextOrSubmitButton = () => {
+        // Don't render the submit/next button unless the flight list is present to submit or progress on.
+        if (this.state.showingFlightList === false || this.state.flightListLoading)
+            return null;
+
+        const searchProgress = this.state.searchProgress;
+        const isOnFinalPage = searchProgress.flightIndexBeingSearched >= searchProgress.flightsTotalToSearch - 1;
+        const isFlightSelected = !!this.state.selectedFlightOffer;
+        let classes = isFlightSelected ? 'nontoggle':'disabledButton';
+
+        if (isOnFinalPage) {
+            return <button className={classes} id="submitButton" onClick={this.submitReservation} disabled={!isFlightSelected}>Submit</button>
+        } else {
+            return <button className={classes} id="nextFlightButton" onClick={this.onNextFlightClicked} disabled={!isFlightSelected}>Next Flight</button>
+        }
+    }
+
+    onNextFlightClicked = () => {
+        this.setCurrentFlightSelected();
     }
 
     onSearchClicked = async () => {
