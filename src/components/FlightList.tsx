@@ -61,7 +61,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
 
     getFlightListHeaderMessage = () => {
         if (this.props.flightSelectionType === FlightType.MultiCity) {
-            return `Choosing flight ${this.props.flightSearchStatus.flightIndexBeingSearched} of ${this.props.flightSearchStatus.flightsTotalToSearch}`;
+            return `Choosing flight ${this.props.flightSearchStatus.flightIndexBeingSearched + 1} of ${this.props.flightSearchStatus.flightsTotalToSearch}`;
         } else if (this.props.flightSelectionType === FlightType.RoundTrip) {
             const isSearchingFirstFlight = this.props.flightSearchStatus.flightIndexBeingSearched === 0;
             return isSearchingFirstFlight
