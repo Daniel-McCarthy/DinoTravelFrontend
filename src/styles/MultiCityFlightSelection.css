@@ -1,5 +1,5 @@
 .addRemoveSpacer {
-    width: 535px;
+    width: 640px;
     display: inline-block;
 }
 
@@ -32,7 +32,8 @@
 }
 
 .multiCityFlightSelectionContainer .datePicker {
-    width: 150px;
+    width: 180px;
+    height: 60px;
     margin-bottom: 8px;
     margin-top: 0px;
 }
@@ -43,4 +44,9 @@
 
 .flightDate {
     display: inline-block;
+}
+
+.airportSelectorElement {
+    display: inline-block;
+    width: 320px;
 }

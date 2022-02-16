@@ -7,6 +7,10 @@ button {
     border-radius: 7px;
 }
 
+.disabledButton {
+    background-color: darkgray;
+}
+
 .selected, .nontoggle {
     background-color: rgb(59, 77, 145);
 }
