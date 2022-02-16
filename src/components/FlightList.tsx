@@ -14,6 +14,7 @@ interface IFlightListState {
 }
 
 interface IFlightListProps {
+    isLoadingData: boolean;
     destinationIataCode?: string,
     flightOfferData: Array<IFlightOfferData>
     hide: boolean;
@@ -83,7 +84,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     assembleFlightListTable = () => {
         return (
             <div>
-                {this.state.flightOfferData.map((flightOffer: IFlightOfferData, index) => {
+                    {this.state.flightOfferData.map((flightOffer: IFlightOfferData, index) => {
                     // Limit number of flgiths being rendered
                     if (index > 15) {
                         return null;
@@ -230,7 +231,13 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     }
 
     render() {
+        if (this.props.isLoadingData) {
+            return <div id='loadingImageContainer'>
+                        <div id='loadingImage'></div>
+                    </div>
+        }
         const isDataEmpty = this.state.flightOfferData.length === 0;
+
         return (
             this.state.isHidden
                 ? null
