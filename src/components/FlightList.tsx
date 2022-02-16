@@ -1,6 +1,8 @@
 import moment = require("moment");
 import * as React from "react";
 import { getFlightStopsFromItinerary, getInitialAirlineFromItinerary, getTotalFlightTimeFromItinerary, IDuration, IFlightOfferData, parseFlightTimeFormat } from "../api/flightOffers";
+import { FlightType } from "../enums/FlightType";
+import { ISearchProgress } from "../HomePage";
 import { randomInt } from "../lib/utility";
 
 import '../styles/FlightList.css';
@@ -15,6 +17,10 @@ interface IFlightListProps {
     destinationIataCode?: string,
     flightOfferData: Array<IFlightOfferData>
     hide: boolean;
+
+    // Controlling how multi-flight selection is displayed
+    flightSelectionType: FlightType;
+    flightSearchStatus: ISearchProgress;
 
     onFlightSelectionUpdate(selectedFlight: IFlightOfferData | null): void;
 }
@@ -52,10 +58,23 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
             </div>
     }
 
+    getFlightListHeaderMessage = () => {
+        if (this.props.flightSelectionType === FlightType.MultiCity) {
+            return `Choosing flight ${this.props.flightSearchStatus.flightIndexBeingSearched} of ${this.props.flightSearchStatus.flightsTotalToSearch}`;
+        } else if (this.props.flightSelectionType === FlightType.RoundTrip) {
+            const isSearchingFirstFlight = this.props.flightSearchStatus.flightIndexBeingSearched === 0;
+            return isSearchingFirstFlight
+                ? 'Choosing Departing Flight >'
+                : 'Departing Flight > Choosing Return Flight';
+        } else {
+            return "Choosing your Flight >"
+        }
+    }
+
     renderFlightList = () => {
         return <div className="flightList">
                 <div>
-                    <text className="flightListHeader">{`Choose departing flight > Choose Return Flight > Review your Trip`}</text>
+                    <text className="flightListHeader">{this.getFlightListHeaderMessage()}</text>
                     {this.assembleFlightListTable()}
                 </div>
             </div>
