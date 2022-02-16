@@ -280,7 +280,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
             const flightOfferArguments: IFlightOfferArguments = {
                 departureAirportIataCode: currentFlightToSearch?.flight.originAirportIataCode,
-                departureDate: this.state.departureFlightDate,
+                departureDate: currentFlightToSearch.flight.flightDate,
                 arrivalAirportIataCode: currentFlightToSearch?.flight.destinationAirportIataCode,
                 numberOfAdults: this.state.numAdultTravelers,
                 numberOfChildren: this.state.numChildTravelers,
