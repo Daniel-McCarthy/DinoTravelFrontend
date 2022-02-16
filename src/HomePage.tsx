@@ -85,7 +85,8 @@ interface IHomePageState {
 }
 
 interface IHomePageProps {
-
+    id_Token: string | null
+    isLoggedIn: boolean
 }
 
 interface IToastMessage {
@@ -93,6 +94,7 @@ interface IToastMessage {
     toastType: ToastType,
 }
 
+// noinspection DuplicatedCode
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     public constructor(props: IHomePageProps) {
@@ -127,9 +129,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             }
         }
     }
-
-
-
 
     getCurrentFlightToSelect = (flightSearchList?: IFlightSearch[]): IFlightSearch | null => {
         const searchList = !!flightSearchList ? flightSearchList : this.state.currentSearches;
@@ -410,7 +409,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                             <Link to='/support' >
                                 <button className="nontoggle">support</button>
                             </Link>
-                            <button className="nontoggle">about us</button>
+                            <Link to='/about'>
+                                <button className="nontoggle">about us</button>
+                            </Link>
                             <button className="nontoggle">trips</button>
                             <Link to='/login'>
                                 <button className="nontoggle">login</button>
