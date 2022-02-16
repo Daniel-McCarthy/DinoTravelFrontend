@@ -137,6 +137,14 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return null;
     }
 
+    resetAllSearchDataAndFlightList = () => {
+        this.setState({
+            showingFlightList: false,
+            currentSearches: [],
+            selectedFlightOffer: null
+        })
+    }
+
     resetFlightSearches = () => {
         const searchesWithClearedOffers = this.state.currentSearches.map(flightSearch => {
             flightSearch.hasBeenSearched = false;
@@ -478,18 +486,21 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     }
 
     selectRoundTrip = () => {
+        this.resetAllSearchDataAndFlightList();
         this.setState({
             flightType: FlightType.RoundTrip
         });
     }
 
     selectOneWay = () => {
+        this.resetAllSearchDataAndFlightList();
         this.setState({
             flightType: FlightType.OneWay
         });
     }
 
     selectMultiCityFlight = () => {
+        this.resetAllSearchDataAndFlightList();
         this.setState({
             flightType: FlightType.MultiCity
         });
