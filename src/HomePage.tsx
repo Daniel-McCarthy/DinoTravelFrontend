@@ -129,8 +129,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
 
 
-    getCurrentFlightToSelect = (): IFlightSearch | null => {
-        for (const flightSearch of this.state.currentSearches) {
+    getCurrentFlightToSelect = (flightSearchList?: IFlightSearch[]): IFlightSearch | null => {
+        const searchList = !!flightSearchList ? flightSearchList : this.state.currentSearches;
+        for (const flightSearch of searchList) {
             if (!flightSearch.hasBeenSearched)
                 return flightSearch
         }
@@ -269,10 +270,12 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
 
 
-    getFlightOfferAPIData = async () => {
+    getFlightOfferAPIData = async (flightToSearch?: IFlightSearch | null) => {
 
         try {
-            const currentFlightToSearch = this.getCurrentFlightToSelect();
+            const currentFlightToSearch = !!flightToSearch
+                ? flightToSearch
+                : this.getCurrentFlightToSelect();
             if (currentFlightToSearch === null) {
                 // Handle error
                 return;
@@ -491,8 +494,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.setState({
             flightListLoading: true
         }, () => {
-            this.assembleFlightSearchList();
-            this.getFlightOfferAPIData();
+            const currentFlightOfferList = this.assembleFlightSearchList();
+            const currentFlightToSearch = this.getCurrentFlightToSelect(currentFlightOfferList);
+            this.getFlightOfferAPIData(currentFlightToSearch);
         });
     }
 
