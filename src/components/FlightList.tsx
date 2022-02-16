@@ -75,7 +75,6 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     renderFlightList = () => {
         return <div className="flightList">
                 <div>
-                    <text className="flightListHeader">{this.getFlightListHeaderMessage()}</text>
                     {this.assembleFlightListTable()}
                 </div>
             </div>
@@ -238,6 +237,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
             this.state.isHidden
                 ? null
                 : <div className="flightList">
+                    <text className="flightListHeader">{this.getFlightListHeaderMessage()}</text>
                     {isDataEmpty ? this.renderNoFlightDataMessage() : this.renderFlightList()}
                   </div>   
         )
