@@ -132,6 +132,7 @@ section h1 {
 }
 
 #submitButton {
+    display: block;
     margin-bottom: 100px;
 }
 
