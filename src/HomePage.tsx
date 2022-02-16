@@ -56,7 +56,8 @@ interface IHomePageState {
 }
 
 interface IHomePageProps {
-
+    id_Token: string | null
+    isLoggedIn: boolean
 }
 
 interface IToastMessage {
@@ -64,6 +65,7 @@ interface IToastMessage {
     toastType: ToastType,
 }
 
+// noinspection DuplicatedCode
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     public constructor(props: IHomePageProps) {
@@ -88,7 +90,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
             multiCityFlightSelections: [],
 
-            bannerImages
+            bannerImages,
         }
     }
 
@@ -134,6 +136,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         const roundTripButtonClass = isRoundTripSelected ? 'selected' : '';
         const oneWayButtonClass = isOneWaySelected ? 'selected' : '';
         const multiCityButtonClass = isMultiCitySelected ? 'selected' :  '';
+
         return (
             <div>
                 <header>
@@ -232,6 +235,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
                 </section>
+
+                <div>
+                    <p>User is {this.props.isLoggedIn ? "Logged In" : "Logged Out"}</p>
+                </div>
 
                 <div id='bannerCarousel'>
                     <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
