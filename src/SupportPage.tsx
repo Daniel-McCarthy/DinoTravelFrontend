@@ -64,7 +64,9 @@ export class SupportPage extends React.Component<ISupportPageProps, ISupportPage
                             <Link to='/support' >
                                 <button className="nontoggle">support</button>
                             </Link>
-                            <button className="nontoggle">about us</button>
+                            <Link to='/about'>
+                                <button className="nontoggle">about us</button>
+                            </Link>
                             <button className="nontoggle">trips</button>
                             <Link to='/login'>
                                 <button className="nontoggle">login</button>

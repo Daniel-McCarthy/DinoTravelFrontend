@@ -1,0 +1,12 @@
+#aboutUsContainer {
+    width: 500px;
+    margin: auto;
+}
+
+#aboutUsTitle {
+    text-align: center;
+}
+
+#aboutUsSection {
+    font-size: larger;
+}
