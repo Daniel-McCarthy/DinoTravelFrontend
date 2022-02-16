@@ -3,7 +3,6 @@ import * as React from "react";
 import { getFlightStopsFromItinerary, getInitialAirlineFromItinerary, getTotalFlightTimeFromItinerary, IDuration, IFlightOfferData, parseFlightTimeFormat } from "../api/flightOffers";
 import { FlightType } from "../enums/FlightType";
 import { ISearchProgress } from "../HomePage";
-import { randomInt } from "../lib/utility";
 
 import '../styles/FlightList.css';
 
@@ -212,10 +211,6 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
 
         const amPMLabel = (hour < 12) || (hour == 24) ? 'AM' : 'PM';
         return `${hour}:${min} ${amPMLabel}`;
-    }
-
-    calculateRandomDummyPrice = () => {
-        return randomInt(100, 600);
     }
 
     getFlightByID = (id: number): IFlightOfferData | null => {
