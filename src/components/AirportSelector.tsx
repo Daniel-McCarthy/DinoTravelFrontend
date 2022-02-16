@@ -16,7 +16,8 @@ interface IAirportSelectorState {
 
 interface IAirportSelectorProps {
     placeholderText?: string;
-    onAirportSelectionUpdated: (selectedLocation: ILocationData) => void;
+    onAirportSelectionUpdated: (selectedLocation: ILocationData, rowNumber: number) => void;
+    rowNumber?: number;
 }
 
 export class AirportSelector extends React.Component<IAirportSelectorProps, IAirportSelectorState> {
@@ -155,7 +156,7 @@ export class AirportSelector extends React.Component<IAirportSelectorProps, IAir
         this.setState({
             selectedLocation: locationBeingSelected
         });
-        this.props.onAirportSelectionUpdated(locationBeingSelected);
+        this.props.onAirportSelectionUpdated(locationBeingSelected, this.props.rowNumber || 0);
     };
 
     onQueryUpdated = (event: React.ChangeEvent<HTMLInputElement>) => {

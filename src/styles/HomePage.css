@@ -50,9 +50,13 @@ section {
  * Image Carousel Styling
  */
 
+ #bannerContainer {
+    display: flex;
+}
+
 #bannerCarousel {
-    display: block;
     width: 100%;
+    margin-top: 100vh;
 }
 
 /*
@@ -119,18 +123,30 @@ section h1 {
 }
 
 #userInputRow .datePicker {
-    width: 120px;
+    width: 180px;
 }
 
 #submitButton, #searchButton {
     width: 150px;
     margin-top: 50px;
+}
+
+#submitButton {
+    display: block;
     margin-bottom: 100px;
+}
+
+#searchButton {
+    margin-bottom: 20px;
+}
+
+#nextFlightButton {
+    margin-top: 30px;
 }
 
 .dateInputContainer {
     display: inline-block;
-    width: 120px;
+    width: 180px;
     margin-right: 30px;
 }
 
@@ -149,6 +165,7 @@ section h1 {
 }
 
 .leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {
+    width: 320px;
     height: 125px;
     display: flex;
 }
