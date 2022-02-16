@@ -48,7 +48,8 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
 
         if (prevProps.flightOfferData !== this.props.flightOfferData) {
             this.setState({
-                flightOfferData: this.props.flightOfferData
+                flightOfferData: this.props.flightOfferData,
+                selectedFlight: '' // We shouldn't still have a selection since this new data implies that they no longer match up with what we saw before.
             });
         }
     }
