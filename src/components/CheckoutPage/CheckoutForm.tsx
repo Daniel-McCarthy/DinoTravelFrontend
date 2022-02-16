@@ -1,6 +1,15 @@
 import React from 'react';
+import moment = require("moment");
 
-export default function CheckoutForm() {
+export default function CheckoutForm({updateFirstName, updateLastName, updateBirthday, updateEmail}: {
+    updateFirstName: (newFirstName: string) => void, 
+    updateLastName: (newLastName: string) => void,
+    updateBirthday: (newBirthday: moment.Moment) => void,
+    updateEmail: (newEmail: string) => void,
+    }) {
+
+    // Gender, Country, and Phone no. don't need to be added to the users DB
+
     return (
         <>
             <div id="checkoutForm">
@@ -14,12 +23,12 @@ export default function CheckoutForm() {
                 <div id="userInfoCheckout">
                     <p>
                         <label htmlFor="txtFirstName">First Name*</label><br></br>
-                        <input type="text"></input>
+                        <input type="text" onChange={(event) => updateFirstName(event.target.value)}></input>
                     </p>
 
                     <p>
                         <label htmlFor="txtLastName">Last Name*</label><br></br>
-                        <input type="text"></input>
+                        <input type="text" onChange={(event) => updateLastName(event.target.value)}></input>
                     </p>
 
                     <p>
@@ -44,13 +53,7 @@ export default function CheckoutForm() {
 
                     <p>
                         <label htmlFor="txtBirthDate">Date of birth*</label><br></br>
-                        <input className="datePicker" type="date" placeholder="yyyy-mm-dd"></input>
-                    </p>
-
-                    <p>
-                        {/* NOT IMPLEMENTED */}
-                        <label htmlFor="btnChooseSeats">Seat Selection</label><br></br>
-                        <button id="btnChooseSeats">Choose Seats</button>
+                        <input className="datePicker" type="date" placeholder="yyyy-mm-dd" onChange={(event) => updateBirthday(moment(event.currentTarget.value, "YYYY-MM-DD"))}></input>
                     </p>
                 </div>
 
@@ -66,7 +69,7 @@ export default function CheckoutForm() {
                     <div id="inputEmail">
                         <p>
                             <label htmlFor="txtEmail">Email address*</label><br></br>
-                            <input type="txtEmail"></input>
+                            <input type="txtEmail" onChange={(event) => updateEmail(event.target.value)}></input>
                         </p>
                     </div>
                 </div>

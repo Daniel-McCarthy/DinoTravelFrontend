@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import { AboutPage } from "./AboutPage";
+import { CheckoutPage } from "./CheckoutPage";
 import { HomePage } from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import { SupportPage } from "./SupportPage";
@@ -51,6 +52,7 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
                 <Routes>
                     <Route path="/support" element={<SupportPage/>} />
                     <Route path="/about" element={<AboutPage />} />
+                    <Route path="/checkout" element={<CheckoutPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} />} />
                     <Route path="/" element={<HomePage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn}/>} />
                     <Route path="/login" element={<LoginPage updateIDToken={this.updateIdToken} isLoggedIn={this.state.isLoggedIn}/>} />
                 </Routes>
