@@ -206,6 +206,11 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             // Set search list for all flights configured via multicity selection
             // TODO: Bubble up error to user if searching incomplete selection in multi-city instead of just ignoring it and printing to console
             this.setState({
+                searchProgress: {
+                    searchStatus: SearchStatus.Searching,
+                    flightIndexBeingSearched: 0,
+                    flightsTotalToSearch: flightsToSearch.length
+                },
                 currentSearches: flightsToSearch
             });
             return flightsToSearch;
@@ -251,6 +256,11 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
             // Set outbound (and if RoundTrip, inbound too) flight to currentSearches to go through.
             this.setState({
+                searchProgress: {
+                    searchStatus: SearchStatus.Searching,
+                    flightIndexBeingSearched: 0,
+                    flightsTotalToSearch: isRoundTripSelected ? 2 : 1
+                },
                 currentSearches: flightsToSearch
             });
             return flightsToSearch;
