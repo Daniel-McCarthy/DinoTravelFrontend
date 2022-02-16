@@ -67,6 +67,7 @@ interface IHomePageState {
     // Selected Flight location from the FlightList component
     selectedFlightOffer: IFlightOfferData | null;
     showingFlightList: boolean;
+    flightListLoading: boolean;
 
     departureAirport: ILocationData | null;
     departureFlightDate: moment.Moment;
@@ -107,6 +108,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             flightOfferData: [],
             selectedFlightOffer: null,
             showingFlightList: false,
+            flightListLoading: false,
 
             departureAirport: null,
             departureFlightDate: moment(),
@@ -228,7 +230,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             };
 
             flightsToSearch.push(firstFlightSearch);
-            if (this.state.flightType === FlightType.RoundTrip) {
+            const isRoundTripSelected = this.state.flightType === FlightType.RoundTrip;
+            if (isRoundTripSelected) {
                 // Add return trip
                 const returnOrigin = this.state.returnAirport;
                 const returnDestination = this.state.departureAirport;
@@ -286,10 +289,17 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
             this.setState({
                 flightOfferData: flightOffers,
+                flightListLoading: false,
                 showingFlightList: true
             });
         } catch (error) {
             this.displayError(`Error: ${JSON.stringify(error)}`);
+            // Ensure if we can't get any data, we show that no results are found.
+            this.setState({
+                flightListLoading: false,
+                showingFlightList: true,
+                flightOfferData: []
+            });
         }
     }
 
@@ -433,7 +443,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                     <button className="nontoggle" id="searchButton" onClick={this.onSearchClicked}>Search</button>
 
 
-                    <FlightList flightSearchStatus={this.state.searchProgress} flightSelectionType={this.state.flightType} flightOfferData={this.state.flightOfferData} onFlightSelectionUpdate={this.selectedFlightOfferUpdated} hide={!this.state.showingFlightList}></FlightList>
+                    <FlightList flightSearchStatus={this.state.searchProgress} flightSelectionType={this.state.flightType} flightOfferData={this.state.flightOfferData} onFlightSelectionUpdate={this.selectedFlightOfferUpdated} hide={!this.state.showingFlightList} isLoadingData={this.state.flightListLoading}></FlightList>
+                    {this.renderNextOrSubmitButton()}
                 </section>
 
                 <div id='bannerContainer'>
@@ -463,10 +474,15 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         return <button className="nontoggle" id="submitButton" onClick={this.submitReservation}>Submit</button>
     }
 
-    onSearchClicked = () => {
+    onSearchClicked = async () => {
         // Must verify filters are set in order to search
-        this.assembleFlightSearchList();
-        this.getFlightOfferAPIData();
+        
+        this.setState({
+            flightListLoading: true
+        }, () => {
+            this.assembleFlightSearchList();
+            this.getFlightOfferAPIData();
+        });
     }
 
     onDepartureFlightDateSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
