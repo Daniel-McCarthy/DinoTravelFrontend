@@ -153,14 +153,16 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             if (!currentSearch.hasBeenSearched) {
                 updatedSearches[i].hasBeenSearched = true;
                 finalizedFlightSelections.push(this.state.selectedFlightOffer);
-                
                 break;
             }
         }
 
+        const updatedSearchProgress = this.state.searchProgress;
+        updatedSearchProgress.flightIndexBeingSearched += 1;
         this.setState({
             currentSearches: updatedSearches,
             finalizedFlightSelections,
+            searchProgress: updatedSearchProgress,
             selectedFlightOffer: null
         }, () => {
             this.getFlightOfferAPIData();
@@ -537,7 +539,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
     onSearchClicked = async () => {
         // Must verify filters are set in order to search
-        
         this.setState({
             flightListLoading: true
         }, () => {
