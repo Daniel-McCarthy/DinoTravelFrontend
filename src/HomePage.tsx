@@ -303,7 +303,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 showingFlightList: true
             });
         } catch (error) {
-            this.displayError(`Error: ${JSON.stringify(error)}`);
+            const errorMessage = (error as Error).message;
+            this.displayError(`Error: ${JSON.stringify(errorMessage)}`);
             // Ensure if we can't get any data, we show that no results are found.
             this.setState({
                 flightListLoading: false,
