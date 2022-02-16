@@ -46,7 +46,7 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
 
     // Would normally send a /delete request instead
     const handleDelete = (resId: number) => {
-        if (window.confirm("Are you sure you want you cancel your flight?")) {
+        if (window.confirm("Are you sure you want you cancel your flight? This will cancel all flights connected to this booking number")) {
 
             deleteReservation(resId);
         }
