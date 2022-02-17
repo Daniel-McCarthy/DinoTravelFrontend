@@ -537,6 +537,11 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
     }
 
     onSubmitClicked = async () => {
+        if (this.props.id_Token == null) {
+            this.displayError('Cannot submit due to not being logged in.');
+            return;
+        }
+
         // Update status of search progress and add final flight to flight selections
         if (this.state.selectedFlightOffer == null) {
             return;
