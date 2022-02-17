@@ -1,11 +1,17 @@
+import moment from 'moment';
 import React from 'react';
+import { updateUser } from '../../api/users';
 import '../../styles/CheckoutPage.css';
 
-export default function CheckoutReceipt() {
+export default function CheckoutReceipt({firstName, lastName, email, dob, idToken} : {firstName: string, lastName: string, email: string, dob: moment.Moment, idToken: string | null}) {
     const testFlights = ["Chicago (ORD) to New York (LGA)","Chicago (ORD) to New York (LGA)", "Chicago (ORD) to New York (LGA)", "Chicago (ORD) to New York (LGA)", "Chicago (ORD) to New York (LGA)"];
 
     const completeBooking = () => {
         console.log("booking");
+
+        if (idToken !== null) {
+            updateUser(firstName, lastName, email, dob, idToken);
+        }
     }
 
     return (
