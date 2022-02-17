@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { IFlightOfferData } from '../../api/flightOffers';
+import { getTotalFlightTimeFromItinerary, IFlightOfferData } from '../../api/flightOffers';
 import { updateUser } from '../../api/users';
 import '../../styles/CheckoutPage.css';
 
@@ -20,9 +20,10 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
         
         var sm = 0
         offers.forEach((offer) =>{
-            const gt = parseFloat(offer.price.grandTotal);
-
-            sm = sm + gt
+            if (offer.price.grandTotal) {
+                const gt = parseFloat(offer.price.grandTotal);
+                sm = sm + gt
+            }
         });
         setTotal(sm);
         return sm;
@@ -38,14 +39,30 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
             <div id="bookingReceipt">
                 <div id="receiptTitle">
                     <h2>Booking Information</h2>
-                    <p>{flightOffers.length} Reservations</p>
+                    <h3>{flightOffers.length} Reservations</h3>
                 </div>
 
                 <div id="receiptFlights">
                     {flightOffers.map((offer) => {
-                        offer.itineraries.map((itinerary) => {
-                            itinerary.segments.map((segment) => {
-                                <p>({segment.departure.iataCode}) to ({segment.arrival.iataCode})</p>
+                        return offer.itineraries.map((itenary) => {
+                            return itenary.segments.map((segment) => {
+                                return (
+                                    <>
+                                        <p>({segment.departure.iataCode}) to ({segment.arrival.iataCode})</p>
+                                        <p>{(segment.departure.at).substring(11)} - {(segment.arrival.at).substring(11)}
+                                            {/* How to save time in a single variable?*/}
+                                            ({getTotalFlightTimeFromItinerary(itenary).totalHours}h {getTotalFlightTimeFromItinerary(itenary).totalMinutes}m)
+                                        </p>
+                                        <p>
+                                            {segment.carrierCode}
+                                        </p>
+                                        <p>
+                                            {/* Display grandTotal if it exists */}
+                                            ${offer.price.grandTotal && offer.price.grandTotal}
+                                        </p>
+                                        <br></br>
+                                    </>
+                                )
                             })
                         })
                     })}
