@@ -278,3 +278,45 @@ export const getInitialAirlineFromItinerary = (itinerary: IItinerary) => {
     const airlineIataCode = firstFlightSegment.carrierCode;
     return getAirlineNameFromIataCode(airlineIataCode);
 };
+
+export const getFinalLandingTimeFromFlightOffer = (flightOffer: IFlightOfferData) => {
+    const finalItinerary = flightOffer.itineraries[flightOffer.itineraries.length-1];
+    const finalSegment = finalItinerary.segments[finalItinerary.segments.length-1];
+    return finalSegment.arrival.at;
+}
+
+ export const parseDateFormat = (date: string): moment.Moment => {
+    return moment(date, 'YYYY-MM-DD HH-mm-ss');
+ }
+
+// Good candidate for a unit test
+export const formatFlightLengthTime = (departure_time: string, arrival_time: string): string => {
+    const departureMoment = parseDateFormat(departure_time);
+    const arrivalMoment = parseDateFormat(arrival_time);
+
+    const timeDifferenceInMinutes = Math.abs(departureMoment.diff(arrivalMoment, 'minutes'));
+    const hourDifference = Math.floor(timeDifferenceInMinutes / 60);
+    const minuteDifference = timeDifferenceInMinutes % 60;
+    return `${hourDifference} hrs ${minuteDifference} min`;
+}
+
+export const formatFlightDuration = (flightDuration: IDuration) => {
+    return `${flightDuration.totalHours} hrs ${flightDuration.totalMinutes} min`;
+}
+
+
+export const formatTime = (date: Date): string => {
+    let hour = date.getHours() + 1; // +1 since 1AM would appear as 0AM otherwise
+    let min = date.getMinutes().toString();
+
+    if (hour > 12)
+        hour -= 12; // Format to 12/12 AM/PM structure
+
+    // Pad minutes to 2 digits
+    if (min.length < 2)
+        min += '0';
+
+    const amPMLabel = (hour < 12) || (hour == 24) ? 'AM' : 'PM';
+    return `${hour}:${min} ${amPMLabel}`;
+}
+
