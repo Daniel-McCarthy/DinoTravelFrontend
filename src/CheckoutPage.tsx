@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Link} from "react-router-dom";
 import CheckoutForm from "./components/CheckoutPage/CheckoutForm";
+import CheckoutReceipt from "./components/CheckoutPage/CheckoutReceipt";
 import {ImageCarousel} from "./components/ImageCarousel";
 import './styles/CheckoutPage.css';
 import moment = require("moment");
@@ -79,7 +80,9 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                             <Link to="/support">
                                 <button className="nontoggle">support</button>
                             </Link>
-                            <button className="nontoggle">about us</button>
+                            <Link to="/about">
+                                <button className="nontoggle">about us</button>
+                            </Link>
                             <Link to="/trips">
                                 <button className="nontoggle">trips</button>
                             </Link>
@@ -90,8 +93,13 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                     </div>
                 </header>
                 <main>
-                    <div>
-                        <CheckoutForm updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateBirthday={this.updateBirthday} updateEmail={this.updateEmail}/>
+                    <div id="checkoutComponents">
+                        <div id="checkoutFormContainer">
+                            <CheckoutForm updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateBirthday={this.updateBirthday} updateEmail={this.updateEmail} />
+                        </div>
+                        <div id="checkoutReceiptContainer">
+                            <CheckoutReceipt />
+                        </div>
                     </div>
                 </main>
                 <div id='bannerCarousel'>
