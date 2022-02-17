@@ -55,7 +55,9 @@ export class AboutPage extends React.Component<IAboutPageProps, IAboutPageState>
                             <Link to='/about'>
                                 <button className="nontoggle">about us</button>
                             </Link>
-                            <button className="nontoggle">trips</button>
+                            <Link to='/trips'>
+                                <button className="nontoggle">trips</button>
+                            </Link>
                             <Link to='/login'>
                                 <button className="nontoggle">login</button>
                             </Link>
