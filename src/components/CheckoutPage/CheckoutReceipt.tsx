@@ -1,10 +1,12 @@
 import moment from 'moment';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { IFlightOfferData } from '../../api/flightOffers';
 import { updateUser } from '../../api/users';
 import '../../styles/CheckoutPage.css';
 
-export default function CheckoutReceipt({firstName, lastName, email, dob, idToken} : {firstName: string, lastName: string, email: string, dob: moment.Moment, idToken: string | null}) {
-    const testFlights = ["Chicago (ORD) to New York (LGA)","Chicago (ORD) to New York (LGA)", "Chicago (ORD) to New York (LGA)", "Chicago (ORD) to New York (LGA)", "Chicago (ORD) to New York (LGA)"];
+export default function CheckoutReceipt({firstName, lastName, email, dob, idToken, flightOffers} : {firstName: string, lastName: string, email: string, dob: moment.Moment, idToken: string | null, flightOffers: IFlightOfferData[]}) {
+
+    const [total, setTotal] = useState(0);
 
     const completeBooking = () => {
         console.log("booking");
@@ -14,26 +16,44 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
         }
     }
 
+    const getTotal = (offers: IFlightOfferData[]) => {
+        
+        var sm = 0
+        offers.forEach((offer) =>{
+            const gt = parseFloat(offer.price.grandTotal);
+
+            sm = sm + gt
+        });
+        setTotal(sm);
+        return sm;
+    }
+
+    useEffect(() => {
+        getTotal(flightOffers);
+    }, flightOffers)
+
+
     return (
         <>
             <div id="bookingReceipt">
                 <div id="receiptTitle">
                     <h2>Booking Information</h2>
-                    <p>Number of flights</p>
+                    <p>{flightOffers.length} Reservations</p>
                 </div>
 
                 <div id="receiptFlights">
-                    {testFlights.map((_) => (
-                        <p>
-                            {_}
-                        </p>
-                    ))}
-
+                    {flightOffers.map((offer) => {
+                        offer.itineraries.map((itinerary) => {
+                            itinerary.segments.map((segment) => {
+                                <p>({segment.departure.iataCode}) to ({segment.arrival.iataCode})</p>
+                            })
+                        })
+                    })}
                 </div>
 
                 <div id="receiptTotal">
                     <h3>Your estimated total:</h3>
-                    <p>$TOTAL</p>
+                    <p>${total}</p>
                 </div>
 
                 <p>

@@ -100,7 +100,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                             <CheckoutForm updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateBirthday={this.updateBirthday} updateEmail={this.updateEmail} />
                         </div>
                         <div id="checkoutReceiptContainer">
-                            <CheckoutReceipt firstName={this.state.firstName} lastName={this.state.lastName} email={this.state.email} dob={(this.state.birthday)} idToken={this.props.id_Token} />
+                            <CheckoutReceipt firstName={this.state.firstName} lastName={this.state.lastName} email={this.state.email} dob={(this.state.birthday)} idToken={this.props.id_Token} flightOffers={this.props.reservedFlightOffers} />
                         </div>
                     </div>
                 </main>
