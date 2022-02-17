@@ -1,21 +1,28 @@
 import moment = require("moment");
 import * as React from "react";
-import { IFlightData } from "../api/flights";
-import { randomInt } from "../lib/utility";
+import { getFlightStopsFromItinerary, getInitialAirlineFromItinerary, getTotalFlightTimeFromItinerary, IDuration, IFlightOfferData, parseFlightTimeFormat } from "../api/flightOffers";
+import { FlightType } from "../enums/FlightType";
+import { ISearchProgress } from "../HomePage";
 
 import '../styles/FlightList.css';
 
 interface IFlightListState {
-    flightData: Array<IFlightData>
+    flightOfferData: Array<IFlightOfferData>
     isHidden: boolean;
     selectedFlight: string;
 }
 
 interface IFlightListProps {
-    flightData: Array<IFlightData>
+    isLoadingData: boolean;
+    destinationIataCode?: string,
+    flightOfferData: Array<IFlightOfferData>
     hide: boolean;
 
-    onFlightSelectionUpdate(selectedFlight: IFlightData | null): void;
+    // Controlling how multi-flight selection is displayed
+    flightSelectionType: FlightType;
+    flightSearchStatus: ISearchProgress;
+
+    onFlightSelectionUpdate(selectedFlight: IFlightOfferData | null): void;
 }
 
 export class FlightList extends React.Component<IFlightListProps, IFlightListState> {
@@ -24,7 +31,7 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         super(props)
 
         this.state = {
-            flightData: props.flightData,
+            flightOfferData: props.flightOfferData,
             isHidden: props.hide,
             selectedFlight: ''
         }
@@ -38,14 +45,10 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
             });
         }
 
-        if (prevProps.flightData !== this.props.flightData) {
-            // Add dummy costs until real costs are included in database.
-            for (const flight of this.props.flightData) {
-                flight.flight_cost = this.calculateRandomDummyPrice();
-            }
-
+        if (prevProps.flightOfferData !== this.props.flightOfferData) {
             this.setState({
-                flightData: this.props.flightData
+                flightOfferData: this.props.flightOfferData,
+                selectedFlight: '' // We shouldn't still have a selection since this new data implies that they no longer match up with what we saw before.
             });
         }
     }
@@ -56,10 +59,22 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
             </div>
     }
 
+    getFlightListHeaderMessage = () => {
+        if (this.props.flightSelectionType === FlightType.MultiCity) {
+            return `Choosing flight ${this.props.flightSearchStatus.flightIndexBeingSearched + 1} of ${this.props.flightSearchStatus.flightsTotalToSearch}`;
+        } else if (this.props.flightSelectionType === FlightType.RoundTrip) {
+            const isSearchingFirstFlight = this.props.flightSearchStatus.flightIndexBeingSearched === 0;
+            return isSearchingFirstFlight
+                ? 'Choosing Departing Flight >'
+                : 'Departing Flight > Choosing Return Flight';
+        } else {
+            return "Choosing your Flight >"
+        }
+    }
+
     renderFlightList = () => {
         return <div className="flightList">
                 <div>
-                    <text className="flightListHeader">{`Choose departing flight > Choose Return Flight > Review your Trip`}</text>
                     {this.assembleFlightListTable()}
                 </div>
             </div>
@@ -68,32 +83,91 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     assembleFlightListTable = () => {
         return (
             <div>
-                {this.state.flightData.map((flight: IFlightData) => {
-                    const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.departure_time, flight.arrival_time);
-                    const flightLengthLabel = this.formatFlightLengthTime(flight.departure_time, flight.arrival_time);
-                    const isSelected = flight.flight_id.toString() === this.state.selectedFlight;
+                    {this.state.flightOfferData.map((flightOffer: IFlightOfferData, index) => {
+                    // Limit number of flgiths being rendered
+                    if (index > 15) {
+                        return null;
+                    }
+
+                    const originalTakeOffTime = parseFlightTimeFormat(flightOffer.itineraries[0].segments[0].departure.at);
+                    const finalLandingTime = parseFlightTimeFormat(this.getFinalLandingTimeFromFlightOffer(flightOffer));
+
+                    const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(originalTakeOffTime.toString(), finalLandingTime.toString());
+                    const flightLengthLabel = this.formatFlightDuration(getTotalFlightTimeFromItinerary(flightOffer.itineraries[0]));
+                    const isSelected = flightOffer.id === this.state.selectedFlight;
                     const selectionClass = isSelected ? 'selectedFlight' : '';
-                    return <div className={`flightRow ${selectionClass}`} onClick={this.selectFlight} id={flight.flight_id.toString()}>
+
+                    const airline = getInitialAirlineFromItinerary(flightOffer.itineraries[0]);
+                    const takeOffLocationIata = flightOffer.itineraries[0].segments[0].departure.iataCode;
+                    const landingLocationIata = flightOffer.itineraries[0].segments[0].arrival.iataCode;
+
+                    return <div className={`flightRow ${selectionClass}`} onClick={this.selectFlight} id={flightOffer.id}>
                         <table>
                             <tr>
                                 <td>{takeOffLandingTime}</td>
                                 <td>{flightLengthLabel}</td>
                             </tr>
                             <tr>
-                                <td>({flight.arrival_airport}) - ({flight.departure_airport})</td>
-                                <td>Direct flight.</td>
+                                <td>({takeOffLocationIata}) - ({landingLocationIata})</td>
+                                {this.renderFlightStops(flightOffer)}
                             </tr>
                             <tr>
-                                <td>{flight.flight_provider}</td>
+                                <td>{airline}</td>
                             </tr>
                         </table>
                         <div className="ticketPrice">
-                            <text>{`$${flight.flight_cost}`}</text>
+                            <text>{`$${flightOffer.price.grandTotal}`}</text>
                         </div>
                     </div>
                 })}
             </div>
         )
+    }
+
+    renderFlightStops = (flightOffer: IFlightOfferData) => {
+        const stopsForFlight = getFlightStopsFromItinerary(flightOffer.itineraries[0]);
+        const stopsAvailable = stopsForFlight != null && stopsForFlight.length > 0;
+
+        return (
+            stopsAvailable
+                ? stopsForFlight.map(stop => {
+                    return <td className="stopsMessage">{stop.duration.totalHours} hour {stop.duration.totalMinutes} min stop at {stop.location} airport.</td>
+                })
+                : <td className="stopsMessage">Direct flight</td>
+        );
+    }
+
+    getTotalFirstFlightTime = (flightOffer: IFlightOfferData): IDuration => {
+        const itineraries = flightOffer.itineraries[0];
+        const segments = itineraries.segments;
+        let totalHours = 0;
+        let totalMinutes = 0;
+  
+        segments.forEach(segment => {
+            const durationString = segment.duration;
+            const hoursMatch = durationString.match(/\d+(?=H)/);
+            const minutesMatch = durationString.match(/\d+(?=M)/);
+
+            totalHours += !!hoursMatch ? parseInt(hoursMatch[0]) : 0;
+            totalMinutes += !!minutesMatch ? parseInt(minutesMatch[0]) : 0;
+        });
+
+        // If minutes is an hour or multiple, increase hours and set minutes back down to less than an hour
+        if (totalMinutes >= 60) {
+            const hoursFromMinutes = Math.floor(totalMinutes/60);
+            totalHours += hoursFromMinutes;
+            totalMinutes -= 60 * hoursFromMinutes;
+        }
+        return {
+            totalHours,
+            totalMinutes
+        };
+    }
+
+    getFinalLandingTimeFromFlightOffer = (flightOffer: IFlightOfferData) => {
+        const finalItinerary = flightOffer.itineraries[flightOffer.itineraries.length-1];
+        const finalSegment = finalItinerary.segments[finalItinerary.segments.length-1];
+        return finalSegment.arrival.at;
     }
 
      parseDateFormat = (date: string): moment.Moment => {
@@ -111,6 +185,10 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         return `${hourDifference} hrs ${minuteDifference} min`;
     }
 
+    formatFlightDuration = (flightDuration: IDuration) => {
+        return `${flightDuration.totalHours} hrs ${flightDuration.totalMinutes} min`;
+    }
+
     formatFlightTakeOffAndLandingTime = (depature_time: string, arrival_time: string): string => {
         const departureDate = new Date(Date.parse(depature_time));
         const arrivalDate = new Date(Date.parse(arrival_time));
@@ -120,8 +198,11 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     }
 
     formatTime = (date: Date): string => {
-        const hour = date.getHours();
+        let hour = date.getHours() + 1; // +1 since 1AM would appear as 0AM otherwise
         let min = date.getMinutes().toString();
+
+        if (hour > 12)
+            hour -= 12; // Format to 12/12 AM/PM structure
 
         // Pad minutes to 2 digits
         if (min.length < 2)
@@ -131,12 +212,8 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
         return `${hour}:${min} ${amPMLabel}`;
     }
 
-    calculateRandomDummyPrice = () => {
-        return randomInt(100, 600);
-    }
-
-    getFlightByID = (id: number): IFlightData | null => {
-        const matchingFlights = this.state.flightData.filter((flight: IFlightData) => { return flight.flight_id === id });
+    getFlightByID = (id: number): IFlightOfferData | null => {
+        const matchingFlights = this.state.flightOfferData.filter((flightOffer: IFlightOfferData) => { return flightOffer.id === id.toString() });
         return (matchingFlights.length > 0) ? matchingFlights[0] : null;
     }
 
@@ -149,11 +226,18 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
     }
 
     render() {
-        const isDataEmpty = this.state.flightData.length === 0;
+        if (this.props.isLoadingData) {
+            return <div id='loadingImageContainer'>
+                        <div id='loadingImage'></div>
+                    </div>
+        }
+        const isDataEmpty = this.state.flightOfferData.length === 0;
+
         return (
             this.state.isHidden
                 ? null
                 : <div className="flightList">
+                    <text className="flightListHeader">{this.getFlightListHeaderMessage()}</text>
                     {isDataEmpty ? this.renderNoFlightDataMessage() : this.renderFlightList()}
                   </div>   
         )

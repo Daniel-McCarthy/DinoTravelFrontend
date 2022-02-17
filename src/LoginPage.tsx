@@ -38,13 +38,11 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
                         </div>
 
                         <nav>
-                            <Link to="/support">
-                                <button className="nontoggle">support</button>
+                            <button className="nontoggle">support</button>
+                            <Link to='/about'>
+                                <button className="nontoggle">about us</button>
                             </Link>
-                            <button className="nontoggle">about us</button>
-                            <Link to="/trips">
-                                <button className="nontoggle">trips</button>
-                            </Link>
+                            <button className="nontoggle">trips</button>
                             <Link to='/login'>
                                 <button className="nontoggle">login</button>
                             </Link>

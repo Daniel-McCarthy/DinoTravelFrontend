@@ -1,6 +1,105 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/AboutPage.tsx":
+/*!***************************!*\
+  !*** ./src/AboutPage.tsx ***!
+  \***************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AboutPage = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
+const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
+const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
+const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
+const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
+const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
+const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
+const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
+const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
+const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+__webpack_require__(/*! ./styles/AboutPage.css */ "./src/styles/AboutPage.css");
+class AboutPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            bannerImages
+        };
+    }
+    render() {
+        return (React.createElement(React.Fragment, null,
+            React.createElement("header", null,
+                React.createElement("div", { id: "headerContent" },
+                    React.createElement("div", { className: "banner" },
+                        React.createElement(react_router_dom_1.Link, { to: '/' },
+                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                        React.createElement("div", { className: "slogan" },
+                            React.createElement("h3", null, "Travel More"))),
+                    React.createElement("nav", null,
+                        React.createElement(react_router_dom_1.Link, { to: '/support' },
+                            React.createElement("button", { className: "nontoggle" }, "support")),
+                        React.createElement(react_router_dom_1.Link, { to: '/about' },
+                            React.createElement("button", { className: "nontoggle" }, "about us")),
+                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/login' },
+                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement("main", null,
+                React.createElement("div", { id: "aboutUsContainer" },
+                    React.createElement("div", { id: "aboutUsTitle" },
+                        React.createElement("h1", null, "About Us")),
+                    React.createElement("div", { id: "aboutUsSection" },
+                        React.createElement("p", null, "DinoTravel is an easy to use itinerary service that is designed to help customers find flights within specific price ranges across all airline companies. We want to make travel planning simpler and more accessible to the everday person."),
+                        React.createElement("p", null, "With new services and applications coming out every day, it can be hard to keep track of it all. Our application is designed to make your traveling experience organized and simple. Whether you travel for business or leisure, you can count on DinoTravel to make it hassle-free."),
+                        React.createElement("p", { style: { "fontSize": "12px", "marginTop": "100px" } },
+                            "Created by the Purple Dinos for DePaul's Winter Quarter Senior Capstone Project (CSC394/IS376).",
+                            React.createElement("br", null),
+                            React.createElement("div", { style: { "display": "inline-block" } },
+                                React.createElement("ul", null,
+                                    React.createElement("li", null, "Dan McCarthy"),
+                                    React.createElement("li", null, "David Gawel"),
+                                    React.createElement("li", null, "Jackson Meyer"),
+                                    React.createElement("li", null, "Jawan L. Davis"),
+                                    React.createElement("li", null, "Jenna Dahl-Crimmins"))),
+                            React.createElement("div", { style: { "display": "inline-block" } },
+                                React.createElement("ul", null,
+                                    React.createElement("li", null, "Mario DiBartolomeo"),
+                                    React.createElement("li", null, "Muhammad Fahad"),
+                                    React.createElement("li", null, "Nick Clark"),
+                                    React.createElement("li", null, "Philip Reeves"),
+                                    React.createElement("li", null, "Suhaib Mikbel"))))))),
+            React.createElement("div", { id: 'bannerCarousel' },
+                React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages }))));
+    }
+}
+exports.AboutPage = AboutPage;
+
+
+/***/ }),
+
 /***/ "./src/HomePage.tsx":
 /*!**************************!*\
   !*** ./src/HomePage.tsx ***!
@@ -35,7 +134,6 @@ const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enum
 const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
 const ToastType_1 = __webpack_require__(/*! ./enums/ToastType */ "./src/enums/ToastType.ts");
 const ToastMessage_1 = __webpack_require__(/*! ./components/ToastMessage */ "./src/components/ToastMessage.tsx");
-const flights_1 = __webpack_require__(/*! ./api/flights */ "./src/api/flights.ts");
 __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
@@ -54,22 +152,213 @@ const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.j
 const MultiCityFlightSelection_1 = __webpack_require__(/*! ./components/MultiCityFlightSelection */ "./src/components/MultiCityFlightSelection.tsx");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const AirportSelector_1 = __webpack_require__(/*! ./components/AirportSelector */ "./src/components/AirportSelector.tsx");
+const flightOffers_1 = __webpack_require__(/*! ./api/flightOffers */ "./src/api/flightOffers.ts");
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+var SearchStatus;
+(function (SearchStatus) {
+    SearchStatus[SearchStatus["SettingFilters"] = 0] = "SettingFilters";
+    SearchStatus[SearchStatus["Searching"] = 1] = "Searching";
+    SearchStatus[SearchStatus["Finished"] = 2] = "Finished";
+})(SearchStatus || (SearchStatus = {}));
+// noinspection DuplicatedCode
 class HomePage extends React.Component {
     constructor(props) {
         super(props);
-        this.getFlightAPIData = async () => {
-            try {
-                const flights = await (0, flights_1.getFlightData)();
-                console.log(flights);
+        this.getCurrentFlightToSelect = (flightSearchList) => {
+            const searchList = !!flightSearchList ? flightSearchList : this.state.currentSearches;
+            for (const flightSearch of searchList) {
+                if (!flightSearch.hasBeenSearched)
+                    return flightSearch;
+            }
+            return null;
+        };
+        this.setCurrentFlightSelected = () => {
+            if (!this.state.selectedFlightOffer) {
+                this.displayError('You must select a flight before moving to the next.');
+                return;
+            }
+            const finalizedFlightSelections = this.state.finalizedFlightSelections;
+            const updatedSearches = this.state.currentSearches;
+            for (let i = 0; i < updatedSearches.length; i++) {
+                const currentSearch = updatedSearches[i];
+                if (!currentSearch.hasBeenSearched) {
+                    updatedSearches[i].hasBeenSearched = true;
+                    finalizedFlightSelections.push(this.state.selectedFlightOffer);
+                    break;
+                }
+            }
+            const updatedSearchProgress = this.state.searchProgress;
+            updatedSearchProgress.flightIndexBeingSearched += 1;
+            this.setState({
+                currentSearches: updatedSearches,
+                finalizedFlightSelections,
+                searchProgress: updatedSearchProgress,
+                selectedFlightOffer: null
+            }, () => {
+                this.getFlightOfferAPIData();
+            });
+        };
+        this.resetAllSearchDataAndFlightList = () => {
+            this.setState({
+                showingFlightList: false,
+                currentSearches: [],
+                selectedFlightOffer: null,
+                finalizedFlightSelections: []
+            });
+        };
+        this.resetFlightSearches = () => {
+            const searchesWithClearedOffers = this.state.currentSearches.map(flightSearch => {
+                flightSearch.hasBeenSearched = false;
+                flightSearch.selectedFlightOffer = undefined;
+                return flightSearch;
+            });
+            this.setState({
+                currentSearches: searchesWithClearedOffers
+            });
+        };
+        this.selectOfferForCurrentFlightSearch = (selectedOffer) => {
+            const updatedSearches = this.state.currentSearches.map(flightSearch => {
+                // If the flight has already been searched (previous search), simply return it to the array unmodified.
+                if (flightSearch.hasBeenSearched)
+                    return flightSearch;
+                // If the flight hasn't been searched, it is the current active search.
+                // Update this flight with the new offer selection.
+                flightSearch.hasBeenSearched = true;
+                flightSearch.selectedFlightOffer = selectedOffer;
+                return flightSearch;
+            });
+            this.setState({
+                currentSearches: updatedSearches
+            });
+        };
+        this.assembleFlightSearchList = () => {
+            var _a, _b;
+            const flightType = this.state.flightType;
+            if (flightType === FlightType_1.FlightType.MultiCity) {
+                if (this.state.multiCityFlightOfferSelections.length <= 0) {
+                    // Add proper handling
+                    return [];
+                }
+                const flightsToSearch = [];
+                this.state.multiCityFlightOfferSelections.forEach(flightToSearch => {
+                    const originLocation = flightToSearch.leavingFrom;
+                    const destinationLocation = flightToSearch.goingTo;
+                    if (originLocation == null || destinationLocation == null) {
+                        console.error(`Error assembling flightList. Found following selected flight to search with missing destination or origin data:\n${JSON.stringify(flightToSearch)}`);
+                        return;
+                    }
+                    const asFlightInterface = {
+                        originAirportIataCode: originLocation.iataCode,
+                        destinationAirportIataCode: destinationLocation === null || destinationLocation === void 0 ? void 0 : destinationLocation.iataCode,
+                        flightDate: flightToSearch.depatureDate
+                    };
+                    const asFlightSearchInterface = {
+                        flight: asFlightInterface,
+                        numAdultTravelers: this.state.numAdultTravelers,
+                        numChildTravelers: this.state.numChildTravelers,
+                        hasBeenSearched: false
+                    };
+                    flightsToSearch.push(asFlightSearchInterface);
+                });
+                // Set search list for all flights configured via multicity selection
+                // TODO: Bubble up error to user if searching incomplete selection in multi-city instead of just ignoring it and printing to console
                 this.setState({
-                    flightsData: flights,
+                    searchProgress: {
+                        searchStatus: SearchStatus.Searching,
+                        flightIndexBeingSearched: 0,
+                        flightsTotalToSearch: flightsToSearch.length
+                    },
+                    currentSearches: flightsToSearch
+                });
+                return flightsToSearch;
+            }
+            else {
+                if (!this.state.returnAirport || !this.state.departureAirport) {
+                    // Add proper handling
+                    return [];
+                }
+                const flightsToSearch = [];
+                const firstFlight = {
+                    originAirportIataCode: (_a = this.state.departureAirport) === null || _a === void 0 ? void 0 : _a.iataCode,
+                    destinationAirportIataCode: (_b = this.state.returnAirport) === null || _b === void 0 ? void 0 : _b.iataCode,
+                    flightDate: this.state.departureFlightDate
+                };
+                const firstFlightSearch = {
+                    flight: firstFlight,
+                    numAdultTravelers: this.state.numAdultTravelers,
+                    numChildTravelers: this.state.numChildTravelers,
+                    hasBeenSearched: false
+                };
+                flightsToSearch.push(firstFlightSearch);
+                const isRoundTripSelected = this.state.flightType === FlightType_1.FlightType.RoundTrip;
+                if (isRoundTripSelected) {
+                    // Add return trip
+                    const returnOrigin = this.state.returnAirport;
+                    const returnDestination = this.state.departureAirport;
+                    const secondFlightSearch = {
+                        flight: {
+                            originAirportIataCode: returnOrigin.iataCode,
+                            destinationAirportIataCode: returnDestination.iataCode,
+                            flightDate: this.state.returnFlightDate
+                        },
+                        numAdultTravelers: this.state.numAdultTravelers,
+                        numChildTravelers: this.state.numChildTravelers,
+                        hasBeenSearched: false
+                    };
+                    flightsToSearch.push(secondFlightSearch);
+                }
+                // Set outbound (and if RoundTrip, inbound too) flight to currentSearches to go through.
+                this.setState({
+                    searchProgress: {
+                        searchStatus: SearchStatus.Searching,
+                        flightIndexBeingSearched: 0,
+                        flightsTotalToSearch: isRoundTripSelected ? 2 : 1
+                    },
+                    currentSearches: flightsToSearch
+                });
+                return flightsToSearch;
+            }
+        };
+        this.getFlightOfferAPIData = async (flightToSearch) => {
+            try {
+                const currentFlightToSearch = !!flightToSearch
+                    ? flightToSearch
+                    : this.getCurrentFlightToSelect();
+                if (currentFlightToSearch === null) {
+                    // Handle error
+                    return;
+                }
+                const flightOfferArguments = {
+                    departureAirportIataCode: currentFlightToSearch === null || currentFlightToSearch === void 0 ? void 0 : currentFlightToSearch.flight.originAirportIataCode,
+                    departureDate: currentFlightToSearch.flight.flightDate,
+                    arrivalAirportIataCode: currentFlightToSearch === null || currentFlightToSearch === void 0 ? void 0 : currentFlightToSearch.flight.destinationAirportIataCode,
+                    numberOfAdults: this.state.numAdultTravelers,
+                    numberOfChildren: this.state.numChildTravelers,
+                };
+                if (this.state.flightType === FlightType_1.FlightType.RoundTrip)
+                    flightOfferArguments.returnDate = this.state.returnFlightDate;
+                const flightOffers = await (0, flightOffers_1.getFlightOffersWithFilters)(flightOfferArguments);
+                console.log(flightOffers);
+                // So that we can handle it in catch and function can treat 
+                // flight offers as Array<IFlightOfferData>.
+                if (flightOffers instanceof Error) {
+                    throw flightOffers;
+                }
+                this.setState({
+                    flightOfferData: flightOffers,
+                    flightListLoading: false,
                     showingFlightList: true
                 });
-                return flights;
             }
             catch (error) {
-                this.displayError(`Error: ${JSON.stringify(error)}`);
+                const errorMessage = error.message;
+                this.displayError(`Error: ${JSON.stringify(errorMessage)}`);
+                // Ensure if we can't get any data, we show that no results are found.
+                this.setState({
+                    flightListLoading: false,
+                    showingFlightList: true,
+                    flightOfferData: []
+                });
             }
         };
         this.displayError = (message) => {
@@ -90,6 +379,25 @@ class HomePage extends React.Component {
                 }
             });
         };
+        this.onAdultPassengersChanged = (changeEvent) => {
+            const adultPassengersInput = changeEvent.target;
+            const newValue = parseInt(adultPassengersInput.value);
+            this.setState({
+                numAdultTravelers: newValue
+            });
+        };
+        this.onChildPassengersChanged = (changeEvent) => {
+            const childPassengersInput = changeEvent.target;
+            const newValue = parseInt(childPassengersInput.value);
+            this.setState({
+                numChildTravelers: newValue
+            });
+        };
+        this.onToastClosed = () => {
+            this.setState({
+                showToast: false
+            });
+        };
         this.onDepartureAirportSelectionUpdated = (selectedAirport) => {
             this.setState({
                 departureAirport: selectedAirport
@@ -100,17 +408,38 @@ class HomePage extends React.Component {
                 returnAirport: selectedAirport
             });
         };
-        this.renderSubmitButton = () => {
-            return React.createElement("button", { className: "nontoggle", id: "submitButton", onClick: this.submitReservation }, "Submit");
+        this.renderNextOrSubmitButton = () => {
+            // Don't render the submit/next button unless the flight list is present to submit or progress on.
+            if (this.state.showingFlightList === false || this.state.flightListLoading)
+                return null;
+            const searchProgress = this.state.searchProgress;
+            const isOnFinalPage = searchProgress.flightIndexBeingSearched >= searchProgress.flightsTotalToSearch - 1;
+            const isFlightSelected = !!this.state.selectedFlightOffer;
+            let classes = isFlightSelected ? 'nontoggle' : 'disabledButton';
+            if (isOnFinalPage) {
+                return React.createElement("button", { className: classes, id: "submitButton", onClick: this.submitReservation, disabled: !isFlightSelected }, "Submit");
+            }
+            else {
+                return React.createElement("button", { className: classes, id: "nextFlightButton", onClick: this.onNextFlightClicked, disabled: !isFlightSelected }, "Next Flight");
+            }
         };
-        this.onSearchClicked = () => {
+        this.onNextFlightClicked = () => {
+            this.setCurrentFlightSelected();
+        };
+        this.onSearchClicked = async () => {
             // Must verify filters are set in order to search
-            this.getFlightAPIData();
+            this.setState({
+                flightListLoading: true
+            }, () => {
+                const currentFlightOfferList = this.assembleFlightSearchList();
+                const currentFlightToSearch = this.getCurrentFlightToSelect(currentFlightOfferList);
+                this.getFlightOfferAPIData(currentFlightToSearch);
+            });
         };
-        this.onArrivalFlightDateSelected = (event) => {
+        this.onDepartureFlightDateSelected = (event) => {
             const newDate = event.currentTarget.value;
             this.setState({
-                returnFlightDate: moment(newDate, 'YYYY-MM-DD')
+                departureFlightDate: moment(newDate, 'YYYY-MM-DD')
             });
         };
         this.onReturnFlightDateSelected = (event) => {
@@ -120,23 +449,26 @@ class HomePage extends React.Component {
             });
         };
         this.selectRoundTrip = () => {
+            this.resetAllSearchDataAndFlightList();
             this.setState({
                 flightType: FlightType_1.FlightType.RoundTrip
             });
         };
         this.selectOneWay = () => {
+            this.resetAllSearchDataAndFlightList();
             this.setState({
                 flightType: FlightType_1.FlightType.OneWay
             });
         };
         this.selectMultiCityFlight = () => {
+            this.resetAllSearchDataAndFlightList();
             this.setState({
                 flightType: FlightType_1.FlightType.MultiCity
             });
         };
         this.submitReservation = async () => {
             // Reject submission and warn user if submitting without a flight selection.
-            if (this.state.selectedFlight == null) {
+            if (this.state.selectedFlightOffer == null) {
                 this.displayError(`A flight to book must be selected before submission.`);
                 return;
             }
@@ -144,10 +476,10 @@ class HomePage extends React.Component {
                 user_id: 1,
                 trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
                 outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                outgoing_flight_id: this.state.selectedFlight.flight_id,
+                outgoing_flight_id: parseInt(this.state.selectedFlightOffer.id),
                 returning_flight_type: undefined,
                 returning_flight_id: undefined,
-                price: this.state.selectedFlight.flight_cost
+                price: parseFloat(this.state.selectedFlightOffer.price.grandTotal)
             };
             const response = await (0, reservations_1.registerReservation)(reservation);
             if (response instanceof Error) {
@@ -162,34 +494,42 @@ class HomePage extends React.Component {
                 this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
             }
         };
-        this.selectedFlightUpdated = (flightSelection) => {
+        this.selectedFlightOfferUpdated = (flightOfferSelection) => {
             this.setState({
-                selectedFlight: flightSelection
+                selectedFlightOffer: flightOfferSelection
             });
         };
         // This function is called when flight selections are changed in the MultiCityFlightSelection component.
-        this.onMultiCityFlightSelectionChange = (flightSelections) => {
+        this.onMultiCityFlightOfferSelectionChange = (flightOfferSelections) => {
             this.setState({
-                multiCityFlightSelections: flightSelections
+                multiCityFlightOfferSelections: flightOfferSelections
             });
         };
         this.state = {
             flightType: FlightType_1.FlightType.RoundTrip,
             flightClass: FlightClass_1.FlightClass.EconomyClass,
-            numAdultTravelers: 0,
+            numAdultTravelers: 1,
             numChildTravelers: 0,
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType_1.ToastType.InfoToast, message: "" },
             showToast: false,
-            flightsData: [],
-            selectedFlight: null,
+            flightOfferData: [],
+            selectedFlightOffer: null,
+            finalizedFlightSelections: [],
             showingFlightList: false,
+            flightListLoading: false,
             departureAirport: null,
             departureFlightDate: moment(),
             returnAirport: null,
             returnFlightDate: moment(),
-            multiCityFlightSelections: [],
-            bannerImages
+            multiCityFlightOfferSelections: [],
+            bannerImages,
+            currentSearches: [],
+            searchProgress: {
+                searchStatus: SearchStatus.SettingFilters,
+                flightIndexBeingSearched: 0,
+                flightsTotalToSearch: 0
+            }
         };
     }
     render() {
@@ -208,8 +548,10 @@ class HomePage extends React.Component {
                         React.createElement("div", { className: "slogan" },
                             React.createElement("h3", null, "Travel More"))),
                     React.createElement("nav", null,
-                        React.createElement("button", { className: "nontoggle" }, "support"),
-                        React.createElement("button", { className: "nontoggle" }, "about us"),
+                        React.createElement(react_router_dom_1.Link, { to: '/support' },
+                            React.createElement("button", { className: "nontoggle" }, "support")),
+                        React.createElement(react_router_dom_1.Link, { to: '/about' },
+                            React.createElement("button", { className: "nontoggle" }, "about us")),
                         React.createElement("button", { className: "nontoggle" }, "trips"),
                         React.createElement(react_router_dom_1.Link, { to: '/login' },
                             React.createElement("button", { className: "nontoggle" }, "login"))))),
@@ -223,14 +565,14 @@ class HomePage extends React.Component {
                     React.createElement("div", { className: "filterDropdowns" },
                         React.createElement("div", { className: "travelersInput" },
                             React.createElement("h3", null, "Number of Adult Travelers:"),
-                            React.createElement("input", { type: "number", placeholder: "1", step: 1, max: 10, min: 0 })),
+                            React.createElement("input", { type: "number", value: this.state.numAdultTravelers, step: 1, max: 10, min: 0, onChange: this.onAdultPassengersChanged })),
                         React.createElement("div", { className: "travelersInput" },
                             React.createElement("h3", null, "Number of Child Travelers:"),
-                            React.createElement("input", { type: "number", placeholder: "0", step: 1, max: 10, min: 0 })),
+                            React.createElement("input", { type: "number", value: this.state.numChildTravelers, step: 1, max: 10, min: 0, onChange: this.onChildPassengersChanged })),
                         React.createElement("select", null,
                             React.createElement("option", { disabled: true, selected: true }, "Class"),
                             Object.values(FlightClass_1.FlightClass).map(flightClass => (React.createElement("option", null, flightClass)))))),
-                isMultiCitySelected ? React.createElement(MultiCityFlightSelection_1.MultiCityFlightSelect, { hide: false, onFlightSelectionsChanged: this.onMultiCityFlightSelectionChange })
+                isMultiCitySelected ? React.createElement(MultiCityFlightSelection_1.MultiCityFlightSelect, { hide: false, onFlightSelectionsChanged: this.onMultiCityFlightOfferSelectionChange })
                     :
                         React.createElement("div", { id: "userInputRow" },
                             React.createElement("div", { id: "destinationInputs" },
@@ -240,17 +582,19 @@ class HomePage extends React.Component {
                                     React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Going To', onAirportSelectionUpdated: this.onArrivalAirportSelectionUpdated }))),
                             React.createElement("div", { className: "dateInputContainer" },
                                 React.createElement("h3", { className: 'verticalSpacer' }, "Departing"),
-                                React.createElement("input", { className: "datePicker", type: "date", onChange: this.onArrivalFlightDateSelected, placeholder: "yyyy-mm-dd" })),
+                                React.createElement("input", { className: "datePicker", type: "date", onChange: this.onDepartureFlightDateSelected, placeholder: "yyyy-mm-dd" })),
                             isRoundTripSelected
                                 ? React.createElement("div", { className: "dateInputContainer" },
                                     React.createElement("h3", { className: 'verticalSpacer' }, "Returning"),
                                     React.createElement("input", { className: "datePicker", onChange: this.onReturnFlightDateSelected, type: "date", placeholder: "yyyy-mm-dd" }))
                                 : null),
-                React.createElement(FlightList_1.FlightList, { flightData: this.state.flightsData, onFlightSelectionUpdate: this.selectedFlightUpdated, hide: !this.state.showingFlightList }),
-                React.createElement("button", { className: "nontoggle", id: "searchButton", onClick: this.onSearchClicked }, "Search")),
-            React.createElement("div", { id: 'bannerCarousel' },
-                React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })),
-            React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message })));
+                React.createElement("button", { className: "nontoggle", id: "searchButton", onClick: this.onSearchClicked }, "Search"),
+                React.createElement(FlightList_1.FlightList, { flightSearchStatus: this.state.searchProgress, flightSelectionType: this.state.flightType, flightOfferData: this.state.flightOfferData, onFlightSelectionUpdate: this.selectedFlightOfferUpdated, hide: !this.state.showingFlightList, isLoadingData: this.state.flightListLoading }),
+                this.renderNextOrSubmitButton()),
+            React.createElement("div", { id: 'bannerContainer' },
+                React.createElement("div", { id: 'bannerCarousel' },
+                    React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages }))),
+            React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message, onToastClosed: this.onToastClosed })));
     }
 }
 exports.HomePage = HomePage;
@@ -285,31 +629,40 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LoginPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const react_google_login_1 = __importDefault(__webpack_require__(/*! react-google-login */ "./node_modules/react-google-login/dist/google-login.js"));
-const responseGoogle = (response) => {
-    console.log('FAILURE');
-    console.log(response);
-};
-function onSignIn(googleUser) {
-    const profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-}
+const AuthenticationButton_1 = __webpack_require__(/*! ./components/AuthenticationButton */ "./src/components/AuthenticationButton.tsx");
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
+__webpack_require__(/*! ./styles/Login.css */ "./src/styles/Login.css");
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            bannerImages: [],
+        };
     }
     render() {
-        return (React.createElement(react_google_login_1.default, { clientId: "1042234633479-gpprc2adcpltfjnaij7gib55ko91441n.apps.googleusercontent.com", buttonText: "Login", onSuccess: onSignIn, onFailure: responseGoogle, cookiePolicy: 'single_host_origin' }));
+        return (React.createElement("div", null,
+            React.createElement("header", null,
+                React.createElement("div", { id: "headerContent" },
+                    React.createElement("div", { className: "banner" },
+                        React.createElement(react_router_dom_1.Link, { to: '/' },
+                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                        React.createElement("div", { className: "slogan" },
+                            React.createElement("h3", null, "Travel More"))),
+                    React.createElement("nav", null,
+                        React.createElement("button", { className: "nontoggle" }, "support"),
+                        React.createElement(react_router_dom_1.Link, { to: '/about' },
+                            React.createElement("button", { className: "nontoggle" }, "about us")),
+                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/login' },
+                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement("div", { className: "center" },
+                React.createElement(AuthenticationButton_1.AuthenticationButton, { updateIDToken: this.props.updateIDToken, isLoggedIn: this.props.isLoggedIn })),
+            React.createElement("div", { id: 'bannerCarousel' },
+                React.createElement(ImageCarousel_1.ImageCarousel, { height: 500, imagesToUse: this.state.bannerImages }))));
     }
 }
 exports.LoginPage = LoginPage;
@@ -348,19 +701,46 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageRouting = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const AboutPage_1 = __webpack_require__(/*! ./AboutPage */ "./src/AboutPage.tsx");
 const HomePage_1 = __webpack_require__(/*! ./HomePage */ "./src/HomePage.tsx");
 const LoginPage_1 = __webpack_require__(/*! ./LoginPage */ "./src/LoginPage.tsx");
-;
+const SupportPage_1 = __webpack_require__(/*! ./SupportPage */ "./src/SupportPage.tsx");
 class PageRouting extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.updateIdToken = (newID) => {
+            this.setState({
+                IDToken: newID,
+                isLoggedIn: newID !== null
+            });
+            console.log("updated to: " + newID);
+            this.render();
+        };
+        this.state = { IDToken: null, isLoggedIn: false };
+        let TokenJson = JSON.parse(localStorage.getItem('Token'));
+        console.log(TokenJson);
+        if (TokenJson != null) {
+            let TimeExpired = TokenJson.expires_at;
+            if (Date.now() >= TimeExpired) {
+                this.state = { IDToken: null, isLoggedIn: false };
+                localStorage.setItem('LoggedIn', 'false');
+                localStorage.setItem('LoginAttempted', 'false');
+                localStorage.removeItem('Profile');
+                localStorage.removeItem('Token');
+                console.log('Token has expired');
+            }
+            else {
+                this.state = { IDToken: TokenJson.id_token, isLoggedIn: true };
+            }
+        }
     }
     render() {
         return (React.createElement(react_router_dom_1.HashRouter, null,
             React.createElement(react_router_dom_1.Routes, null,
-                React.createElement(react_router_dom_1.Route, { path: "/", element: React.createElement(HomePage_1.HomePage, null) }),
-                React.createElement(react_router_dom_1.Route, { path: "/login", element: React.createElement(LoginPage_1.LoginPage, null) }))));
+                React.createElement(react_router_dom_1.Route, { path: "/support", element: React.createElement(SupportPage_1.SupportPage, null) }),
+                React.createElement(react_router_dom_1.Route, { path: "/about", element: React.createElement(AboutPage_1.AboutPage, null) }),
+                React.createElement(react_router_dom_1.Route, { path: "/", element: React.createElement(HomePage_1.HomePage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn }) }),
+                React.createElement(react_router_dom_1.Route, { path: "/login", element: React.createElement(LoginPage_1.LoginPage, { updateIDToken: this.updateIdToken, isLoggedIn: this.state.isLoggedIn }) }))));
     }
 }
 exports.PageRouting = PageRouting;
@@ -368,23 +748,135 @@ exports.PageRouting = PageRouting;
 
 /***/ }),
 
-/***/ "./src/api/flights.ts":
-/*!****************************!*\
-  !*** ./src/api/flights.ts ***!
-  \****************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ "./src/SupportPage.tsx":
+/*!*****************************!*\
+  !*** ./src/SupportPage.tsx ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SupportPage = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const ComplaintForm_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/ComplaintForm */ "./src/components/SupportPage/ComplaintForm.tsx"));
+const Policies_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/Policies */ "./src/components/SupportPage/Policies.tsx"));
+const ReviewForm_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/ReviewForm */ "./src/components/SupportPage/ReviewForm.tsx"));
+const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
+const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
+const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
+const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
+const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
+const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
+const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
+const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
+const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
+const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+__webpack_require__(/*! ./styles/SupportPage.css */ "./src/styles/SupportPage.css");
+class SupportPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showComplaints: false,
+            showReviews: false,
+            showPolicies: false,
+            bannerImages
+        };
+    }
+    render() {
+        const complaintsButtonClass = this.state.showComplaints ? "selected" : "";
+        const reviewsButtonClass = this.state.showReviews ? "selected" : "";
+        const policiesButtonClass = this.state.showPolicies ? "selected" : "";
+        return (React.createElement(React.Fragment, null,
+            React.createElement("header", null,
+                React.createElement("div", { id: "headerContent" },
+                    React.createElement("div", { className: "banner" },
+                        React.createElement(react_router_dom_1.Link, { to: '/' },
+                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                        React.createElement("div", { className: "slogan" },
+                            React.createElement("h3", null, "Travel More"))),
+                    React.createElement("nav", null,
+                        React.createElement(react_router_dom_1.Link, { to: '/support' },
+                            React.createElement("button", { className: "nontoggle" }, "support")),
+                        React.createElement(react_router_dom_1.Link, { to: '/about' },
+                            React.createElement("button", { className: "nontoggle" }, "about us")),
+                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/login' },
+                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement("main", null,
+                React.createElement("div", { id: "supportPageTitle" },
+                    React.createElement("h1", null, "Customer Support"),
+                    React.createElement("div", { className: "supportButtons" },
+                        React.createElement("br", null),
+                        React.createElement("button", { className: complaintsButtonClass, onClick: () => this.setState({ showComplaints: true, showReviews: false, showPolicies: false }) }, "Complaints"),
+                        React.createElement("button", { className: reviewsButtonClass, onClick: () => this.setState({ showComplaints: false, showReviews: true, showPolicies: false }) }, "Rate Us"),
+                        React.createElement("button", { className: policiesButtonClass, onClick: () => this.setState({ showComplaints: false, showReviews: false, showPolicies: true }) }, "Policies"))),
+                React.createElement("div", { id: "content" },
+                    React.createElement("div", { className: "complaintForm" }, this.state.showComplaints && React.createElement(ComplaintForm_1.default, null)),
+                    React.createElement("div", { className: "reviewForm" }, this.state.showReviews && React.createElement(ReviewForm_1.default, null)),
+                    React.createElement("div", { className: "policies" }, this.state.showPolicies && React.createElement(Policies_1.default, null))),
+                React.createElement("div", { id: 'bannerCarousel' },
+                    React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })))));
+    }
+}
+exports.SupportPage = SupportPage;
+
+
+/***/ }),
+
+/***/ "./src/api/flightOffers.ts":
+/*!*********************************!*\
+  !*** ./src/api/flightOffers.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getFlightData = void 0;
+exports.getInitialAirlineFromItinerary = exports.parseFlightTimeFormat = exports.getFlightStopsFromItinerary = exports.getTotalFlightTimeFromItinerary = exports.buildFlightAPIUrlFromArguments = exports.getFlightOffersWithFilters = exports.FlightOfferSearchProperties = void 0;
+const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+const AirlineMapping_1 = __webpack_require__(/*! ../lib/AirlineMapping */ "./src/lib/AirlineMapping.ts");
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
-const flightsAPI = '/api/flights';
-const flightEndpointURL = `https://www.${baseURL}:${port}${flightsAPI}`;
-const apiDataString = `[{"flight_id":1,"seats_available":55,"flight_provider":"American Airlines","departure_airport":"ORD","departure_time":"2021-01-05 01:10:00","arrival_airport":"JFK","arrival_time":"2021-01-05 02:00:00"},{"flight_id":2,"seats_available":12,"flight_provider":"United Airlines","departure_airport":"LON","departure_time":"2021-01-06 01:10:00","arrival_airport":"YMQ","arrival_time":"2021-01-06 02:00:00"},{"flight_id":3,"seats_available":1,"flight_provider":"Alaska Airlines","departure_airport":"STO","departure_time":"2021-01-07 01:10:00","arrival_airport":"TYO","arrival_time":"2021-01-07 02:00:00"},{"flight_id":4,"seats_available":65,"flight_provider":"Jet Blue","departure_airport":"WAS","departure_time":"2021-01-08 01:10:00","arrival_airport":"DCA","arrival_time":"2021-01-08 02:00:00"},{"flight_id":5,"seats_available":123,"flight_provider":"Southwest Airlines","departure_airport":"MDW","departure_time":"2021-01-09 01:10:00","arrival_airport":"LAX","arrival_time":"2021-01-09 02:00:00"},{"flight_id":6,"seats_available":3,"flight_provider":"Spirit Airlines","departure_airport":"IAD","departure_time":"2021-01-10 01:10:00","arrival_airport":"LBG","arrival_time":"2021-01-10 02:00:00"},{"flight_id":7,"seats_available":43,"flight_provider":"United Airlines","departure_airport":"BKK","departure_time":"2021-01-11 01:10:00","arrival_airport":"GLA","arrival_time":"2021-01-11 02:00:00"},{"flight_id":8,"seats_available":16,"flight_provider":"Air Wisconsin","departure_airport":"HOU","departure_time":"2021-01-12 01:10:00","arrival_airport":"SNA","arrival_time":"2021-01-12 02:00:00"},{"flight_id":9,"seats_available":7,"flight_provider":"Mesa Airlines","departure_airport":"SEA","departure_time":"2021-01-13 01:10:00","arrival_airport":"TPE","arrival_time":"2021-01-13 02:00:00"},{"flight_id":10,"seats_available":8,"flight_provider":"Dino Airlines","departure_airport":"BHX","departure_time":"2021-01-14 01:10:00","arrival_airport":"BHM","arrival_time":"2021-01-14 02:00:00"},{"flight_id":11,"seats_available":17,"flight_provider":"LOT Polish Airlines","departure_airport":"ORD","departure_time":"2022-01-12 08:00:00","arrival_airport":"WAW","arrival_time":"2022-01-12 18:00:00"}]`;
-const getFlightData = async () => {
-    console.log(`Retrieving Flight data from: ${flightEndpointURL}`);
+const flightOffersAPI = '/api/flightOffers';
+const flightOffersEndpointURL = `https://www.${baseURL}:${port}${flightOffersAPI}`;
+var FlightOfferSearchProperties;
+(function (FlightOfferSearchProperties) {
+    FlightOfferSearchProperties["departureAirportCode"] = "originLocationCode";
+    FlightOfferSearchProperties["arrivalAirportCode"] = "destinationLocationCode";
+    FlightOfferSearchProperties["departureDate"] = "departureDate";
+    FlightOfferSearchProperties["arrivalDate"] = "returnDate";
+    FlightOfferSearchProperties["numberOfAdults"] = "adults";
+    FlightOfferSearchProperties["numberOfChildren"] = "children";
+    FlightOfferSearchProperties["flightClass"] = "travelClass";
+    FlightOfferSearchProperties["maximumPrice"] = "maxPrice";
+})(FlightOfferSearchProperties = exports.FlightOfferSearchProperties || (exports.FlightOfferSearchProperties = {}));
+const getFlightOffersWithFilters = async (flightOfferArguments) => {
+    const finalFlightOfferURL = (0, exports.buildFlightAPIUrlFromArguments)(flightOfferArguments);
+    console.log(`Retrieving FlightOffer data from: ${finalFlightOfferURL}`);
     const options = {
         'method': 'GET',
         headers: {
@@ -393,20 +885,143 @@ const getFlightData = async () => {
         }
     };
     try {
-        const responseData = await fetch(flightEndpointURL, options);
+        const responseData = await fetch(finalFlightOfferURL, options);
         const statusCode = responseData.status;
-        console.log(`Recieved response from /flight endpoint with status: '${statusCode}'`);
+        console.log(`Recieved response from /flightOffers endpoint with status: '${statusCode}'`);
         const json = await responseData.json();
-        console.log(`JSON recieved from /flight endpoint: '${JSON.stringify(json)}'`);
+        console.log(`JSON recieved from /flightOffers endpoint: '${JSON.stringify(json)}'`);
         return json;
     }
     catch (error) {
-        console.error(`Failed to get flight data from API endpoint due to reason: ${error}`);
+        const errorMessage = `Failed to get flightOffer data from API endpoint due to reason: ${error}`;
+        console.error(errorMessage);
+        return Error(errorMessage);
     }
-    // Parse local data as backup if network call doesn't work.
-    return JSON.parse(apiDataString);
 };
-exports.getFlightData = getFlightData;
+exports.getFlightOffersWithFilters = getFlightOffersWithFilters;
+const buildFlightAPIUrlFromArguments = (flightOfferArguments) => {
+    let url = flightOffersEndpointURL;
+    let queryCount = 0;
+    if (!!flightOfferArguments.arrivalAirportIataCode) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.arrivalAirportCode}=${flightOfferArguments.arrivalAirportIataCode}`;
+        queryCount++;
+    }
+    if (!!flightOfferArguments.departureAirportIataCode) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.departureAirportCode}=${flightOfferArguments.departureAirportIataCode}`;
+        queryCount++;
+    }
+    if (!!flightOfferArguments.departureDate) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.departureDate}=${formatDateForAPI(flightOfferArguments.departureDate)}`;
+        queryCount++;
+    }
+    if (!!flightOfferArguments.returnDate) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.arrivalDate}=${formatDateForAPI(flightOfferArguments.returnDate)}`;
+    }
+    if (!!flightOfferArguments.numberOfAdults) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.numberOfAdults}=${flightOfferArguments.numberOfAdults}`;
+        queryCount++;
+    }
+    if (!!flightOfferArguments.numberOfChildren) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.numberOfChildren}=${flightOfferArguments.numberOfChildren}`;
+        queryCount++;
+    }
+    if (!!flightOfferArguments.flightClass) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.flightClass}=${flightOfferArguments.flightClass}`;
+        queryCount++;
+    }
+    if (!!flightOfferArguments.maxPrice) {
+        const querySymbol = queryCount === 0
+            ? '?'
+            : '&';
+        url += `${querySymbol}${FlightOfferSearchProperties.maximumPrice}=${flightOfferArguments.maxPrice}`;
+        queryCount++;
+    }
+    return url;
+};
+exports.buildFlightAPIUrlFromArguments = buildFlightAPIUrlFromArguments;
+const formatDateForAPI = (date) => {
+    return date.format('YYYY-MM-DD');
+};
+const getTotalFlightTimeFromItinerary = (itinerary) => {
+    const segments = itinerary.segments;
+    let totalHours = 0;
+    let totalMinutes = 0;
+    segments.forEach(segment => {
+        const durationString = segment.duration;
+        const hoursMatch = durationString.match(/\d+(?=H)/);
+        const minutesMatch = durationString.match(/\d+(?=M)/);
+        totalHours += !!hoursMatch ? parseInt(hoursMatch[0]) : 0;
+        totalMinutes += !!minutesMatch ? parseInt(minutesMatch[0]) : 0;
+    });
+    // If minutes is an hour or multiple, increase hours and set minutes back down to less than an hour
+    if (totalMinutes >= 60) {
+        const hoursFromMinutes = Math.floor(totalMinutes / 60);
+        totalHours += hoursFromMinutes;
+        totalMinutes -= 60 * hoursFromMinutes;
+    }
+    return {
+        totalHours,
+        totalMinutes
+    };
+};
+exports.getTotalFlightTimeFromItinerary = getTotalFlightTimeFromItinerary;
+const getFlightStopsFromItinerary = (itinerary /*, finalStopIataCode: string*/) => {
+    const segmentsToDestination = itinerary.segments;
+    if (segmentsToDestination.length <= 1)
+        return null;
+    const flightStops = [];
+    segmentsToDestination.forEach((segment, index) => {
+        const hasAnotherSegment = (index + 1) < segmentsToDestination.length;
+        if (hasAnotherSegment) {
+            const nextSegment = segmentsToDestination[index + 1];
+            const currentArrivalTime = (0, exports.parseFlightTimeFormat)(segment.arrival.at);
+            const nextDepartureTime = (0, exports.parseFlightTimeFormat)(nextSegment.departure.at);
+            const timeDifferenceInMinutes = Math.abs(currentArrivalTime.diff(nextDepartureTime, 'minutes'));
+            const hourDifference = Math.floor(timeDifferenceInMinutes / 60);
+            const minuteDifference = timeDifferenceInMinutes % 60;
+            flightStops.push({
+                duration: {
+                    totalHours: hourDifference,
+                    totalMinutes: minuteDifference
+                },
+                location: segment.arrival.iataCode
+            });
+        }
+    });
+    return flightStops;
+};
+exports.getFlightStopsFromItinerary = getFlightStopsFromItinerary;
+const parseFlightTimeFormat = (date) => {
+    return moment(date, 'YYYY-MM-DD HH-mm-ss');
+};
+exports.parseFlightTimeFormat = parseFlightTimeFormat;
+const getInitialAirlineFromItinerary = (itinerary) => {
+    const firstFlightSegment = itinerary.segments[0];
+    const airlineIataCode = firstFlightSegment.carrierCode;
+    return (0, AirlineMapping_1.getAirlineNameFromIataCode)(airlineIataCode);
+};
+exports.getInitialAirlineFromItinerary = getInitialAirlineFromItinerary;
 
 
 /***/ }),
@@ -661,7 +1276,7 @@ class AirportSelector extends React.Component {
             this.setState({
                 selectedLocation: locationBeingSelected
             });
-            this.props.onAirportSelectionUpdated(locationBeingSelected);
+            this.props.onAirportSelectionUpdated(locationBeingSelected, this.props.rowNumber || 0);
         };
         this.onQueryUpdated = (event) => {
             const inputElement = event.currentTarget;
@@ -716,6 +1331,114 @@ exports.AirportSelector = AirportSelector;
 
 /***/ }),
 
+/***/ "./src/components/AuthenticationButton.tsx":
+/*!*************************************************!*\
+  !*** ./src/components/AuthenticationButton.tsx ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AuthenticationButton = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_google_login_1 = __webpack_require__(/*! react-google-login */ "./node_modules/react-google-login/dist/google-login.js");
+class AuthenticationButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.onSignInFail = (response) => {
+            localStorage.setItem('LoggedIn', 'false');
+            localStorage.setItem('LoginAttempted', 'true');
+            this.setState({
+                LoggedIn: false,
+                LoginAttempted: true,
+            });
+            console.log('Sorry but your login has failed');
+            console.log(response);
+        };
+        this.onSignIn = (googleUser) => {
+            //DO NOT SEND USER ID TO BACKEND
+            console.log(googleUser);
+            localStorage.setItem('LoggedIn', 'true');
+            localStorage.setItem('LoginAttempted', 'true');
+            localStorage.setItem('Profile', JSON.stringify(googleUser.profileObj));
+            localStorage.setItem('Token', JSON.stringify(googleUser.tokenObj));
+            this.props.updateIDToken(googleUser.tokenObj.id_token);
+            this.setState({
+                LoginAttempted: true,
+                LoggedIn: true,
+                Profile: googleUser.profileObj,
+                Token: googleUser.tokenObj,
+            });
+        };
+        this.onLogOut = () => {
+            localStorage.setItem('LoggedIn', 'false');
+            localStorage.setItem('LoginAttempted', 'false');
+            localStorage.removeItem('Profile');
+            localStorage.removeItem('Token');
+            this.props.updateIDToken(null);
+            this.setState({
+                LoginAttempted: false,
+                LoggedIn: false,
+            });
+        };
+        if (this.props.isLoggedIn) {
+            this.state = {
+                LoggedIn: true,
+                LoginAttempted: false,
+                Profile: JSON.parse(localStorage.getItem('Profile')),
+                Token: JSON.parse(localStorage.getItem('Token')),
+            };
+        }
+        else {
+            this.state = {
+                LoggedIn: false,
+                LoginAttempted: false,
+                Profile: null,
+                Token: null,
+            };
+        }
+    }
+    render() {
+        //login info
+        const googleClientID = "1042234633479-gpprc2adcpltfjnaij7gib55ko91441n.apps.googleusercontent.com";
+        const isLoggedIn = this.state.LoggedIn;
+        let LoginButton;
+        if (isLoggedIn) {
+            LoginButton =
+                React.createElement(react_google_login_1.GoogleLogout, { clientId: googleClientID, buttonText: "Logout", onLogoutSuccess: this.onLogOut });
+        }
+        else {
+            LoginButton =
+                React.createElement(react_google_login_1.GoogleLogin, { clientId: googleClientID, buttonText: "Login", onSuccess: this.onSignIn, onFailure: this.onSignInFail, cookiePolicy: 'single_host_origin', accessType: 'offline', prompt: 'consent' });
+        }
+        return (React.createElement("div", null, LoginButton));
+    }
+}
+exports.AuthenticationButton = AuthenticationButton;
+
+
+/***/ }),
+
 /***/ "./src/components/FlightList.tsx":
 /*!***************************************!*\
   !*** ./src/components/FlightList.tsx ***!
@@ -747,7 +1470,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.FlightList = void 0;
 const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const utility_1 = __webpack_require__(/*! ../lib/utility */ "./src/lib/utility.ts");
+const flightOffers_1 = __webpack_require__(/*! ../api/flightOffers */ "./src/api/flightOffers.ts");
+const FlightType_1 = __webpack_require__(/*! ../enums/FlightType */ "./src/enums/FlightType.ts");
 __webpack_require__(/*! ../styles/FlightList.css */ "./src/styles/FlightList.css");
 class FlightList extends React.Component {
     constructor(props) {
@@ -756,19 +1480,40 @@ class FlightList extends React.Component {
             return React.createElement("div", null,
                 React.createElement("h1", { className: "noDataList" }, "No matching flight data available to be displayed."));
         };
+        this.getFlightListHeaderMessage = () => {
+            if (this.props.flightSelectionType === FlightType_1.FlightType.MultiCity) {
+                return `Choosing flight ${this.props.flightSearchStatus.flightIndexBeingSearched + 1} of ${this.props.flightSearchStatus.flightsTotalToSearch}`;
+            }
+            else if (this.props.flightSelectionType === FlightType_1.FlightType.RoundTrip) {
+                const isSearchingFirstFlight = this.props.flightSearchStatus.flightIndexBeingSearched === 0;
+                return isSearchingFirstFlight
+                    ? 'Choosing Departing Flight >'
+                    : 'Departing Flight > Choosing Return Flight';
+            }
+            else {
+                return "Choosing your Flight >";
+            }
+        };
         this.renderFlightList = () => {
             return React.createElement("div", { className: "flightList" },
-                React.createElement("div", null,
-                    React.createElement("text", { className: "flightListHeader" }, `Choose departing flight > Choose Return Flight > Review your Trip`),
-                    this.assembleFlightListTable()));
+                React.createElement("div", null, this.assembleFlightListTable()));
         };
         this.assembleFlightListTable = () => {
-            return (React.createElement("div", null, this.state.flightData.map((flight) => {
-                const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(flight.departure_time, flight.arrival_time);
-                const flightLengthLabel = this.formatFlightLengthTime(flight.departure_time, flight.arrival_time);
-                const isSelected = flight.flight_id.toString() === this.state.selectedFlight;
+            return (React.createElement("div", null, this.state.flightOfferData.map((flightOffer, index) => {
+                // Limit number of flgiths being rendered
+                if (index > 15) {
+                    return null;
+                }
+                const originalTakeOffTime = (0, flightOffers_1.parseFlightTimeFormat)(flightOffer.itineraries[0].segments[0].departure.at);
+                const finalLandingTime = (0, flightOffers_1.parseFlightTimeFormat)(this.getFinalLandingTimeFromFlightOffer(flightOffer));
+                const takeOffLandingTime = this.formatFlightTakeOffAndLandingTime(originalTakeOffTime.toString(), finalLandingTime.toString());
+                const flightLengthLabel = this.formatFlightDuration((0, flightOffers_1.getTotalFlightTimeFromItinerary)(flightOffer.itineraries[0]));
+                const isSelected = flightOffer.id === this.state.selectedFlight;
                 const selectionClass = isSelected ? 'selectedFlight' : '';
-                return React.createElement("div", { className: `flightRow ${selectionClass}`, onClick: this.selectFlight, id: flight.flight_id.toString() },
+                const airline = (0, flightOffers_1.getInitialAirlineFromItinerary)(flightOffer.itineraries[0]);
+                const takeOffLocationIata = flightOffer.itineraries[0].segments[0].departure.iataCode;
+                const landingLocationIata = flightOffer.itineraries[0].segments[0].arrival.iataCode;
+                return React.createElement("div", { className: `flightRow ${selectionClass}`, onClick: this.selectFlight, id: flightOffer.id },
                     React.createElement("table", null,
                         React.createElement("tr", null,
                             React.createElement("td", null, takeOffLandingTime),
@@ -776,16 +1521,59 @@ class FlightList extends React.Component {
                         React.createElement("tr", null,
                             React.createElement("td", null,
                                 "(",
-                                flight.arrival_airport,
+                                takeOffLocationIata,
                                 ") - (",
-                                flight.departure_airport,
+                                landingLocationIata,
                                 ")"),
-                            React.createElement("td", null, "Direct flight.")),
+                            this.renderFlightStops(flightOffer)),
                         React.createElement("tr", null,
-                            React.createElement("td", null, flight.flight_provider))),
+                            React.createElement("td", null, airline))),
                     React.createElement("div", { className: "ticketPrice" },
-                        React.createElement("text", null, `$${flight.flight_cost}`)));
+                        React.createElement("text", null, `$${flightOffer.price.grandTotal}`)));
             })));
+        };
+        this.renderFlightStops = (flightOffer) => {
+            const stopsForFlight = (0, flightOffers_1.getFlightStopsFromItinerary)(flightOffer.itineraries[0]);
+            const stopsAvailable = stopsForFlight != null && stopsForFlight.length > 0;
+            return (stopsAvailable
+                ? stopsForFlight.map(stop => {
+                    return React.createElement("td", { className: "stopsMessage" },
+                        stop.duration.totalHours,
+                        " hour ",
+                        stop.duration.totalMinutes,
+                        " min stop at ",
+                        stop.location,
+                        " airport.");
+                })
+                : React.createElement("td", { className: "stopsMessage" }, "Direct flight"));
+        };
+        this.getTotalFirstFlightTime = (flightOffer) => {
+            const itineraries = flightOffer.itineraries[0];
+            const segments = itineraries.segments;
+            let totalHours = 0;
+            let totalMinutes = 0;
+            segments.forEach(segment => {
+                const durationString = segment.duration;
+                const hoursMatch = durationString.match(/\d+(?=H)/);
+                const minutesMatch = durationString.match(/\d+(?=M)/);
+                totalHours += !!hoursMatch ? parseInt(hoursMatch[0]) : 0;
+                totalMinutes += !!minutesMatch ? parseInt(minutesMatch[0]) : 0;
+            });
+            // If minutes is an hour or multiple, increase hours and set minutes back down to less than an hour
+            if (totalMinutes >= 60) {
+                const hoursFromMinutes = Math.floor(totalMinutes / 60);
+                totalHours += hoursFromMinutes;
+                totalMinutes -= 60 * hoursFromMinutes;
+            }
+            return {
+                totalHours,
+                totalMinutes
+            };
+        };
+        this.getFinalLandingTimeFromFlightOffer = (flightOffer) => {
+            const finalItinerary = flightOffer.itineraries[flightOffer.itineraries.length - 1];
+            const finalSegment = finalItinerary.segments[finalItinerary.segments.length - 1];
+            return finalSegment.arrival.at;
         };
         this.parseDateFormat = (date) => {
             return moment(date, 'YYYY-MM-DD HH-mm-ss');
@@ -799,25 +1587,27 @@ class FlightList extends React.Component {
             const minuteDifference = timeDifferenceInMinutes % 60;
             return `${hourDifference} hrs ${minuteDifference} min`;
         };
+        this.formatFlightDuration = (flightDuration) => {
+            return `${flightDuration.totalHours} hrs ${flightDuration.totalMinutes} min`;
+        };
         this.formatFlightTakeOffAndLandingTime = (depature_time, arrival_time) => {
             const departureDate = new Date(Date.parse(depature_time));
             const arrivalDate = new Date(Date.parse(arrival_time));
             return `${this.formatTime(departureDate)} - ${this.formatTime(arrivalDate)}`;
         };
         this.formatTime = (date) => {
-            const hour = date.getHours();
+            let hour = date.getHours() + 1; // +1 since 1AM would appear as 0AM otherwise
             let min = date.getMinutes().toString();
+            if (hour > 12)
+                hour -= 12; // Format to 12/12 AM/PM structure
             // Pad minutes to 2 digits
             if (min.length < 2)
                 min += '0';
             const amPMLabel = (hour < 12) || (hour == 24) ? 'AM' : 'PM';
             return `${hour}:${min} ${amPMLabel}`;
         };
-        this.calculateRandomDummyPrice = () => {
-            return (0, utility_1.randomInt)(100, 600);
-        };
         this.getFlightByID = (id) => {
-            const matchingFlights = this.state.flightData.filter((flight) => { return flight.flight_id === id; });
+            const matchingFlights = this.state.flightOfferData.filter((flightOffer) => { return flightOffer.id === id.toString(); });
             return (matchingFlights.length > 0) ? matchingFlights[0] : null;
         };
         this.selectFlight = (event) => {
@@ -828,7 +1618,7 @@ class FlightList extends React.Component {
             });
         };
         this.state = {
-            flightData: props.flightData,
+            flightOfferData: props.flightOfferData,
             isHidden: props.hide,
             selectedFlight: ''
         };
@@ -840,21 +1630,24 @@ class FlightList extends React.Component {
                 isHidden: this.props.hide
             });
         }
-        if (prevProps.flightData !== this.props.flightData) {
-            // Add dummy costs until real costs are included in database.
-            for (const flight of this.props.flightData) {
-                flight.flight_cost = this.calculateRandomDummyPrice();
-            }
+        if (prevProps.flightOfferData !== this.props.flightOfferData) {
             this.setState({
-                flightData: this.props.flightData
+                flightOfferData: this.props.flightOfferData,
+                selectedFlight: '' // We shouldn't still have a selection since this new data implies that they no longer match up with what we saw before.
             });
         }
     }
     render() {
-        const isDataEmpty = this.state.flightData.length === 0;
+        if (this.props.isLoadingData) {
+            return React.createElement("div", { id: 'loadingImageContainer' },
+                React.createElement("div", { id: 'loadingImage' }));
+        }
+        const isDataEmpty = this.state.flightOfferData.length === 0;
         return (this.state.isHidden
             ? null
-            : React.createElement("div", { className: "flightList" }, isDataEmpty ? this.renderNoFlightDataMessage() : this.renderFlightList()));
+            : React.createElement("div", { className: "flightList" },
+                React.createElement("text", { className: "flightListHeader" }, this.getFlightListHeaderMessage()),
+                isDataEmpty ? this.renderNoFlightDataMessage() : this.renderFlightList()));
     }
 }
 exports.FlightList = FlightList;
@@ -980,6 +1773,7 @@ const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.j
 const uuid_1 = __webpack_require__(/*! uuid */ "./node_modules/uuid/dist/esm-browser/index.js");
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 __webpack_require__(/*! ../styles/MultiCityFlightSelection.css */ "./src/styles/MultiCityFlightSelection.css");
+const AirportSelector_1 = __webpack_require__(/*! ./AirportSelector */ "./src/components/AirportSelector.tsx");
 ;
 ;
 ;
@@ -1000,8 +1794,8 @@ class MultiCityFlightSelect extends React.Component {
                         React.createElement("h3", { className: 'flightLabel' },
                             "Flight ",
                             index),
-                        React.createElement("input", { className: "leavingInput", placeholder: "Leaving From", accessKey: index.toString(), onChange: this.updateDepartureAirport }),
-                        React.createElement("input", { placeholder: "Going To", accessKey: index.toString(), onChange: this.updateArrivalAirport })),
+                        React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From', rowNumber: index, onAirportSelectionUpdated: this.updateDepartureAirport }),
+                        React.createElement(AirportSelector_1.AirportSelector, { placeholderText: 'Leaving From', rowNumber: index, onAirportSelectionUpdated: this.updateArrivalAirport })),
                     React.createElement("div", { className: "flightDate" },
                         React.createElement("h3", null, isFirst ? "Departing" : " "),
                         React.createElement("input", { className: "datePicker", type: "date", placeholder: "yyyy-mm-dd", onChange: this.onFlightDateChanged, accessKey: index.toString() })),
@@ -1015,8 +1809,8 @@ class MultiCityFlightSelect extends React.Component {
             const flights = this.state.flights;
             flights.push({
                 id: (0, uuid_1.v4)(),
-                leavingFrom: '',
-                goingTo: '',
+                leavingFrom: null,
+                goingTo: null,
                 depatureDate: moment()
             });
             this.updateFlightsState(flights);
@@ -1029,6 +1823,7 @@ class MultiCityFlightSelect extends React.Component {
             flights[rowNumber].depatureDate = moment(newDate, 'YYYY-MM-DD');
             // Update flights data with modified array data
             // Flight associated with row has been updated with new flight date.
+            // Update component state with changed flights, and update parent with the modification that was made.
             this.updateFlightsState(flights);
         };
         this.onRemoveFlightClicked = (event) => {
@@ -1041,24 +1836,20 @@ class MultiCityFlightSelect extends React.Component {
             const flights = this.state.flights.filter((_flight, index) => {
                 return index !== flightRowNumber;
             });
+            // Update component state with changed flights, and update parent with the modification that was made.
             this.updateFlightsState(flights);
         };
-        this.updateDepartureAirport = (event) => {
-            const airportDepartureInput = event.currentTarget;
-            const flightRowNumber = parseInt(airportDepartureInput.accessKey);
-            const newAirportSelection = airportDepartureInput.value;
+        this.updateDepartureAirport = (selectedLocation, rowNumber) => {
             const flights = this.state.flights;
             // Update flight that matches input index to new departure airport selection
-            flights[flightRowNumber].leavingFrom = newAirportSelection;
+            flights[rowNumber].leavingFrom = selectedLocation;
             this.updateFlightsState(flights);
+            // Update component state with changed flights, and update parent with the modification that was made.
         };
-        this.updateArrivalAirport = (event) => {
-            const airportArrivalInput = event.currentTarget;
-            const flightRowNumber = parseInt(airportArrivalInput.accessKey);
-            const newAirportSelection = airportArrivalInput.value;
+        this.updateArrivalAirport = (selectedLocation, rowNumber) => {
             const flights = this.state.flights;
             // Update flight that matches input index to new arrival airport selection
-            flights[flightRowNumber].goingTo = newAirportSelection;
+            flights[rowNumber].goingTo = selectedLocation;
             this.updateFlightsState(flights);
         };
         this.updateFlightsState = (newFlights) => {
@@ -1069,8 +1860,8 @@ class MultiCityFlightSelect extends React.Component {
         };
         const blankFlight = {
             id: (0, uuid_1.v4)(),
-            leavingFrom: '',
-            goingTo: '',
+            leavingFrom: null,
+            goingTo: null,
             depatureDate: moment()
         };
         this.state = {
@@ -1083,6 +1874,245 @@ class MultiCityFlightSelect extends React.Component {
     }
 }
 exports.MultiCityFlightSelect = MultiCityFlightSelect;
+
+
+/***/ }),
+
+/***/ "./src/components/SupportPage/ComplaintForm.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/SupportPage/ComplaintForm.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const ToastType_1 = __webpack_require__(/*! ../../enums/ToastType */ "./src/enums/ToastType.ts");
+const ToastMessage_1 = __webpack_require__(/*! ../ToastMessage */ "./src/components/ToastMessage.tsx");
+__webpack_require__(/*! ../../styles/ComplaintForm.css */ "./src/styles/ComplaintForm.css");
+function ComplaintForm() {
+    const [toast, setToast] = (0, react_1.useState)({ toastType: ToastType_1.ToastType.InfoToast, message: "", show: false });
+    const [name, setName] = (0, react_1.useState)();
+    const [email, setEmail] = (0, react_1.useState)();
+    const [resNumber, setResNumber] = (0, react_1.useState)();
+    const [complaint, setComplaint] = (0, react_1.useState)();
+    // TODO make resNumber optional
+    console.log(resNumber);
+    const validateComplaint = () => {
+        if (name && email && complaint) {
+            setToast({
+                message: "Thank you for your feedback. Complaint recieved.",
+                toastType: ToastType_1.ToastType.SuccessToast,
+                show: true
+            });
+        }
+        else {
+            setToast({
+                message: "Please enter full name, email, and complaint.",
+                toastType: ToastType_1.ToastType.ErrorToast,
+                show: true
+            });
+        }
+    };
+    const onToastClosed = () => {
+        setToast({
+            message: "",
+            toastType: ToastType_1.ToastType.InfoToast,
+            show: false
+        });
+    };
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { id: "complaint" },
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtFullName" }, "Full Name"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "First and Last", onChange: (_) => setName(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtResNum" }, "Reservation Number (Optional)"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("input", { type: "text", id: "txtResNum", placeholder: "000", onChange: (_) => setResNumber(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtarComplaint" }, "Complaint"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("textarea", { id: "txtarComplaint", placeholder: "Type Here", onChange: (_) => setComplaint(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("button", { id: "btnSubmit", onClick: validateComplaint }, "Submit"))),
+        react_1.default.createElement(ToastMessage_1.ToastMessage, { toastType: toast.toastType, show: toast.show, message: toast.message, onToastClosed: onToastClosed })));
+}
+exports["default"] = ComplaintForm;
+
+
+/***/ }),
+
+/***/ "./src/components/SupportPage/Policies.tsx":
+/*!*************************************************!*\
+  !*** ./src/components/SupportPage/Policies.tsx ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+__webpack_require__(/*! ../../styles/Policies.css */ "./src/styles/Policies.css");
+function Policies() {
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { id: "policies" },
+            react_1.default.createElement("div", { className: "salesPolicy" },
+                react_1.default.createElement("h2", null, "Sales Policy"),
+                react_1.default.createElement("p", null, "Sales are final in most cases. Refunds will be given out through Dino Travel credit. Please see the Refund Policy for more information.")),
+            react_1.default.createElement("div", { className: "cancellationPolicy" },
+                react_1.default.createElement("h2", null, "Cancellation Policy"),
+                react_1.default.createElement("p", null, "Reservations may be cancelled by the user who initially created the reservation. Please contact us if the user is unable to access their reservations.")),
+            react_1.default.createElement("div", { className: "refundPolicy" },
+                react_1.default.createElement("h2", null, "Refund Policy"),
+                react_1.default.createElement("p", null,
+                    "Refunds will be payed out through Dino Travel credit. For any refund on an eligible reservation, please wait up to 48 hours for the refund to process. Reservations are eligible for a refund if:",
+                    react_1.default.createElement("ul", null,
+                        react_1.default.createElement("li", null, "there are more than 24 hours before the flight departs"),
+                        react_1.default.createElement("li", null, "the flight has been cancelled by the airline and they have not offered a replacement flight")))))));
+}
+exports["default"] = Policies;
+
+
+/***/ }),
+
+/***/ "./src/components/SupportPage/ReviewForm.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/SupportPage/ReviewForm.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const ToastType_1 = __webpack_require__(/*! ../../enums/ToastType */ "./src/enums/ToastType.ts");
+const ToastMessage_1 = __webpack_require__(/*! ../ToastMessage */ "./src/components/ToastMessage.tsx");
+__webpack_require__(/*! ../../styles/ReviewForm.css */ "./src/styles/ReviewForm.css");
+function ReviewForm() {
+    const [toast, setToast] = (0, react_1.useState)({ toastType: ToastType_1.ToastType.InfoToast, message: "", show: false });
+    const [name, setName] = (0, react_1.useState)();
+    const [email, setEmail] = (0, react_1.useState)();
+    const [experience, setExperience] = (0, react_1.useState)();
+    const [recommendation, setRecommendation] = (0, react_1.useState)();
+    const [review, setReview] = (0, react_1.useState)();
+    const validateReview = () => {
+        if (name && email && experience && recommendation && review) {
+            setToast({
+                message: "Thank you for your review!",
+                toastType: ToastType_1.ToastType.SuccessToast,
+                show: true
+            });
+        }
+        else {
+            setToast({
+                message: "Please fill out the whole form before submitting.",
+                toastType: ToastType_1.ToastType.ErrorToast,
+                show: true
+            });
+        }
+    };
+    const onToastClosed = () => {
+        setToast({
+            message: "",
+            toastType: ToastType_1.ToastType.InfoToast,
+            show: false
+        });
+    };
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { id: "review" },
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtFullName" }, "Full Name"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "First and Last", onChange: (_) => setName(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "How was your experience on our website?"),
+                react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "(1 = lowest and 5 = highest)"),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp1", value: "1", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "exp1" }, "1"),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp2", value: "2", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "exp2" }, "2"),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp3", value: "3", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "exp3" }, "3"),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp4", value: "4", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "exp4" }, "4"),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp5", value: "5", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "exp5" }, "5")),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "How likely are you to recommend Dino Travel to someone you know?"),
+                react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "(1 = not very likely and 5 = very likely)"),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec1", value: "1", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "rec1" }, "1"),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec2", value: "2", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "rec2" }, "2"),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec3", value: "3", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "rec3" }, "3"),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec4", value: "4", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "rec4" }, "4"),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec5", value: "5", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("label", { htmlFor: "rec5" }, "5")),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "txtarReview" }, "Is there anything we can do to improve?"),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("textarea", { id: "txtarReview", placeholder: "Type Here", onChange: (_) => setReview(_.currentTarget.value) })),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("label", { htmlFor: "btnSubmit" }, "We will use your email address to follow-up on account issues, and for no other purpose."),
+                react_1.default.createElement("br", null),
+                react_1.default.createElement("button", { id: "btnSubmit", onClick: validateReview }, "Submit"))),
+        react_1.default.createElement(ToastMessage_1.ToastMessage, { toastType: toast.toastType, show: toast.show, message: toast.message, onToastClosed: onToastClosed })));
+}
+exports["default"] = ReviewForm;
 
 
 /***/ }),
@@ -1121,6 +2151,9 @@ __webpack_require__(/*! ../styles/Toast.css */ "./src/styles/Toast.css");
 class ToastMessage extends React.Component {
     constructor(props) {
         super(props);
+        this.closeToast = () => {
+            this.props.onToastClosed();
+        };
         this.state = {
             toastType: props.toastType,
             message: props.message,
@@ -1129,27 +2162,29 @@ class ToastMessage extends React.Component {
     }
     componentDidUpdate(prevProps) {
         // Update show/hide state when props updates from parent component.
-        if (prevProps.show !== this.props.show) {
+        if (prevProps.show !== this.props.show || this.state.show !== this.props.show) {
             this.setState({
                 show: this.props.show
             });
         }
-        if (prevProps.message !== this.props.message) {
+        if (prevProps.message !== this.props.message || this.state.message !== this.props.message) {
             this.setState({
                 message: this.props.message
             });
         }
-        if (prevProps.toastType !== this.props.toastType) {
+        if (prevProps.toastType !== this.props.toastType || this.state.toastType !== this.props.toastType) {
             this.setState({
                 toastType: this.props.toastType
             });
         }
     }
     render() {
-        const visibilityClass = this.state.show ? 'fadeAway' : 'invisible';
-        const toastClass = `toast ${this.state.toastType} ${visibilityClass}`;
-        return (React.createElement("div", { className: toastClass },
-            React.createElement("h3", null, this.state.message)));
+        const toastClass = `toast ${this.state.toastType}`;
+        return (React.createElement("div", { className: 'toastContainer' }, this.state.show ?
+            React.createElement("div", { className: toastClass },
+                React.createElement("h3", null, this.state.message),
+                React.createElement("label", { onClick: this.closeToast, className: "closeButton" }, "x"))
+            : null));
     }
 }
 exports.ToastMessage = ToastMessage;
@@ -1276,23 +2311,241 @@ ReactDOM.render(React.createElement(PageRouting_1.PageRouting, null), document.g
 
 /***/ }),
 
-/***/ "./src/lib/utility.ts":
-/*!****************************!*\
-  !*** ./src/lib/utility.ts ***!
-  \****************************/
+/***/ "./src/lib/AirlineMapping.ts":
+/*!***********************************!*\
+  !*** ./src/lib/AirlineMapping.ts ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.randomInt = void 0;
+exports.getAirlineNameFromIataCode = void 0;
+const airlineMappings = new Map([
+    ['AA', 'American Airlines'],
+    ['2G', 'CargoItalia (alternate)'],
+    ['CO', 'Continental Airlines'],
+    ['DL', 'Delta Air Lines'],
+    ['NW', 'Northwest Airlines (alternate site)'],
+    ['AC', 'Air Canada'],
+    ['UA', 'United Airlines Cargo'],
+    ['CP', 'Canadian Airlines Int´l'],
+    ['LH', 'Lufthansa Cargo AG'],
+    ['FX', 'Fedex'],
+    ['AS', 'Alaska Airlines'],
+    ['US', 'USAirways'],
+    ['RG', 'VARIG Brazilian Airlines'],
+    ['KA', 'Dragonair'],
+    ['LA', 'LAN Chile'],
+    ['TP', 'TAP Air Portugal'],
+    ['CY', 'Cyprus Airways'],
+    ['OA', 'Olympic Airways'],
+    ['EI', 'Aer Lingus Cargo'],
+    ['AZ', 'Alitalia'],
+    ['AF', 'Air France'],
+    ['IC', 'Indian Airlines'],
+    ['HM', 'Air Seychelles'],
+    ['OK', 'Czech Airlines'],
+    ['SV', 'Saudi Arabian Airlines'],
+    ['RB', 'Syrian Arab Airlines'],
+    ['ET', 'Ethiopian Airlines'],
+    ['GF', 'Gulf Air'],
+    ['KL', 'KLM Cargo'],
+    ['IB', 'Iberia'],
+    ['ME', 'Middle East Airlines'],
+    ['MS', 'Egyptair'],
+    ['PR', 'Philippine Airlines'],
+    ['AF', 'Air France'],
+    ['LO', 'LOT Polish Airlines'],
+    ['QF', 'Qantas Airways'],
+    ['SN', 'Brussels Airlines'],
+    ['SA', 'South African Airways'],
+    ['NZ', 'Air New Zealand'],
+    ['IT', 'Kingfisher Airlines'],
+    ['KD', 'KD Avia'],
+    ['IR', 'Iran Air'],
+    ['AI', 'Air India'],
+    ['AY', 'Finnair'],
+    ['BW', 'Caribbean Airlines'],
+    ['FI', 'Icelandair'],
+    ['CK', 'China Cargo Airlines'],
+    ['LY', 'EL AL'],
+    ['JU', 'JAT Airways'],
+    ['SK', 'SAS-Scandinavian Airlines System'],
+    ['DT', 'TAAG Angola Airlines'],
+    ['LM', 'Air ALM'],
+    ['AH', 'Air Algerie'],
+    ['BA', 'British Airways'],
+    ['GA', 'Garuda Indonesia'],
+    ['MP', 'Martinair Cargo'],
+    ['JL', 'Japan Airlines'],
+    ['LR', 'LACSA Airlines of Costa Rica'],
+    ['AM', 'Aeromexico Cargo'],
+    ['LI', 'LIAT Airlines'],
+    ['AT', 'Royal Air Maroc'],
+    ['LN', 'Libyan Airlines'],
+    ['QR', 'Qatar Airways'],
+    ['CX', 'Cathay Pacific Airways'],
+    ['3V', 'TNT Airways'],
+    ['JP', 'Adria Airways'],
+    ['CV', 'Cargolux Airlines'],
+    ['EK', 'Emirates'],
+    ['KE', 'Korean Air'],
+    ['MA', 'Malev Hungarian Airlines'],
+    ['RG', 'VARIG Brazilian Airlines'],
+    ['JI', 'Jade Cargo International'],
+    ['JM', 'Air Jamaica'],
+    ['TA', 'TACA'],
+    ['NH', 'ANA All Nippon Cargo'],
+    ['PK', 'Pakistan Int´l Airlines'],
+    ['TG', 'Thai Airways'],
+    ['KU', 'Kuwait Airways'],
+    ['CM', 'Copa Airlines Cargo'],
+    ['NG', 'Lauda Air'],
+    ['MH', 'Malaysian Airline System'],
+    ['MH', ' '],
+    ['MH', 'Homepage'],
+    ['JD', 'Japan Air System'],
+    ['TK', 'Turkish Airlines'],
+    ['BD', 'British Midland Airways'],
+    ['MK', 'Air Mauritius'],
+    ['OS', 'Austrian Cargo'],
+    ['MD', 'Air Madagascar'],
+    ['EF', 'Far Eastern Air Transport'],
+    ['LT', 'LTU (Leisure Cargo)'],
+    ['TL', 'Trans Mediterranean Airways'],
+    ['K4', 'Kalitta Air'],
+    ['LD', 'Air Hong Kong'],
+    ['CI', 'China Airlines'],
+    ['5S', 'Global Aviation and Services'],
+    ['OO', 'Sky West Airlines'],
+    ['WE', 'Centurion Air Cargo'],
+    ['SC', 'Shandong Airlines (Chinese)'],
+    ['RF', 'Florida West International Airways'],
+    ['NC', 'Northern Air Cargo'],
+    ['C8', 'Cargolux Italia'],
+    ['5Y', 'Atlas Air'],
+    ['KX', 'Cayman Airways'],
+    ['A3', 'Aegean Airlines'],
+    ['PO', 'Polar Air Cargo'],
+    ['JW', 'Arrow Air'],
+    ['5X', 'UPS Air Cargo'],
+    ['N8', 'National Air Cargo'],
+    ['S7', 'Siberia Airlines'],
+    ['ER', 'DHL Aviation/DHL Airways'],
+    ['KC', 'Air Astana'],
+    ['ZH', 'Shenzhen Airlines (Chinese)'],
+    ['SU', 'Aeroflot'],
+    ['RJ', 'Royal Jordanian'],
+    ['WN', 'Southwest Airlines'],
+    ['A2', 'Cielos Airlines'],
+    ['M3', 'ABSA Aerolinhas Brasileiras'],
+    ['M2', 'Mario’s Air'],
+    ['XQ', 'Sun Express'],
+    ['PS', 'Ukraine Int´l Airlines'],
+    ['9U', 'Air Moldova'],
+    ['7C', 'Coyne Airways'],
+    ['RU', 'AirBridge Cargo'],
+    ['9W', 'Jet Airways'],
+    ['UL', 'SriLankan Cargo'],
+    ['UL', 'more AWB tracking'],
+    ['UY', 'Cameroon Airlines'],
+    ['EY', 'ETIHAD Airways'],
+    ['QY', 'DHL Aviation / European Air Transport'],
+    ['SQ', 'Singapore Airlines'],
+    ['FB', 'Bulgaria Air'],
+    ['GL', 'Air Greenland'],
+    ['IY', 'Yemenia Yemen Airways'],
+    ['KM', 'Air Malta'],
+    ['PX', 'Air Niugini'],
+    ['BT', 'Air Baltic'],
+    ['BI', 'Royal Brunei Airlines'],
+    ['NX', 'Air Macau'],
+    ['BR', 'Eva Airways'],
+    ['5C', 'CAL Cargo Air Lines'],
+    ['KQ', 'Kenya Airways'],
+    ['MB', 'MNG Airlines'],
+    ['LX', 'Swiss'],
+    ['QT', 'Tampa Airlines'],
+    ['MF', 'Xiamen Airlines'],
+    ['SP', 'SATA Air Acores'],
+    ['VN', 'Vietnam Airlines'],
+    ['SM', 'Avient'],
+    ['J2', 'Azerbaijan Airlines'],
+    ['FM', 'Shanghai Airlines'],
+    ['MU', 'China Eastern Airlines'],
+    ['CZ', 'China Southern Airlines'],
+    ['GD', 'Grandstar Cargo'],
+    ['AE', 'Mandarin Airlines'],
+    ['M6', 'Amerijet International'],
+    ['S6', 'SAC South American Airways'],
+    ['F4', 'Shanghai Airlines Cargo'],
+    ['OU', 'Croatia Airlines'],
+    ['N8', 'Hong Kong Airlines'],
+    ['FK', 'Africa West'],
+    ['EV', 'Atlantic Southeast Airlines'],
+    ['MY', 'MASAir'],
+    ['VV', 'Aerosvit'],
+    ['Y8', 'Yangtze River Express Airlines'],
+    ['6R', 'AeroUnion'],
+    ['3U', 'Sichuan Airlines'],
+    ['HU', 'Hainan Airlines (Chinese)'],
+    ['DE', 'Condor Flugdienst'],
+    ['OH', 'Comair'],
+    ['B1', 'TAB Cargo'],
+    ['QN', 'Air Armenia'],
+    ['UZ', 'Buraq Air Transport (Arabic only)'],
+    ['VS', 'Virgin Atlantic'],
+    ['KZ', 'Nippon Cargo Airlines'],
+    ['JJ', 'TAM Brazilian Airlines'],
+    ['7I', 'Insel Air Cargo'],
+    ['OV', 'Estonian Air'],
+    ['QO', 'Aeromexpress Cargo'],
+    ['OZ', 'Asiana Airlines'],
+    ['IJ', 'Great Wall Airlines'],
+    ['UX', 'Air Europa Cargo'],
+    ['BG', 'Biman Bangladesh'],
+    ['CA', 'Air China']
+]);
 /*
- * Generate a random integer between min and max (inclusive)
- */
-const randomInt = (min, max) => {
-    return Math.floor((Math.random() * max) + min);
+    getAirlineNameFromIataCode
+    Accepts an airline iata code and attempts to find a mapping to a full airline name.
+    If one exists, it will return it, otherwise it will return the IATA code for display purposes as a fallback.
+*/
+const getAirlineNameFromIataCode = (iataCode) => {
+    const airlineName = airlineMappings.get(iataCode);
+    return !!airlineName
+        ? airlineName
+        : iataCode;
 };
-exports.randomInt = randomInt;
+exports.getAirlineNameFromIataCode = getAirlineNameFromIataCode;
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/AboutPage.css":
+/*!************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/AboutPage.css ***!
+  \************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#aboutUsContainer {\r\n    width: 500px;\r\n    margin: auto;\r\n}\r\n\r\n#aboutUsTitle {\r\n    text-align: center;\r\n}\r\n\r\n#aboutUsSection {\r\n    font-size: larger;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/AboutPage.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,iBAAiB;AACrB","sourcesContent":["#aboutUsContainer {\r\n    width: 500px;\r\n    margin: auto;\r\n}\r\n\r\n#aboutUsTitle {\r\n    text-align: center;\r\n}\r\n\r\n#aboutUsSection {\r\n    font-size: larger;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
 
 /***/ }),
@@ -1324,10 +2577,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".airportSelector input, .airportSelect
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/FlightList.css":
-/*!*************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/FlightList.css ***!
-  \*************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/ComplaintForm.css":
+/*!****************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/ComplaintForm.css ***!
+  \****************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1344,7 +2597,39 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightList.css"],"names":[],"mappings":"AAAA;;EAEE;AACF;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,gBAAgB;AACpB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,mBAAmB;IACnB,yBAAyB;AAC7B;;AAEA,iEAAiE;AACjE;IACI,oBAAoB;CACvB;;AAED;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;IACjB,eAAe;IACf,qBAAqB;AACzB;;AAEA;IACI,oCAAoC;AACxC","sourcesContent":["/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ComplaintForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/FlightList.css":
+/*!*************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/FlightList.css ***!
+  \*************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/getUrl.js */ "./node_modules/css-loader/dist/runtime/getUrl.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2__);
+// Imports
+
+
+
+var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../../assets/loading.gif */ "./assets/loading.gif"), __webpack_require__.b);
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n    border-bottom: solid lightgray 1px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n\r\n.stopsMessage {\r\n    width: 305px;\r\n}\r\n\r\n#loadingImageContainer {\r\n    display: flex;\r\n    width: 100%;\r\n}\r\n\r\n#loadingImage {\r\n    width: 300px;\r\n    height: 300px;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightList.css"],"names":[],"mappings":"AAAA;;EAEE;AACF;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,gBAAgB;AACpB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;IACjB,kCAAkC;AACtC;;AAEA;IACI,mBAAmB;IACnB,yBAAyB;AAC7B;;AAEA,iEAAiE;AACjE;IACI,oBAAoB;CACvB;;AAED;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;IACjB,eAAe;IACf,qBAAqB;AACzB;;AAEA;IACI,oCAAoC;AACxC;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,WAAW;AACf;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,cAAc;IACd,iBAAiB;IACjB,kBAAkB;IAClB,yDAAiD;AACrD","sourcesContent":["/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n    border-bottom: solid lightgray 1px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n\r\n.stopsMessage {\r\n    width: 305px;\r\n}\r\n\r\n#loadingImageContainer {\r\n    display: flex;\r\n    width: 100%;\r\n}\r\n\r\n#loadingImage {\r\n    width: 300px;\r\n    height: 300px;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    background-image: url(\"../../assets/loading.gif\");\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1376,7 +2661,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: flex;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n    display: flex;\r\n}\r\n\r\n#destinationInputs .verticalSpacer {\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .airportSelectorElement {\r\n    margin-right: 40px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    margin-top: auto;\r\n}\r\n\r\n.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {\r\n    height: 125px;\r\n    display: flex;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,cAAc;IACd,WAAW;AACf;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,aAAa;AACjB;;AAEA;IACI,gBAAgB;IAChB,aAAa;AACjB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,gBAAgB;IAChB,oBAAoB;AACxB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,aAAa;IACb,aAAa;AACjB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n#bannerCarousel {\r\n    display: block;\r\n    width: 100%;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: flex;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n    display: flex;\r\n}\r\n\r\n#destinationInputs .verticalSpacer {\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 120px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 120px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .airportSelectorElement {\r\n    margin-right: 40px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    margin-top: auto;\r\n}\r\n\r\n.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {\r\n    height: 125px;\r\n    display: flex;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n #bannerContainer {\r\n    display: flex;\r\n}\r\n\r\n#bannerCarousel {\r\n    width: 100%;\r\n    margin-top: 100vh;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: flex;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n    display: flex;\r\n}\r\n\r\n#destinationInputs .verticalSpacer {\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 180px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n}\r\n\r\n#submitButton {\r\n    display: block;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n#searchButton {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#nextFlightButton {\r\n    margin-top: 30px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 180px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .airportSelectorElement {\r\n    margin-right: 40px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    margin-top: auto;\r\n}\r\n\r\n.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {\r\n    width: 320px;\r\n    height: 125px;\r\n    display: flex;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/HomePage.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,SAAS;AACb;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;;IAEnB,mBAAmB;AACvB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,iBAAiB;;IAEjB,qBAAqB;IACrB,kBAAkB;IAClB,gDAAkD;AACtD;;AAEA;IACI,aAAa;IACb,iBAAiB;IACjB,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,UAAU;IACV,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;CAED;IACG,aAAa;AACjB;;AAEA;IACI,WAAW;IACX,iBAAiB;AACrB;;AAEA;;EAEE;;AAEF;IACI,cAAc;AAClB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,kBAAkB;AACtB;;AAEA;IACI,eAAe;AACnB;;AAEA;;EAEE;;AAEF;IACI,aAAa;AACjB;;AAEA;IACI,gBAAgB;IAChB,aAAa;AACjB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,gBAAgB;AACpB;;AAEA;IACI,cAAc;IACd,oBAAoB;AACxB;;AAEA;IACI,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,qBAAqB;IACrB,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,kBAAkB;IAClB,YAAY;AAChB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,aAAa;AACjB","sourcesContent":["body {\r\n    font-family: sans-serif;\r\n    margin: 0;\r\n}\r\n\r\n#headerContent {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n\r\n    margin-bottom: 40px;\r\n}\r\n\r\nheader nav button {\r\n    margin-right: 15px;\r\n}\r\n\r\n.banner {\r\n    display: flex;\r\n}\r\n\r\n.logo {\r\n    width: 220px;\r\n    height: 200px;\r\n    margin-left: 20px;\r\n\r\n    display: inline-block;\r\n    margin-right: 10px;\r\n    content: url(\"../../assets/dino_travel_logo2.png\");\r\n}\r\n\r\n.slogan {\r\n    display: flex;\r\n    margin-left: 20px;\r\n    height: 200px;\r\n    align-items: center;\r\n}\r\n\r\nnav {\r\n    display: inline-block;\r\n}\r\n\r\nsection {\r\n    width: 80%;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n/*\r\n * Image Carousel Styling\r\n */\r\n\r\n #bannerContainer {\r\n    display: flex;\r\n}\r\n\r\n#bannerCarousel {\r\n    width: 100%;\r\n    margin-top: 100vh;\r\n}\r\n\r\n/*\r\n * Filters Styling\r\n */\r\n\r\n#filterRow {\r\n    display: block;\r\n}\r\n\r\n.flightTypeFilters button {\r\n    width: 112px;\r\n    height: 60px;\r\n    margin-right: 10px;\r\n    font-size: 18px;\r\n}\r\n\r\n.flightTypeFilters {\r\n    display: inline-block;\r\n}\r\n\r\n.filterDropdowns {\r\n    display: inline-block;\r\n    margin-left: 60px;\r\n}\r\n\r\n.filterDropdowns select {\r\n    margin-right: 35px;\r\n}\r\n\r\n#filterRow input {\r\n    height: 35px;\r\n    width: 200px;\r\n}\r\n\r\n#filterRow h3 {\r\n    font-size: 14px;\r\n}\r\n\r\n.travelersInput {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n}\r\n\r\nsection h1 {\r\n    font-size: 36px;\r\n}\r\n\r\n/*\r\n * User Input Stylings\r\n */\r\n\r\n#destinationInputs {\r\n    display: flex;\r\n}\r\n\r\n#userInputRow {\r\n    margin-top: 30px;\r\n    display: flex;\r\n}\r\n\r\n#destinationInputs .verticalSpacer {\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .datePicker {\r\n    width: 180px;\r\n}\r\n\r\n#submitButton, #searchButton {\r\n    width: 150px;\r\n    margin-top: 50px;\r\n}\r\n\r\n#submitButton {\r\n    display: block;\r\n    margin-bottom: 100px;\r\n}\r\n\r\n#searchButton {\r\n    margin-bottom: 20px;\r\n}\r\n\r\n#nextFlightButton {\r\n    margin-top: 30px;\r\n}\r\n\r\n.dateInputContainer {\r\n    display: inline-block;\r\n    width: 180px;\r\n    margin-right: 30px;\r\n}\r\n\r\n#userInputRow input {\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n    height: 60px;\r\n}\r\n\r\n#userInputRow .airportSelectorElement {\r\n    margin-right: 40px;\r\n}\r\n\r\n.airportSelectorElement {\r\n    margin-top: auto;\r\n}\r\n\r\n.leavingAirportSelectorContainer, .arrivingAirportSelectorContainer {\r\n    width: 320px;\r\n    height: 125px;\r\n    display: flex;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1415,6 +2700,33 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\r\n    background-color: b
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/Login.css":
+/*!********************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/Login.css ***!
+  \********************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ".center{\r\n    width: 0;\r\n    margin: 0 auto;\r\n}", "",{"version":3,"sources":["webpack://./src/styles/Login.css"],"names":[],"mappings":"AAAA;IACI,QAAQ;IACR,cAAc;AAClB","sourcesContent":[".center{\r\n    width: 0;\r\n    margin: 0 auto;\r\n}"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/MultiCityFlightSelection.css":
 /*!***************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/MultiCityFlightSelection.css ***!
@@ -1435,7 +2747,88 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".addRemoveSpacer {\r\n    width: 535px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 150px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/MultiCityFlightSelection.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,qBAAqB;AACzB;;AAEA;IACI,wBAAwB;IACxB,uBAAuB;IACvB,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,oBAAoB;IACpB,eAAe;AACnB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;AACzB","sourcesContent":[".addRemoveSpacer {\r\n    width: 535px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 150px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".addRemoveSpacer {\r\n    width: 640px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 180px;\r\n    height: 60px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n\r\n.airportSelectorElement {\r\n    display: inline-block;\r\n    width: 320px;\r\n}", "",{"version":3,"sources":["webpack://./src/styles/MultiCityFlightSelection.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,qBAAqB;AACzB;;AAEA;IACI,wBAAwB;IACxB,uBAAuB;IACvB,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;IACI,kBAAkB;IAClB,oBAAoB;IACpB,eAAe;AACnB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;AACnB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,YAAY;AAChB","sourcesContent":[".addRemoveSpacer {\r\n    width: 640px;\r\n    display: inline-block;\r\n}\r\n\r\n.buttonLabel {\r\n    color: rgb(93, 190, 207);\r\n    /* padding-top: 20px; */\r\n    margin-right: 40px;\r\n    font-weight:600;\r\n}\r\n\r\n.multiCityFlightSelectionContainer {\r\n    margin-top: 30px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer input {\r\n    height: 50px;\r\n    width: 220px;\r\n    border-radius: 3px;\r\n    margin-right: 40px;\r\n}\r\n\r\n.flightLabel {\r\n    margin-bottom: 6px;\r\n    font-weight: lighter;\r\n    font-size: 14px;\r\n}\r\n\r\n.multiCityFlightSelectionContainer h3 {\r\n    color: black;\r\n}\r\n\r\n.multiCityFlightSelectionContainer .datePicker {\r\n    width: 180px;\r\n    height: 60px;\r\n    margin-bottom: 8px;\r\n    margin-top: 0px;\r\n}\r\n\r\n.flightDestination {\r\n    display: inline-block;\r\n}\r\n\r\n.flightDate {\r\n    display: inline-block;\r\n}\r\n\r\n.airportSelectorElement {\r\n    display: inline-block;\r\n    width: 320px;\r\n}"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/Policies.css":
+/*!***********************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/Policies.css ***!
+  \***********************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#policies {\r\n    width: 500px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Policies.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB","sourcesContent":["#policies {\r\n    width: 500px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/ReviewForm.css":
+/*!*************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/ReviewForm.css ***!
+  \*************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ReviewForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,kBAAkB;IAClB,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/SupportPage.css":
+/*!**************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/SupportPage.css ***!
+  \**************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "main {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n#supportPageTitle {\r\n    align-items: center;\r\n    text-align: center;\r\n}\r\n\r\n.supportButtons {\r\n    display: flex;\r\n    justify-content: center;\r\n    padding-bottom: 50px;\r\n}\r\n\r\n.supportButtons button {\r\n    margin-right: 50px;\r\n}\r\n\r\n#content {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/SupportPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;IACI,mBAAmB;IACnB,kBAAkB;AACtB;;AAEA;IACI,aAAa;IACb,uBAAuB;IACvB,oBAAoB;AACxB;;AAEA;IACI,kBAAkB;AACtB;;AAEA;IACI,iBAAiB;IACjB,kBAAkB;AACtB","sourcesContent":["main {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n\r\n#supportPageTitle {\r\n    align-items: center;\r\n    text-align: center;\r\n}\r\n\r\n.supportButtons {\r\n    display: flex;\r\n    justify-content: center;\r\n    padding-bottom: 50px;\r\n}\r\n\r\n.supportButtons button {\r\n    margin-right: 50px;\r\n}\r\n\r\n#content {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1462,7 +2855,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".toast {\r\n    color: white;\r\n\r\n    display: flex;\r\n    width: 100%;\r\n    min-height: 40px;\r\n\r\n    /* Fix toast to the top of the screen */\r\n    float: left;\r\n    position: fixed;\r\n    top:0;\r\n}\r\n\r\n.fadeAway {\r\n    /* Make toast disappear automatically - fade out after 4 seconds */\r\n    animation: fadeOut 500ms linear 4s;\r\n    -webkit-animation-fill-mode: forwards;\r\n    animation-fill-mode: forwards;\r\n}\r\n\r\n@keyframes fadeOut {\r\n    0% {opacity: 100;}\r\n    100% {opacity: 0;}\r\n  }\r\n\r\n.invisible {\r\n    opacity: 0;\r\n}\r\n\r\n.infoToast {\r\n    background-color: rgb(69, 80, 228);\r\n    border-bottom: darkblue 3px solid;\r\n}\r\n\r\n.errorToast {\r\n    background-color: red;\r\n    border-bottom: rgb(204, 0, 0) 3px solid;\r\n}\r\n\r\n.successToast {\r\n    background-color: rgb(0, 167, 0);\r\n    border-bottom: darkgreen 3px solid;\r\n}\r\n\r\n.toast h3 {\r\n    margin-left: 15px;\r\n    font-size: 18px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Toast.css"],"names":[],"mappings":"AAAA;IACI,YAAY;;IAEZ,aAAa;IACb,WAAW;IACX,gBAAgB;;IAEhB,uCAAuC;IACvC,WAAW;IACX,eAAe;IACf,KAAK;AACT;;AAEA;IACI,kEAAkE;IAClE,kCAAkC;IAClC,qCAAqC;IACrC,6BAA6B;AACjC;;AAEA;IACI,IAAI,YAAY,CAAC;IACjB,MAAM,UAAU,CAAC;EACnB;;AAEF;IACI,UAAU;AACd;;AAEA;IACI,kCAAkC;IAClC,iCAAiC;AACrC;;AAEA;IACI,qBAAqB;IACrB,uCAAuC;AAC3C;;AAEA;IACI,gCAAgC;IAChC,kCAAkC;AACtC;;AAEA;IACI,iBAAiB;IACjB,eAAe;AACnB","sourcesContent":[".toast {\r\n    color: white;\r\n\r\n    display: flex;\r\n    width: 100%;\r\n    min-height: 40px;\r\n\r\n    /* Fix toast to the top of the screen */\r\n    float: left;\r\n    position: fixed;\r\n    top:0;\r\n}\r\n\r\n.fadeAway {\r\n    /* Make toast disappear automatically - fade out after 4 seconds */\r\n    animation: fadeOut 500ms linear 4s;\r\n    -webkit-animation-fill-mode: forwards;\r\n    animation-fill-mode: forwards;\r\n}\r\n\r\n@keyframes fadeOut {\r\n    0% {opacity: 100;}\r\n    100% {opacity: 0;}\r\n  }\r\n\r\n.invisible {\r\n    opacity: 0;\r\n}\r\n\r\n.infoToast {\r\n    background-color: rgb(69, 80, 228);\r\n    border-bottom: darkblue 3px solid;\r\n}\r\n\r\n.errorToast {\r\n    background-color: red;\r\n    border-bottom: rgb(204, 0, 0) 3px solid;\r\n}\r\n\r\n.successToast {\r\n    background-color: rgb(0, 167, 0);\r\n    border-bottom: darkgreen 3px solid;\r\n}\r\n\r\n.toast h3 {\r\n    margin-left: 15px;\r\n    font-size: 18px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".toast {\r\n    color: white;\r\n\r\n    display: flex;\r\n    width: 100%;\r\n    min-height: 40px;\r\n\r\n    /* Fix toast to the top of the screen */\r\n    float: left;\r\n    position: fixed;\r\n    top:0;\r\n\r\n    justify-content: space-between;\r\n}\r\n\r\n.invisible {\r\n    opacity: 0;\r\n}\r\n\r\n.infoToast {\r\n    background-color: rgb(69, 80, 228);\r\n    border-bottom: darkblue 3px solid;\r\n}\r\n\r\n.errorToast {\r\n    background-color: red;\r\n    border-bottom: rgb(204, 0, 0) 3px solid;\r\n}\r\n\r\n.successToast {\r\n    background-color: rgb(0, 167, 0);\r\n    border-bottom: darkgreen 3px solid;\r\n}\r\n\r\n.toast h3 {\r\n    margin-left: 15px;\r\n    font-size: 18px;\r\n}\r\n\r\n.toast .closeButton {\r\n    font-size: 24px;\r\n    font-weight: bold;\r\n    padding-right: 10px;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Toast.css"],"names":[],"mappings":"AAAA;IACI,YAAY;;IAEZ,aAAa;IACb,WAAW;IACX,gBAAgB;;IAEhB,uCAAuC;IACvC,WAAW;IACX,eAAe;IACf,KAAK;;IAEL,8BAA8B;AAClC;;AAEA;IACI,UAAU;AACd;;AAEA;IACI,kCAAkC;IAClC,iCAAiC;AACrC;;AAEA;IACI,qBAAqB;IACrB,uCAAuC;AAC3C;;AAEA;IACI,gCAAgC;IAChC,kCAAkC;AACtC;;AAEA;IACI,iBAAiB;IACjB,eAAe;AACnB;;AAEA;IACI,eAAe;IACf,iBAAiB;IACjB,mBAAmB;IACnB,gBAAgB;IAChB,mBAAmB;AACvB","sourcesContent":[".toast {\r\n    color: white;\r\n\r\n    display: flex;\r\n    width: 100%;\r\n    min-height: 40px;\r\n\r\n    /* Fix toast to the top of the screen */\r\n    float: left;\r\n    position: fixed;\r\n    top:0;\r\n\r\n    justify-content: space-between;\r\n}\r\n\r\n.invisible {\r\n    opacity: 0;\r\n}\r\n\r\n.infoToast {\r\n    background-color: rgb(69, 80, 228);\r\n    border-bottom: darkblue 3px solid;\r\n}\r\n\r\n.errorToast {\r\n    background-color: red;\r\n    border-bottom: rgb(204, 0, 0) 3px solid;\r\n}\r\n\r\n.successToast {\r\n    background-color: rgb(0, 167, 0);\r\n    border-bottom: darkgreen 3px solid;\r\n}\r\n\r\n.toast h3 {\r\n    margin-left: 15px;\r\n    font-size: 18px;\r\n}\r\n\r\n.toast .closeButton {\r\n    font-size: 24px;\r\n    font-weight: bold;\r\n    padding-right: 10px;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1489,7 +2882,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,oCAAoC;IACpC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,kCAAkC;AACtC;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.disabledButton {\r\n    background-color: darkgray;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,oCAAoC;IACpC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,0BAA0B;AAC9B;;AAEA;IACI,kCAAkC;AACtC;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.disabledButton {\r\n    background-color: darkgray;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -26046,6 +27439,61 @@ function version(uuid) {
 
 /***/ }),
 
+/***/ "./src/styles/AboutPage.css":
+/*!**********************************!*\
+  !*** ./src/styles/AboutPage.css ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_AboutPage_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./AboutPage.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/AboutPage.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_AboutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_AboutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_AboutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_AboutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/styles/AirportSelector.css":
 /*!****************************************!*\
   !*** ./src/styles/AirportSelector.css ***!
@@ -26097,6 +27545,61 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_AirportSelector_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/styles/ComplaintForm.css":
+/*!**************************************!*\
+  !*** ./src/styles/ComplaintForm.css ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_ComplaintForm_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./ComplaintForm.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/ComplaintForm.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_ComplaintForm_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_ComplaintForm_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_ComplaintForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_ComplaintForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -26266,6 +27769,61 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./src/styles/Login.css":
+/*!******************************!*\
+  !*** ./src/styles/Login.css ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_Login_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./Login.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/Login.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_Login_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_Login_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_Login_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_Login_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/styles/MultiCityFlightSelection.css":
 /*!*************************************************!*\
   !*** ./src/styles/MultiCityFlightSelection.css ***!
@@ -26317,6 +27875,171 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_MultiCityFlightSelection_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_MultiCityFlightSelection_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_MultiCityFlightSelection_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/styles/Policies.css":
+/*!*********************************!*\
+  !*** ./src/styles/Policies.css ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_Policies_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./Policies.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/Policies.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_Policies_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_Policies_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_Policies_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_Policies_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/styles/ReviewForm.css":
+/*!***********************************!*\
+  !*** ./src/styles/ReviewForm.css ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_ReviewForm_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./ReviewForm.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/ReviewForm.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_ReviewForm_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_ReviewForm_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_ReviewForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_ReviewForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/styles/SupportPage.css":
+/*!************************************!*\
+  !*** ./src/styles/SupportPage.css ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_SupportPage_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./SupportPage.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/SupportPage.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_SupportPage_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_SupportPage_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_SupportPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_SupportPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
@@ -26527,6 +28250,17 @@ module.exports = __webpack_require__.p + "d46da574bd942483c818.png";
 
 "use strict";
 module.exports = __webpack_require__.p + "8a0ddbc6d5eb51f3f0c0.png";
+
+/***/ }),
+
+/***/ "./assets/loading.gif":
+/*!****************************!*\
+  !*** ./assets/loading.gif ***!
+  \****************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "a620c3a27f39ca361323.gif";
 
 /***/ }),
 
