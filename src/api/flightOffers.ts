@@ -11,10 +11,10 @@ export interface IFlightOfferData {
     id: string;
     source: string;
     instantTicketingRequired: boolean;
-    nonHomogenous: boolean;
+    nonHomogeneous: boolean;
     oneWay: boolean;
     lastTicketingDate: string;
-    numberOfBookeableSeats: number;
+    numberOfBookableSeats: number;
     itineraries: IItinerary[];
     price: IPrice;
     pricingOptions: IPricingOptions;
@@ -27,7 +27,7 @@ export interface ITravelerPricing {
     fareOption: string;
     travelerType: string;
     price: IPrice;
-    fareDetailsBySegment: IFareDetailsBySegment;
+    fareDetailsBySegment: IFareDetailsBySegment | IFareDetailsBySegment[];
 }
 
 export interface IFareDetailsBySegment {
@@ -73,8 +73,8 @@ export interface IPrice {
     currency: string;
     total: string;
     base: string;
-    fees: IFees[];
-    grandTotal: string;
+    fees?: IFees[];
+    grandTotal?: string;
 }
 
 export interface IFees {
