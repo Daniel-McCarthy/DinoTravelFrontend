@@ -21,7 +21,7 @@ import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
 import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
 import { getFlightOffersWithFilters, IFlightOfferArguments, IFlightOfferData } from "./api/flightOffers";
@@ -543,7 +543,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         }
     }
 
-    onSubmitClicked = () => {
+    onSubmitClicked = async () => {
         // Update status of search progress and add final flight to flight selections
         if (this.state.selectedFlightOffer == null) {
             return;
@@ -556,9 +556,15 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.setState({
             finalizedFlightSelections,
             searchProgress: currentSearchProgress
-        }, () => {
+        }, async () => {
             // Submit reservations once finalized selections are set
-            this.submitReservations();
+            const didSucceed = await this.submitReservations();
+
+            if (didSucceed) {
+                // Navigate to checkout page
+                const navigate = useNavigate();
+                navigate('/checkout');
+            }
         });
     }
 
@@ -612,17 +618,17 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     }
 
-    submitReservations = async () => {
+    submitReservations = async (): Promise<boolean> => {
         const userId = this.props.id_Token;
         if (userId == null) {
             this.displayError('Failed to reserve flights due to not being logged in.');
-            return;
+            return false;
         }
 
         // Reject submission and warn user if submitting without a flight selection.
         if (this.state.selectedFlightOffer == null) {
             this.displayError(`A flight to book must be selected before submission.`)
-            return;
+            return false;
         }
 
         // Will need to submit a copy of every flight once for each passenger
@@ -676,14 +682,16 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
         if (response instanceof Error) {
             this.displayError('Failed to send reservation submission to Dino Travel.');
-            return;
+            return false;
         }
 
         if (response.status !== 200) {
             this.displayError('Failed to register reservation.');
             console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
+            return false;
         } else {
             this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
+            return true;
         }
     }
 
