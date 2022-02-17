@@ -4,7 +4,7 @@ import { getTotalFlightTimeFromItinerary, IFlightOfferData } from '../../api/fli
 import { updateUser } from '../../api/users';
 import '../../styles/CheckoutPage.css';
 
-export default function CheckoutReceipt({firstName, lastName, email, dob, idToken, flightOffers} : {firstName: string, lastName: string, email: string, dob: moment.Moment, idToken: string | null, flightOffers: IFlightOfferData[]}) {
+export default function CheckoutReceipt({firstName, lastName, email, dob, idToken, flightOffers, onBookingComplete} : {firstName: string, lastName: string, email: string, dob: moment.Moment, idToken: string | null, flightOffers: IFlightOfferData[], onBookingComplete: () => void}) {
 
     const [total, setTotal] = useState(0);
 
@@ -14,6 +14,8 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
         if (idToken !== null) {
             updateUser(firstName, lastName, email, dob, idToken);
         }
+
+        onBookingComplete();
     }
 
     const getTotal = (offers: IFlightOfferData[]) => {
