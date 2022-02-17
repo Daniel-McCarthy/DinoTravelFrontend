@@ -124,7 +124,6 @@ export const getReservationById = async (id: number, subject_id: string): Promis
 }
 
 export const registerReservation = async (reservation: IReservationData, userID: string): Promise<Response | Error> => {
-
     console.log(reservation);
     console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
     const options = {

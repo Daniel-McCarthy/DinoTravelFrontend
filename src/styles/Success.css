@@ -1,0 +1,13 @@
+#successContent {
+    text-align: center;
+}
+
+#successRedirects button {
+    width: 200px;
+    margin: 5px;
+}
+
+#successRedirects a {
+    text-decoration: none;
+    color: rgb(59, 77, 145);
+}

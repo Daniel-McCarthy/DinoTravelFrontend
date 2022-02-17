@@ -1,0 +1,26 @@
+#checkoutForm {
+    width: 700px;
+    padding: 10px;
+}
+#checkoutComponents {
+    width: 1100px;
+    margin: auto;
+}
+
+#bookingReceipt {
+    width: 310px;
+}
+
+#btnCompleteBooking {
+    width: 310px;
+}
+
+#checkoutFormContainer {
+    display: inline-flex;
+    margin: 5px;
+}
+
+#checkoutReceiptContainer {
+    display: inline-flex;
+    margin: 5px;
+}

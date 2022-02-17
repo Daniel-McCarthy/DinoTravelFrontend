@@ -2,7 +2,7 @@ import * as React from "react";
 import { FlightClass, flightClassAsJsonLabel } from "./enums/FlightClass";
 import { FlightType, flightTypeAsJsonLabel } from "./enums/FlightType";
 import { ToastType } from "./enums/ToastType";
-import { ToastMessage } from "./components/ToastMessage";
+import { IToastMessage, ToastMessage } from "./components/ToastMessage";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
@@ -88,16 +88,11 @@ interface IHomePageState {
 interface IHomePageProps {
     id_Token: string | null
     isLoggedIn: boolean
-}
-
-interface IToastMessage {
-    message: string;
-    toastType: ToastType,
+    onReservedFlightsFinalized: (finalFlightSelections: IFlightOfferData[], numberOfAdults: number, numberOfChildren: number, flightClass: FlightClass, flightType: FlightType) => void
 }
 
 // noinspection DuplicatedCode
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
-
     public constructor(props: IHomePageProps) {
         super(props)
 
@@ -539,13 +534,26 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         let classes = isFlightSelected ? 'nontoggle':'disabledButton';
 
         if (isOnFinalPage) {
-            return <button className={classes} id="submitButton" onClick={this.onSubmitClicked} disabled={!isFlightSelected}>Submit</button>
+            if (this.props.id_Token == null) {
+                return <button id='submitButton' disabled={!isFlightSelected} onClick={this.displayLoginSubmissionError}>Submit</button>
+            } else {
+                return <Link to={"/checkout"} onClick={this.onSubmitClicked}><button className={classes} id="submitButton" disabled={!isFlightSelected}>Submit</button></Link>
+            }
         } else {
             return <button className={classes} id="nextFlightButton" onClick={this.onNextFlightClicked} disabled={!isFlightSelected}>Next Flight</button>
         }
     }
 
+    displayLoginSubmissionError = () => {
+        this.displayError('Cannot submit until you have logged in.');
+    }
+
     onSubmitClicked = () => {
+        if (this.props.id_Token == null) {
+            this.displayError('Cannot submit due to not being logged in.');
+            return;
+        }
+
         // Update status of search progress and add final flight to flight selections
         if (this.state.selectedFlightOffer == null) {
             return;
@@ -555,12 +563,12 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         const currentSearchProgress = this.state.searchProgress;
         currentSearchProgress.searchStatus = SearchStatus.Finished;
 
+        // Update PageRouter parent component with our final flight offer data
+        this.props.onReservedFlightsFinalized(finalizedFlightSelections, this.state.numAdultTravelers, this.state.numChildTravelers, this.state.flightClass, this.state.flightType);
+
         this.setState({
             finalizedFlightSelections,
             searchProgress: currentSearchProgress
-        }, () => {
-            // Submit reservations once finalized selections are set
-            this.submitReservations();
         });
     }
 
