@@ -41,40 +41,24 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         this.setState({
             firstName: newFirstName,
         })
-        console.log(this.state.firstName);
-
-        // is this required?
-        this.render();
     }
 
     updateLastName = (newLastName: string) => {
         this.setState({
             lastName: newLastName
         })
-        console.log(this.state.lastName);
-
-        // is this required?
-        this.render();
     }
 
     updateBirthday = (newBirthday: moment.Moment) => {
         this.setState({
             birthday: newBirthday
         })
-        console.log(this.state.birthday);
-
-        // is this required?
-        this.render();
     }
 
     updateEmail = (newEmail: string) =>{
         this.setState({
             email: newEmail
         })
-        console.log(this.state.email);
-        
-        // is this required?
-        this.render();
     }
 
     render() {
