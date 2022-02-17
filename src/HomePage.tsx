@@ -88,7 +88,7 @@ interface IHomePageState {
 interface IHomePageProps {
     id_Token: string | null
     isLoggedIn: boolean
-    onReservedFlightsFinalized: (finalFlightSelections: IFlightOfferData[]) => void
+    onReservedFlightsFinalized: (finalFlightSelections: IFlightOfferData[], numberOfAdults: number, numberOfChildren: number) => void
 }
 
 interface IToastMessage {
@@ -98,7 +98,6 @@ interface IToastMessage {
 
 // noinspection DuplicatedCode
 export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
-
     public constructor(props: IHomePageProps) {
         super(props)
 
@@ -538,7 +537,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         let classes = isFlightSelected ? 'nontoggle':'disabledButton';
 
         if (isOnFinalPage) {
-            return <button className={classes} id="submitButton" onClick={this.onSubmitClicked} disabled={!isFlightSelected}>Submit</button>
+            return <Link to={"/checkout"}><button className={classes} id="submitButton" onClick={this.onSubmitClicked} disabled={!isFlightSelected}>Submit</button></Link>
         } else {
             return <button className={classes} id="nextFlightButton" onClick={this.onNextFlightClicked} disabled={!isFlightSelected}>Next Flight</button>
         }
@@ -555,7 +554,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         currentSearchProgress.searchStatus = SearchStatus.Finished;
 
         // Update PageRouter parent component with our final flight offer data
-        this.props.onReservedFlightsFinalized(finalizedFlightSelections);
+        this.props.onReservedFlightsFinalized(finalizedFlightSelections, this.state.numAdultTravelers, this.state.numChildTravelers);
 
         this.setState({
             finalizedFlightSelections,

@@ -16,25 +16,27 @@ interface IPageRoutingState {
     IDToken: string | null
     isLoggedIn: boolean
     reservedFlights: IFlightOfferData[]
+    reservedAdultSeats: number
+    reservedChildSeats: number
 }
 
 export class PageRouting extends React.Component<IPageRoutingProps, IPageRoutingState> {
     constructor(props: IPageRoutingProps) {
         super(props)
-        this.state = {IDToken: null, isLoggedIn: false, reservedFlights: []}
+        this.state = {IDToken: null, isLoggedIn: false, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0}
         let TokenJson = JSON.parse(localStorage.getItem('Token') as string)
         console.log(TokenJson)
         if (TokenJson != null) {
             let TimeExpired = TokenJson.expires_at
             if (Date.now() >= TimeExpired) {
-                this.state = {IDToken: null, isLoggedIn: false, reservedFlights: []}
+                this.state = {IDToken: null, isLoggedIn: false, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0}
                 localStorage.setItem('LoggedIn', 'false');
                 localStorage.setItem('LoginAttempted', 'false');
                 localStorage.removeItem('Profile');
                 localStorage.removeItem('Token');
                 console.log('Token has expired');
-            }else{
-                this.state = {IDToken: TokenJson.id_token, isLoggedIn: true, reservedFlights: []};
+            } else {
+                this.state = {IDToken: TokenJson.id_token, isLoggedIn: true, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0};
             }
         }
     }
@@ -48,9 +50,11 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
         this.render();
     }
 
-    updateReservedFlights = (reservedFlights: IFlightOfferData[]) => {
+    updateReservedFlights = (reservedFlights: IFlightOfferData[], reservedAdultSeats: number, reservedChildSeats: number) => {
         this.setState({
-            reservedFlights
+            reservedFlights,
+            reservedAdultSeats,
+            reservedChildSeats
         });
     }
 
