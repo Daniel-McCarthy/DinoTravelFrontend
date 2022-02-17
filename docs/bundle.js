@@ -100,6 +100,213 @@ exports.AboutPage = AboutPage;
 
 /***/ }),
 
+/***/ "./src/CheckoutPage.tsx":
+/*!******************************!*\
+  !*** ./src/CheckoutPage.tsx ***!
+  \******************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CheckoutPage = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const CheckoutForm_1 = __importDefault(__webpack_require__(/*! ./components/CheckoutPage/CheckoutForm */ "./src/components/CheckoutPage/CheckoutForm.tsx"));
+const CheckoutReceipt_1 = __importDefault(__webpack_require__(/*! ./components/CheckoutPage/CheckoutReceipt */ "./src/components/CheckoutPage/CheckoutReceipt.tsx"));
+const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
+__webpack_require__(/*! ./styles/CheckoutPage.css */ "./src/styles/CheckoutPage.css");
+const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+const ToastMessage_1 = __webpack_require__(/*! ./components/ToastMessage */ "./src/components/ToastMessage.tsx");
+const ToastType_1 = __webpack_require__(/*! ./enums/ToastType */ "./src/enums/ToastType.ts");
+const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
+const AirlineMapping_1 = __webpack_require__(/*! ./lib/AirlineMapping */ "./src/lib/AirlineMapping.ts");
+const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
+const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enums/FlightClass.ts");
+class CheckoutPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.updateFirstName = (newFirstName) => {
+            this.setState({
+                firstName: newFirstName,
+            });
+        };
+        this.updateLastName = (newLastName) => {
+            this.setState({
+                lastName: newLastName
+            });
+        };
+        this.updateBirthday = (newBirthday) => {
+            this.setState({
+                birthday: newBirthday
+            });
+        };
+        this.updateEmail = (newEmail) => {
+            this.setState({
+                email: newEmail
+            });
+        };
+        this.onBookingCompleteClicked = async () => {
+            await this.submitReservations();
+        };
+        this.onToastClosed = () => {
+            this.setState({
+                showToast: false
+            });
+        };
+        this.displayError = (message) => {
+            this.setState({
+                showToast: true,
+                toastMessage: {
+                    message,
+                    toastType: ToastType_1.ToastType.ErrorToast
+                }
+            });
+        };
+        this.displaySuccess = (message) => {
+            this.setState({
+                showToast: true,
+                toastMessage: {
+                    message,
+                    toastType: ToastType_1.ToastType.SuccessToast
+                }
+            });
+        };
+        this.submitReservations = async () => {
+            const userId = this.props.id_Token;
+            if (userId == null) {
+                this.displayError('Failed to reserve flights due to not being logged in.');
+                return false;
+            }
+            // Will need to submit a copy of every flight once for each passenger
+            const numAdults = this.props.numAdultTravelers;
+            const numChildren = this.props.numChildTravelers;
+            const flightsToReserve = this.props.reservedFlightOffers;
+            const finalReservations = [];
+            flightsToReserve.forEach(async (flight) => {
+                // Submit reservations for each traveler
+                let adultsLeft = numAdults;
+                let childrenLeft = numChildren;
+                while (adultsLeft > 0 || childrenLeft > 0) {
+                    // Figure out what kind of traveler we are reserving for and ensure they are counted as reserved.
+                    const travelerType = adultsLeft > 0 ? reservations_1.TravelerType.Adult : reservations_1.TravelerType.Child;
+                    if (travelerType === reservations_1.TravelerType.Adult) {
+                        adultsLeft -= 1;
+                    }
+                    else {
+                        childrenLeft -= 1;
+                    }
+                    const itinerary = flight.itineraries[0];
+                    const flightRequestInfo = itinerary.segments.map(segment => {
+                        return {
+                            arrival_airport: segment.arrival.iataCode,
+                            departure_airport: segment.departure.iataCode,
+                            departure_time: segment.departure.at,
+                            arrival_time: segment.arrival.at,
+                            flight_provider: (0, AirlineMapping_1.getAirlineNameFromIataCode)(segment.carrierCode),
+                            flight_code: ''
+                        };
+                    });
+                    const reservation = {
+                        price: parseFloat(!!flight.price.grandTotal ? flight.price.grandTotal : '0'),
+                        trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.props.flightType),
+                        traveler_type: travelerType,
+                        traveler_name: 'FlightPassenger',
+                        seat_id: '',
+                        seat_class: (0, FlightClass_1.flightClassAsJsonLabel)(this.props.flightClass),
+                        num_checked_bags: 0,
+                        flight_request_info: flightRequestInfo
+                    };
+                    finalReservations.push(reservation);
+                }
+            });
+            const response = await (0, reservations_1.registerReservations)(finalReservations, userId);
+            if (response instanceof Error) {
+                this.displayError('Failed to send reservation submission to Dino Travel.');
+                return false;
+            }
+            if (response.status !== 200 && response.status != 201) {
+                this.displayError('Failed to register reservation.');
+                console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
+                return false;
+            }
+            else {
+                this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
+                return true;
+            }
+        };
+        console.log('From checkoutpage; flight offers:' + JSON.stringify(this.props.reservedFlightOffers));
+        this.updateFirstName.bind(this);
+        this.updateLastName.bind(this);
+        this.updateBirthday.bind(this);
+        this.updateEmail.bind(this);
+        this.state = {
+            bannerImages: [],
+            firstName: "",
+            lastName: "",
+            birthday: moment(),
+            email: "",
+            // Initialize toast data, invisible by default until is configured for a message to be shown.
+            toastMessage: { toastType: ToastType_1.ToastType.InfoToast, message: "" },
+            showToast: false,
+        };
+    }
+    render() {
+        return (React.createElement("div", null,
+            React.createElement("header", null,
+                React.createElement("div", { id: "headerContent" },
+                    React.createElement("div", { className: "banner" },
+                        React.createElement(react_router_dom_1.Link, { to: '/' },
+                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                        React.createElement("div", { className: "slogan" },
+                            React.createElement("h3", null, "Travel More"))),
+                    React.createElement("nav", null,
+                        React.createElement(react_router_dom_1.Link, { to: "/support" },
+                            React.createElement("button", { className: "nontoggle" }, "support")),
+                        React.createElement(react_router_dom_1.Link, { to: "/about" },
+                            React.createElement("button", { className: "nontoggle" }, "about us")),
+                        React.createElement(react_router_dom_1.Link, { to: "/trips" },
+                            React.createElement("button", { className: "nontoggle" }, "trips")),
+                        React.createElement(react_router_dom_1.Link, { to: '/login' },
+                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement("main", null,
+                React.createElement("div", { id: "checkoutComponents" },
+                    React.createElement("div", { id: "checkoutFormContainer" },
+                        React.createElement(CheckoutForm_1.default, { updateFirstName: this.updateFirstName, updateLastName: this.updateLastName, updateBirthday: this.updateBirthday, updateEmail: this.updateEmail })),
+                    React.createElement("div", { id: "checkoutReceiptContainer" },
+                        React.createElement(CheckoutReceipt_1.default, { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, dob: (this.state.birthday), idToken: this.props.id_Token, flightOffers: this.props.reservedFlightOffers, onBookingComplete: this.onBookingCompleteClicked })))),
+            React.createElement("div", { id: 'bannerCarousel' },
+                React.createElement(ImageCarousel_1.ImageCarousel, { height: 500, imagesToUse: this.state.bannerImages })),
+            React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message, onToastClosed: this.onToastClosed })));
+    }
+}
+exports.CheckoutPage = CheckoutPage;
+
+
+/***/ }),
+
 /***/ "./src/HomePage.tsx":
 /*!**************************!*\
   !*** ./src/HomePage.tsx ***!
@@ -137,7 +344,6 @@ const ToastMessage_1 = __webpack_require__(/*! ./components/ToastMessage */ "./s
 __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
-const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
 // Import banner images needed to load in Image Carousel
 const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
@@ -335,8 +541,8 @@ class HomePage extends React.Component {
                     numberOfAdults: this.state.numAdultTravelers,
                     numberOfChildren: this.state.numChildTravelers,
                 };
-                if (this.state.flightType === FlightType_1.FlightType.RoundTrip)
-                    flightOfferArguments.returnDate = this.state.returnFlightDate;
+                // if (this.state.flightType === FlightType.RoundTrip)
+                //     flightOfferArguments.returnDate = this.state.returnFlightDate;
                 const flightOffers = await (0, flightOffers_1.getFlightOffersWithFilters)(flightOfferArguments);
                 console.log(flightOffers);
                 // So that we can handle it in catch and function can treat 
@@ -417,11 +623,40 @@ class HomePage extends React.Component {
             const isFlightSelected = !!this.state.selectedFlightOffer;
             let classes = isFlightSelected ? 'nontoggle' : 'disabledButton';
             if (isOnFinalPage) {
-                return React.createElement("button", { className: classes, id: "submitButton", onClick: this.submitReservation, disabled: !isFlightSelected }, "Submit");
+                if (this.props.id_Token == null) {
+                    return React.createElement("button", { id: 'submitButton', disabled: !isFlightSelected, onClick: this.displayLoginSubmissionError }, "Submit");
+                }
+                else {
+                    return React.createElement(react_router_dom_1.Link, { to: "/checkout", onClick: this.onSubmitClicked },
+                        React.createElement("button", { className: classes, id: "submitButton", disabled: !isFlightSelected }, "Submit"));
+                }
             }
             else {
                 return React.createElement("button", { className: classes, id: "nextFlightButton", onClick: this.onNextFlightClicked, disabled: !isFlightSelected }, "Next Flight");
             }
+        };
+        this.displayLoginSubmissionError = () => {
+            this.displayError('Cannot submit until you have logged in.');
+        };
+        this.onSubmitClicked = () => {
+            if (this.props.id_Token == null) {
+                this.displayError('Cannot submit due to not being logged in.');
+                return;
+            }
+            // Update status of search progress and add final flight to flight selections
+            if (this.state.selectedFlightOffer == null) {
+                return;
+            }
+            const finalizedFlightSelections = this.state.finalizedFlightSelections;
+            finalizedFlightSelections.push(this.state.selectedFlightOffer);
+            const currentSearchProgress = this.state.searchProgress;
+            currentSearchProgress.searchStatus = SearchStatus.Finished;
+            // Update PageRouter parent component with our final flight offer data
+            this.props.onReservedFlightsFinalized(finalizedFlightSelections, this.state.numAdultTravelers, this.state.numChildTravelers, this.state.flightClass, this.state.flightType);
+            this.setState({
+                finalizedFlightSelections,
+                searchProgress: currentSearchProgress
+            });
         };
         this.onNextFlightClicked = () => {
             this.setCurrentFlightSelected();
@@ -465,34 +700,6 @@ class HomePage extends React.Component {
             this.setState({
                 flightType: FlightType_1.FlightType.MultiCity
             });
-        };
-        this.submitReservation = async () => {
-            // Reject submission and warn user if submitting without a flight selection.
-            if (this.state.selectedFlightOffer == null) {
-                this.displayError(`A flight to book must be selected before submission.`);
-                return;
-            }
-            const reservation = {
-                user_id: 1,
-                trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
-                outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                outgoing_flight_id: parseInt(this.state.selectedFlightOffer.id),
-                returning_flight_type: undefined,
-                returning_flight_id: undefined,
-                price: parseFloat(this.state.selectedFlightOffer.price.grandTotal)
-            };
-            const response = await (0, reservations_1.registerReservation)(reservation);
-            if (response instanceof Error) {
-                this.displayError('Failed to send reservation submission to Dino Travel.');
-                return;
-            }
-            if (response.status !== 200) {
-                this.displayError('Failed to register reservation.');
-                console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
-            }
-            else {
-                this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
-            }
         };
         this.selectedFlightOfferUpdated = (flightOfferSelection) => {
             this.setState({
@@ -697,14 +904,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PageRouting = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const AboutPage_1 = __webpack_require__(/*! ./AboutPage */ "./src/AboutPage.tsx");
+const CheckoutPage_1 = __webpack_require__(/*! ./CheckoutPage */ "./src/CheckoutPage.tsx");
 const HomePage_1 = __webpack_require__(/*! ./HomePage */ "./src/HomePage.tsx");
 const LoginPage_1 = __webpack_require__(/*! ./LoginPage */ "./src/LoginPage.tsx");
 const SupportPage_1 = __webpack_require__(/*! ./SupportPage */ "./src/SupportPage.tsx");
+const SuccessPage_1 = __importDefault(__webpack_require__(/*! ./components/CheckoutPage/SuccessPage */ "./src/components/CheckoutPage/SuccessPage.tsx"));
+const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enums/FlightClass.ts");
+const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
+// const test: IFlightOfferData[] = [{"type":"flight-offer","id":"1","source":"GDS","instantTicketingRequired":false,"nonHomogeneous":false,"oneWay":false,"lastTicketingDate":"2022-02-18","numberOfBookableSeats":9,"itineraries":[{"duration":"PT4H30M","segments":[{"departure":{"iataCode":"ORD","terminal":"1","at":"2022-02-21T15:40:00"},"arrival":{"iataCode":"LAX","terminal":"7","at":"2022-02-21T18:10:00"},"carrierCode":"UA","number":"2375","aircraft":{"code":"753"},"duration":"PT4H30M","id":"120","numberOfStops":0,"blacklistedInEU":false}]}],"price":{"currency":"USD","total":"138.65","base":"115.35","fees":[{"amount":0.0,"type":"SUPPLIER"},{"amount":0.0,"type":"TICKETING"}],"grandTotal":"138.65"},"pricingOptions":{"includedCheckedBagsOnly":false,"fareType":["PUBLISHED"],"refundableFare":false,"noRestrictionFare":false,"noPenaltyFare":false},"validatingAirlineCodes":["UA"],"travelerPricings":[{"travelerId":"1","fareOption":"STANDARD","travelerType":"ADULT","price":{"currency":"USD","total":"138.65","base":"115.35"},"fareDetailsBySegment":[{"segmentId":"120","cabin":"ECONOMY","fareBasis":"LAA3AWEN","class":"L","includedCheckedBags":{"weight":0}}]}]},
+// {"type":"flight-offer","id":"1","source":"GDS","instantTicketingRequired":false,"nonHomogeneous":false,"oneWay":false,"lastTicketingDate":"2022-02-18","numberOfBookableSeats":9,"itineraries":[{"duration":"PT4H30M","segments":[{"departure":{"iataCode":"ORD","terminal":"1","at":"2022-02-21T15:40:00"},"arrival":{"iataCode":"LAX","terminal":"7","at":"2022-02-21T18:10:00"},"carrierCode":"UA","number":"2375","aircraft":{"code":"753"},"duration":"PT4H30M","id":"120","numberOfStops":0,"blacklistedInEU":false}]}],"price":{"currency":"USD","total":"138.65","base":"115.35","fees":[{"amount":0.0,"type":"SUPPLIER"},{"amount":0.0,"type":"TICKETING"}],"grandTotal":"138.65"},"pricingOptions":{"includedCheckedBagsOnly":false,"fareType":["PUBLISHED"],"refundableFare":false,"noRestrictionFare":false,"noPenaltyFare":false},"validatingAirlineCodes":["UA"],"travelerPricings":[{"travelerId":"1","fareOption":"STANDARD","travelerType":"ADULT","price":{"currency":"USD","total":"138.65","base":"115.35"},"fareDetailsBySegment":[{"segmentId":"120","cabin":"ECONOMY","fareBasis":"LAA3AWEN","class":"L","includedCheckedBags":{"weight":0}}]}]}];
 class PageRouting extends React.Component {
     constructor(props) {
         super(props);
@@ -716,13 +932,22 @@ class PageRouting extends React.Component {
             console.log("updated to: " + newID);
             this.render();
         };
-        this.state = { IDToken: null, isLoggedIn: false };
+        this.updateReservedFlights = (reservedFlights, reservedAdultSeats, reservedChildSeats, flightClass, flightType) => {
+            this.setState({
+                reservedFlights,
+                reservedAdultSeats,
+                reservedChildSeats,
+                flightClass,
+                flightType
+            });
+        };
+        this.state = { IDToken: null, isLoggedIn: false, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0, flightClass: FlightClass_1.FlightClass.BusinessClass, flightType: FlightType_1.FlightType.MultiCity };
         let TokenJson = JSON.parse(localStorage.getItem('Token'));
         console.log(TokenJson);
         if (TokenJson != null) {
             let TimeExpired = TokenJson.expires_at;
             if (Date.now() >= TimeExpired) {
-                this.state = { IDToken: null, isLoggedIn: false };
+                this.state = { IDToken: null, isLoggedIn: false, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0, flightClass: FlightClass_1.FlightClass.BusinessClass, flightType: FlightType_1.FlightType.MultiCity };
                 localStorage.setItem('LoggedIn', 'false');
                 localStorage.setItem('LoginAttempted', 'false');
                 localStorage.removeItem('Profile');
@@ -730,7 +955,7 @@ class PageRouting extends React.Component {
                 console.log('Token has expired');
             }
             else {
-                this.state = { IDToken: TokenJson.id_token, isLoggedIn: true };
+                this.state = { IDToken: TokenJson.id_token, isLoggedIn: true, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0, flightClass: FlightClass_1.FlightClass.BusinessClass, flightType: FlightType_1.FlightType.MultiCity };
             }
         }
     }
@@ -739,7 +964,9 @@ class PageRouting extends React.Component {
             React.createElement(react_router_dom_1.Routes, null,
                 React.createElement(react_router_dom_1.Route, { path: "/support", element: React.createElement(SupportPage_1.SupportPage, null) }),
                 React.createElement(react_router_dom_1.Route, { path: "/about", element: React.createElement(AboutPage_1.AboutPage, null) }),
-                React.createElement(react_router_dom_1.Route, { path: "/", element: React.createElement(HomePage_1.HomePage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn }) }),
+                React.createElement(react_router_dom_1.Route, { path: "/checkout", element: React.createElement(CheckoutPage_1.CheckoutPage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn, reservedFlightOffers: this.state.reservedFlights, numAdultTravelers: this.state.reservedAdultSeats, numChildTravelers: this.state.reservedChildSeats, flightClass: this.state.flightClass, flightType: this.state.flightType }) }),
+                React.createElement(react_router_dom_1.Route, { path: "/success", element: React.createElement(SuccessPage_1.default, null) }),
+                React.createElement(react_router_dom_1.Route, { path: "/", element: React.createElement(HomePage_1.HomePage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn, onReservedFlightsFinalized: this.updateReservedFlights }) }),
                 React.createElement(react_router_dom_1.Route, { path: "/login", element: React.createElement(LoginPage_1.LoginPage, { updateIDToken: this.updateIdToken, isLoggedIn: this.state.isLoggedIn }) }))));
     }
 }
@@ -856,7 +1083,7 @@ exports.SupportPage = SupportPage;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInitialAirlineFromItinerary = exports.parseFlightTimeFormat = exports.getFlightStopsFromItinerary = exports.getTotalFlightTimeFromItinerary = exports.buildFlightAPIUrlFromArguments = exports.getFlightOffersWithFilters = exports.FlightOfferSearchProperties = void 0;
+exports.formatTime = exports.formatFlightDuration = exports.formatFlightLengthTime = exports.parseDateFormat = exports.getFinalLandingTimeFromFlightOffer = exports.getInitialAirlineFromItinerary = exports.parseFlightTimeFormat = exports.getFlightStopsFromItinerary = exports.getTotalFlightTimeFromItinerary = exports.buildFlightAPIUrlFromArguments = exports.getFlightOffersWithFilters = exports.FlightOfferSearchProperties = void 0;
 const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 const AirlineMapping_1 = __webpack_require__(/*! ../lib/AirlineMapping */ "./src/lib/AirlineMapping.ts");
 const baseURL = 'purpledinoapi.link';
@@ -1022,6 +1249,42 @@ const getInitialAirlineFromItinerary = (itinerary) => {
     return (0, AirlineMapping_1.getAirlineNameFromIataCode)(airlineIataCode);
 };
 exports.getInitialAirlineFromItinerary = getInitialAirlineFromItinerary;
+const getFinalLandingTimeFromFlightOffer = (flightOffer) => {
+    const finalItinerary = flightOffer.itineraries[flightOffer.itineraries.length - 1];
+    const finalSegment = finalItinerary.segments[finalItinerary.segments.length - 1];
+    return finalSegment.arrival.at;
+};
+exports.getFinalLandingTimeFromFlightOffer = getFinalLandingTimeFromFlightOffer;
+const parseDateFormat = (date) => {
+    return moment(date, 'YYYY-MM-DD HH-mm-ss');
+};
+exports.parseDateFormat = parseDateFormat;
+// Good candidate for a unit test
+const formatFlightLengthTime = (departure_time, arrival_time) => {
+    const departureMoment = (0, exports.parseDateFormat)(departure_time);
+    const arrivalMoment = (0, exports.parseDateFormat)(arrival_time);
+    const timeDifferenceInMinutes = Math.abs(departureMoment.diff(arrivalMoment, 'minutes'));
+    const hourDifference = Math.floor(timeDifferenceInMinutes / 60);
+    const minuteDifference = timeDifferenceInMinutes % 60;
+    return `${hourDifference} hrs ${minuteDifference} min`;
+};
+exports.formatFlightLengthTime = formatFlightLengthTime;
+const formatFlightDuration = (flightDuration) => {
+    return `${flightDuration.totalHours} hrs ${flightDuration.totalMinutes} min`;
+};
+exports.formatFlightDuration = formatFlightDuration;
+const formatTime = (date) => {
+    let hour = date.getHours() + 1; // +1 since 1AM would appear as 0AM otherwise
+    let min = date.getMinutes().toString();
+    if (hour > 12)
+        hour -= 12; // Format to 12/12 AM/PM structure
+    // Pad minutes to 2 digits
+    if (min.length < 2)
+        min += '0';
+    const amPMLabel = (hour < 12) || (hour == 24) ? 'AM' : 'PM';
+    return `${hour}:${min} ${amPMLabel}`;
+};
+exports.formatTime = formatTime;
 
 
 /***/ }),
@@ -1102,11 +1365,19 @@ exports.getLocationsForQuery = getLocationsForQuery;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.registerReservation = exports.getAllReservations = void 0;
+exports.registerReservations = exports.registerReservation = exports.getAllReservations = exports.TravelerType = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const reservationsAPI = '/api/reservations';
 const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
+var TravelerType;
+(function (TravelerType) {
+    TravelerType["Adult"] = "ADULT";
+    TravelerType["Child"] = "CHILD";
+})(TravelerType = exports.TravelerType || (exports.TravelerType = {}));
+;
+;
+;
 const getAllReservations = async () => {
     console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
     const options = {
@@ -1126,16 +1397,17 @@ const getAllReservations = async () => {
     }
 };
 exports.getAllReservations = getAllReservations;
-const registerReservation = async (reservation) => {
+const registerReservation = async (reservation, userID) => {
     console.log(reservation);
     console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
     const options = {
         'method': 'POST',
         headers: {
             'Accept': 'application/json',
+            'Authorization': userID,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(reservation)
+        body: `[${JSON.stringify(reservation)}]`
     };
     try {
         const responseData = await fetch(reservationsEndpointURL, options);
@@ -1149,6 +1421,73 @@ const registerReservation = async (reservation) => {
     }
 };
 exports.registerReservation = registerReservation;
+const registerReservations = async (reservations, userID) => {
+    console.log(reservations);
+    console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
+    const options = {
+        'method': 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': userID,
+            'Content-Type': 'application/json'
+        },
+        body: `${JSON.stringify(reservations)}`
+    };
+    try {
+        const responseData = await fetch(reservationsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.registerReservations = registerReservations;
+
+
+/***/ }),
+
+/***/ "./src/api/users.ts":
+/*!**************************!*\
+  !*** ./src/api/users.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.updateUser = void 0;
+const baseURL = 'purpledinoapi.link';
+const port = '8080';
+const usersAPI = '/api/users';
+const usersEndpointURL = `https://www.${baseURL}:${port}${usersAPI}`;
+const updateUser = async (newFirstName, newLastName, newEmail, newBirthday, subjectId) => {
+    const options = {
+        'method': 'PUT',
+        'headers': {
+            'Authorization': subjectId,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "first_name": newFirstName,
+            "last_name": newLastName,
+            "email": newEmail,
+            "dob": newBirthday
+        })
+    };
+    try {
+        const responseData = await fetch(usersEndpointURL, options);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to update user data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.updateUser = updateUser;
 
 
 /***/ }),
@@ -1435,6 +1774,270 @@ class AuthenticationButton extends React.Component {
     }
 }
 exports.AuthenticationButton = AuthenticationButton;
+
+
+/***/ }),
+
+/***/ "./src/components/CheckoutPage/CheckoutForm.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/CheckoutPage/CheckoutForm.tsx ***!
+  \******************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+function CheckoutForm({ updateFirstName, updateLastName, updateBirthday, updateEmail }) {
+    // Gender, Country, and Phone no. don't need to be added to the users DB
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { id: "checkoutForm" },
+            react_1.default.createElement("div", { id: "checkoutHeader" },
+                react_1.default.createElement("h1", null, "Secure Booking - only takes a few minutes!"),
+                react_1.default.createElement("h2", null, "Traveler Info"),
+                react_1.default.createElement("p", null,
+                    "Traveler names must match government-issued photo ID exactly.",
+                    react_1.default.createElement("br", null),
+                    "All fields must be filled out.")),
+            react_1.default.createElement("div", { id: "userInfoCheckout" },
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", { htmlFor: "txtFirstName" }, "First Name*"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateFirstName(event.target.value) })),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", { htmlFor: "txtLastName" }, "Last Name*"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateLastName(event.target.value) })),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", { htmlFor: "txtCountry" }, "Country*"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { type: "text" })),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", { htmlFor: "txtPhoneNo" }, "Phone Number*"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { type: "text" })),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", null, "Gender*"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { type: "radio", name: "radGender", id: "male", value: "male" }),
+                    react_1.default.createElement("label", { htmlFor: "male" }, "Male"),
+                    react_1.default.createElement("input", { type: "radio", name: "radGender", id: "female", value: "female" }),
+                    react_1.default.createElement("label", { htmlFor: "female" }, "Female")),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", { htmlFor: "txtBirthDate" }, "Date of birth*"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { className: "datePicker", type: "date", placeholder: "yyyy-mm-dd", onChange: (event) => updateBirthday(moment(event.currentTarget.value, "YYYY-MM-DD")) }))),
+            react_1.default.createElement("hr", null),
+            react_1.default.createElement("div", { id: "manageCheckout" },
+                react_1.default.createElement("div", { id: "manageCheckoutHeader" },
+                    react_1.default.createElement("h2", null, "Manage your booking"),
+                    react_1.default.createElement("span", { style: { "fontWeight": "bold" } }, "Confirmation email"),
+                    react_1.default.createElement("p", null, "Please enter the email address where you would like to receive your confirmation.")),
+                react_1.default.createElement("div", { id: "inputEmail" },
+                    react_1.default.createElement("p", null,
+                        react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email address*"),
+                        react_1.default.createElement("br", null),
+                        react_1.default.createElement("input", { type: "txtEmail", onChange: (event) => updateEmail(event.target.value) })))),
+            react_1.default.createElement("hr", null),
+            react_1.default.createElement("div", { id: "reviewCheckout" },
+                react_1.default.createElement("h2", null, "Review and book your trip"),
+                react_1.default.createElement("p", null, "Review your trip details to make sure the dates and times are correct"),
+                react_1.default.createElement("p", null, "Check your spelling. Flight passenger names must match government-issued photo ID exactly."),
+                react_1.default.createElement("p", null, "Review the terms of your booking on the flight website."),
+                react_1.default.createElement("p", null, "By clicking the complete booking button, I acknowledge that I have reviewed the Privacy Statement and Government Travel Adice and have reviewed and accept the above Rules & Restrictions and Terms of Use.")))));
+}
+exports["default"] = CheckoutForm;
+
+
+/***/ }),
+
+/***/ "./src/components/CheckoutPage/CheckoutReceipt.tsx":
+/*!*********************************************************!*\
+  !*** ./src/components/CheckoutPage/CheckoutReceipt.tsx ***!
+  \*********************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const flightOffers_1 = __webpack_require__(/*! ../../api/flightOffers */ "./src/api/flightOffers.ts");
+const users_1 = __webpack_require__(/*! ../../api/users */ "./src/api/users.ts");
+__webpack_require__(/*! ../../styles/CheckoutPage.css */ "./src/styles/CheckoutPage.css");
+function CheckoutReceipt({ firstName, lastName, email, dob, idToken, flightOffers, onBookingComplete }) {
+    const [total, setTotal] = (0, react_1.useState)(0);
+    const completeBooking = () => {
+        console.log("booking");
+        if (idToken !== null) {
+            (0, users_1.updateUser)(firstName, lastName, email, dob, idToken);
+        }
+        onBookingComplete();
+    };
+    const getTotal = (offers) => {
+        var sm = 0;
+        offers.forEach((offer) => {
+            if (offer.price.grandTotal) {
+                const gt = parseFloat(offer.price.grandTotal);
+                sm = sm + gt;
+            }
+        });
+        setTotal(sm);
+        return sm;
+    };
+    (0, react_1.useEffect)(() => {
+        getTotal(flightOffers);
+    }, flightOffers);
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { id: "bookingReceipt" },
+            react_1.default.createElement("div", { id: "receiptTitle" },
+                react_1.default.createElement("h2", null, "Booking Information"),
+                react_1.default.createElement("h3", null,
+                    flightOffers.length,
+                    " Reservations")),
+            react_1.default.createElement("div", { id: "receiptFlights" }, flightOffers.map((offer) => {
+                return offer.itineraries.map((itenary) => {
+                    return itenary.segments.map((segment) => {
+                        return (react_1.default.createElement(react_1.default.Fragment, null,
+                            react_1.default.createElement("p", null,
+                                "(",
+                                segment.departure.iataCode,
+                                ") to (",
+                                segment.arrival.iataCode,
+                                ")"),
+                            react_1.default.createElement("p", null,
+                                (segment.departure.at).substring(11),
+                                " - ",
+                                (segment.arrival.at).substring(11),
+                                "(",
+                                (0, flightOffers_1.getTotalFlightTimeFromItinerary)(itenary).totalHours,
+                                "h ",
+                                (0, flightOffers_1.getTotalFlightTimeFromItinerary)(itenary).totalMinutes,
+                                "m)"),
+                            react_1.default.createElement("p", null, segment.carrierCode),
+                            react_1.default.createElement("p", null,
+                                "$",
+                                offer.price.grandTotal && offer.price.grandTotal),
+                            react_1.default.createElement("br", null)));
+                    });
+                });
+            })),
+            react_1.default.createElement("div", { id: "receiptTotal" },
+                react_1.default.createElement("h3", null, "Your estimated total:"),
+                react_1.default.createElement("p", null,
+                    "$",
+                    total)),
+            react_1.default.createElement("p", null,
+                react_1.default.createElement("button", { id: "btnCompleteBooking", onClick: () => completeBooking() }, "Complete Booking")))));
+}
+exports["default"] = CheckoutReceipt;
+
+
+/***/ }),
+
+/***/ "./src/components/CheckoutPage/SuccessPage.tsx":
+/*!*****************************************************!*\
+  !*** ./src/components/CheckoutPage/SuccessPage.tsx ***!
+  \*****************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const Checkmark_green_png_1 = __importDefault(__webpack_require__(/*! ../../assets/Checkmark_green.png */ "./src/assets/Checkmark_green.png"));
+__webpack_require__(/*! ../../styles/Success.css */ "./src/styles/Success.css");
+const bannerImage1 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
+const bannerImage2 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
+const bannerImage3 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
+const bannerImage4 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
+const bannerImage5 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
+const bannerImage6 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
+const bannerImage7 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
+const bannerImage8 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
+const ImageCarousel_1 = __webpack_require__(/*! ../ImageCarousel */ "./src/components/ImageCarousel.tsx");
+const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+function SuccessPage() {
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", null,
+            react_1.default.createElement("header", null,
+                react_1.default.createElement("div", { id: "headerContent" },
+                    react_1.default.createElement("div", { className: "banner" },
+                        react_1.default.createElement(react_router_dom_1.Link, { to: '/' },
+                            react_1.default.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                        react_1.default.createElement("div", { className: "slogan" },
+                            react_1.default.createElement("h3", null, "Travel More"))),
+                    react_1.default.createElement("nav", null,
+                        react_1.default.createElement(react_router_dom_1.Link, { to: '/support' },
+                            react_1.default.createElement("button", { className: "nontoggle" }, "support")),
+                        react_1.default.createElement(react_router_dom_1.Link, { to: '/about' },
+                            react_1.default.createElement("button", { className: "nontoggle" }, "about us")),
+                        react_1.default.createElement("button", { className: "nontoggle" }, "trips"),
+                        react_1.default.createElement(react_router_dom_1.Link, { to: '/login' },
+                            react_1.default.createElement("button", { className: "nontoggle" }, "login"))))),
+            react_1.default.createElement("div", { id: "successContent" },
+                react_1.default.createElement("div", { id: "successHeader" },
+                    react_1.default.createElement("h1", null, "Success!"),
+                    react_1.default.createElement("h2", null, "Your flight has been booked."),
+                    react_1.default.createElement("img", { src: Checkmark_green_png_1.default })),
+                react_1.default.createElement("div", { id: "successRedirects" },
+                    react_1.default.createElement(react_router_dom_1.Link, { to: "/trip" },
+                        react_1.default.createElement("button", { className: "nontoggle" }, "Update your trip")),
+                    react_1.default.createElement(react_router_dom_1.Link, { to: "/" },
+                        react_1.default.createElement("button", { className: "nontoggle" }, "Book another flight?")),
+                    react_1.default.createElement("p", null,
+                        react_1.default.createElement(react_router_dom_1.Link, { to: "/support" },
+                            react_1.default.createElement("a", { href: 'javascript: void(0)' }, "Leave some feedback!"))))),
+            react_1.default.createElement("div", { id: 'bannerContainer' },
+                react_1.default.createElement("div", { id: 'bannerCarousel' },
+                    react_1.default.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: bannerImages }))))));
+}
+exports["default"] = SuccessPage;
 
 
 /***/ }),
@@ -2241,9 +2844,9 @@ var FlightType;
 })(FlightType = exports.FlightType || (exports.FlightType = {}));
 var FlightTypeJsonLabel;
 (function (FlightTypeJsonLabel) {
-    FlightTypeJsonLabel["One Way"] = "ONE_WAY";
-    FlightTypeJsonLabel["Multi-City"] = "ONE_WAY";
-    FlightTypeJsonLabel["Round Trip"] = "ROUND_TRIP";
+    FlightTypeJsonLabel["One Way"] = "ONEWAY";
+    FlightTypeJsonLabel["Multi-City"] = "ONEWAY";
+    FlightTypeJsonLabel["Round Trip"] = "ROUNDTRIP";
 })(FlightTypeJsonLabel = exports.FlightTypeJsonLabel || (exports.FlightTypeJsonLabel = {}));
 const flightTypeAsJsonLabel = (flightTypeValue) => {
     return FlightTypeJsonLabel[flightTypeValue];
@@ -2577,6 +3180,33 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".airportSelector input, .airportSelect
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/CheckoutPage.css":
+/*!***************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/CheckoutPage.css ***!
+  \***************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#checkoutForm {\r\n    width: 700px;\r\n    padding: 10px;\r\n}\r\n#checkoutComponents {\r\n    width: 1100px;\r\n    margin: auto;\r\n}\r\n\r\n#bookingReceipt {\r\n    width: 310px;\r\n}\r\n\r\n#btnCompleteBooking {\r\n    width: 310px;\r\n}\r\n\r\n#checkoutFormContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutReceiptContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/CheckoutPage.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,aAAa;AACjB;AACA;IACI,aAAa;IACb,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,oBAAoB;IACpB,WAAW;AACf;;AAEA;IACI,oBAAoB;IACpB,WAAW;AACf","sourcesContent":["#checkoutForm {\r\n    width: 700px;\r\n    padding: 10px;\r\n}\r\n#checkoutComponents {\r\n    width: 1100px;\r\n    margin: auto;\r\n}\r\n\r\n#bookingReceipt {\r\n    width: 310px;\r\n}\r\n\r\n#btnCompleteBooking {\r\n    width: 310px;\r\n}\r\n\r\n#checkoutFormContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutReceiptContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/ComplaintForm.css":
 /*!****************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/ComplaintForm.css ***!
@@ -2802,6 +3432,33 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ReviewForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,kBAAkB;IAClB,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/Success.css":
+/*!**********************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/Success.css ***!
+  \**********************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#successContent {\r\n    text-align: center;\r\n}\r\n\r\n#successRedirects button {\r\n    width: 200px;\r\n    margin: 5px;\r\n}\r\n\r\n#successRedirects a {\r\n    text-decoration: none;\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Success.css"],"names":[],"mappings":"AAAA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,WAAW;AACf;;AAEA;IACI,qBAAqB;IACrB,uBAAuB;AAC3B","sourcesContent":["#successContent {\r\n    text-align: center;\r\n}\r\n\r\n#successRedirects button {\r\n    width: 200px;\r\n    margin: 5px;\r\n}\r\n\r\n#successRedirects a {\r\n    text-decoration: none;\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -27549,6 +28206,61 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./src/styles/CheckoutPage.css":
+/*!*************************************!*\
+  !*** ./src/styles/CheckoutPage.css ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_CheckoutPage_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./CheckoutPage.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/CheckoutPage.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_CheckoutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_CheckoutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_CheckoutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_CheckoutPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/styles/ComplaintForm.css":
 /*!**************************************!*\
   !*** ./src/styles/ComplaintForm.css ***!
@@ -27989,6 +28701,61 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./src/styles/Success.css":
+/*!********************************!*\
+  !*** ./src/styles/Success.css ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_Success_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./Success.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/Success.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_Success_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_Success_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_Success_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_Success_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/styles/SupportPage.css":
 /*!************************************!*\
   !*** ./src/styles/SupportPage.css ***!
@@ -28261,6 +29028,17 @@ module.exports = __webpack_require__.p + "8a0ddbc6d5eb51f3f0c0.png";
 
 "use strict";
 module.exports = __webpack_require__.p + "a620c3a27f39ca361323.gif";
+
+/***/ }),
+
+/***/ "./src/assets/Checkmark_green.png":
+/*!****************************************!*\
+  !*** ./src/assets/Checkmark_green.png ***!
+  \****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "e7f6c7ab90fac3e80174.png";
 
 /***/ }),
 
