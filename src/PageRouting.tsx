@@ -7,6 +7,7 @@ import { HomePage } from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import { SupportPage } from "./SupportPage";
 import { IFlightOfferData } from "./api/flightOffers";
+import SuccessPage from "./components/CheckoutPage/SuccessPage";
 
 interface IPageRoutingProps {
 
@@ -63,6 +64,7 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
                     <Route path="/support" element={<SupportPage/>} />
                     <Route path="/about" element={<AboutPage />} />
                     <Route path="/checkout" element={<CheckoutPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} reservedFlightOffers={test} />} />
+                    <Route path="/success" element={<SuccessPage />} />
                     <Route path="/" element={<HomePage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} onReservedFlightsFinalized={this.updateReservedFlights} />} />
                     <Route path="/login" element={<LoginPage updateIDToken={this.updateIdToken} isLoggedIn={this.state.isLoggedIn}/>} />
                 </Routes>
