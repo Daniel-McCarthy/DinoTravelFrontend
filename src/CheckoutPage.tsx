@@ -5,6 +5,7 @@ import CheckoutReceipt from "./components/CheckoutPage/CheckoutReceipt";
 import {ImageCarousel} from "./components/ImageCarousel";
 import './styles/CheckoutPage.css';
 import moment = require("moment");
+import { IFlightOfferData } from "./api/flightOffers";
 
 interface ICheckoutPageState {
     bannerImages: string[];
@@ -17,6 +18,7 @@ interface ICheckoutPageState {
 interface ICheckoutPageProps{
     id_Token: string | null
     isLoggedIn: boolean
+    reservedFlightOffers: IFlightOfferData[]
 }
 
 export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutPageState> {
