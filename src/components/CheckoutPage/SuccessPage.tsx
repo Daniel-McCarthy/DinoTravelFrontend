@@ -60,7 +60,9 @@ export default function SuccessPage() {
                             <button className="nontoggle">Book another flight?</button>
                         </Link>
                         <p>
-                            <a href='/#/'>Leave some feedback!</a>
+                            <Link to="/support">
+                                <a href='javascript: void(0)'>Leave some feedback!</a>
+                            </Link>
                         </p>
                     </div>
 
