@@ -164,7 +164,9 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                                 <Link to='/support' >
                                     <button className="nontoggle">support</button>
                                 </Link>
-                                <button className="nontoggle">about us</button>
+                                <Link to='/about'>
+                                    <button className="nontoggle">about us</button>
+                                </Link>
                                 <Link to='/trips' >
                                     <button className="nontoggle">trips</button>    
                                 </Link>
