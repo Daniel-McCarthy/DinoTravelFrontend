@@ -60,7 +60,7 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
                 <Routes>
                     <Route path="/support" element={<SupportPage/>} />
                     <Route path="/about" element={<AboutPage />} />
-                    <Route path="/checkout" element={<CheckoutPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} />} />
+                    <Route path="/checkout" element={<CheckoutPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} reservedFlightOffers={this.state.reservedFlights} />} />
                     <Route path="/" element={<HomePage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} onReservedFlightsFinalized={this.updateReservedFlights} />} />
                     <Route path="/login" element={<LoginPage updateIDToken={this.updateIdToken} isLoggedIn={this.state.isLoggedIn}/>} />
                 </Routes>
