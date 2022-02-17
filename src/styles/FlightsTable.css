@@ -1,0 +1,30 @@
+#flightsTable {
+    padding-bottom: 20px;
+}
+
+#flightsTable th {
+    display: flexbox;
+    padding-right: 70px;
+}
+
+#flightsTable td {
+    display: flexbox;
+    padding-top: 15px;
+}
+
+#noFlights {
+    padding-bottom: 200px;
+}
+
+#txtNameChange {
+    width: 110px;
+    height: 20px;
+    justify-content: center;
+    margin: 0%;
+}
+
+#flightsTable a {
+    text-decoration: none;
+    height: 5px;
+    width: 5px;
+}
