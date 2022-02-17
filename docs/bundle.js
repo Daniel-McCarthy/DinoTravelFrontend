@@ -64,7 +64,8 @@ class AboutPage extends React.Component {
                             React.createElement("button", { className: "nontoggle" }, "support")),
                         React.createElement(react_router_dom_1.Link, { to: '/about' },
                             React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
+                            React.createElement("button", { className: "nontoggle" }, "trips")),
                         React.createElement(react_router_dom_1.Link, { to: '/login' },
                             React.createElement("button", { className: "nontoggle" }, "login"))))),
             React.createElement("main", null,
@@ -153,6 +154,7 @@ const MultiCityFlightSelection_1 = __webpack_require__(/*! ./components/MultiCit
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const AirportSelector_1 = __webpack_require__(/*! ./components/AirportSelector */ "./src/components/AirportSelector.tsx");
 const flightOffers_1 = __webpack_require__(/*! ./api/flightOffers */ "./src/api/flightOffers.ts");
+const AirlineMapping_1 = __webpack_require__(/*! ./lib/AirlineMapping */ "./src/lib/AirlineMapping.ts");
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 var SearchStatus;
 (function (SearchStatus) {
@@ -335,8 +337,8 @@ class HomePage extends React.Component {
                     numberOfAdults: this.state.numAdultTravelers,
                     numberOfChildren: this.state.numChildTravelers,
                 };
-                if (this.state.flightType === FlightType_1.FlightType.RoundTrip)
-                    flightOfferArguments.returnDate = this.state.returnFlightDate;
+                // if (this.state.flightType === FlightType.RoundTrip)
+                //     flightOfferArguments.returnDate = this.state.returnFlightDate;
                 const flightOffers = await (0, flightOffers_1.getFlightOffersWithFilters)(flightOfferArguments);
                 console.log(flightOffers);
                 // So that we can handle it in catch and function can treat 
@@ -417,11 +419,28 @@ class HomePage extends React.Component {
             const isFlightSelected = !!this.state.selectedFlightOffer;
             let classes = isFlightSelected ? 'nontoggle' : 'disabledButton';
             if (isOnFinalPage) {
-                return React.createElement("button", { className: classes, id: "submitButton", onClick: this.submitReservation, disabled: !isFlightSelected }, "Submit");
+                return React.createElement("button", { className: classes, id: "submitButton", onClick: this.onSubmitClicked, disabled: !isFlightSelected }, "Submit");
             }
             else {
                 return React.createElement("button", { className: classes, id: "nextFlightButton", onClick: this.onNextFlightClicked, disabled: !isFlightSelected }, "Next Flight");
             }
+        };
+        this.onSubmitClicked = () => {
+            // Update status of search progress and add final flight to flight selections
+            if (this.state.selectedFlightOffer == null) {
+                return;
+            }
+            const finalizedFlightSelections = this.state.finalizedFlightSelections;
+            finalizedFlightSelections.push(this.state.selectedFlightOffer);
+            const currentSearchProgress = this.state.searchProgress;
+            currentSearchProgress.searchStatus = SearchStatus.Finished;
+            this.setState({
+                finalizedFlightSelections,
+                searchProgress: currentSearchProgress
+            }, () => {
+                // Submit reservations once finalized selections are set
+                this.submitReservations();
+            });
         };
         this.onNextFlightClicked = () => {
             this.setCurrentFlightSelected();
@@ -466,22 +485,60 @@ class HomePage extends React.Component {
                 flightType: FlightType_1.FlightType.MultiCity
             });
         };
-        this.submitReservation = async () => {
+        this.submitReservations = async () => {
+            const userId = this.props.id_Token;
+            if (userId == null) {
+                this.displayError('Failed to reserve flights due to not being logged in.');
+                return;
+            }
             // Reject submission and warn user if submitting without a flight selection.
             if (this.state.selectedFlightOffer == null) {
                 this.displayError(`A flight to book must be selected before submission.`);
                 return;
             }
-            const reservation = {
-                user_id: 1,
-                trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
-                outgoing_flight_type: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                outgoing_flight_id: parseInt(this.state.selectedFlightOffer.id),
-                returning_flight_type: undefined,
-                returning_flight_id: undefined,
-                price: parseFloat(this.state.selectedFlightOffer.price.grandTotal)
-            };
-            const response = await (0, reservations_1.registerReservation)(reservation);
+            // Will need to submit a copy of every flight once for each passenger
+            const numAdults = this.state.numAdultTravelers;
+            const numChildren = this.state.numChildTravelers;
+            const flightsToReserve = this.state.finalizedFlightSelections;
+            const finalReservations = [];
+            flightsToReserve.forEach(async (flight) => {
+                // Submit reservations for each traveler
+                let adultsLeft = numAdults;
+                let childrenLeft = numChildren;
+                while (adultsLeft > 0 || childrenLeft > 0) {
+                    // Figure out what kind of traveler we are reserving for and ensure they are counted as reserved.
+                    const travelerType = adultsLeft > 0 ? reservations_1.TravelerType.Adult : reservations_1.TravelerType.Child;
+                    if (travelerType === reservations_1.TravelerType.Adult) {
+                        adultsLeft -= 1;
+                    }
+                    else {
+                        childrenLeft -= 1;
+                    }
+                    const itinerary = flight.itineraries[0];
+                    const flightRequestInfo = itinerary.segments.map(segment => {
+                        return {
+                            arrival_airport: segment.arrival.iataCode,
+                            departure_airport: segment.departure.iataCode,
+                            departure_time: segment.departure.at,
+                            arrival_time: segment.arrival.at,
+                            flight_provider: (0, AirlineMapping_1.getAirlineNameFromIataCode)(segment.carrierCode),
+                            flight_code: ''
+                        };
+                    });
+                    const reservation = {
+                        price: parseFloat(flight.price.grandTotal),
+                        trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
+                        traveler_type: travelerType,
+                        traveler_name: 'FlightPassenger',
+                        seat_id: '',
+                        seat_class: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
+                        num_checked_bags: 0,
+                        flight_request_info: flightRequestInfo
+                    };
+                    finalReservations.push(reservation);
+                }
+            });
+            const response = await (0, reservations_1.registerReservations)(finalReservations, userId);
             if (response instanceof Error) {
                 this.displayError('Failed to send reservation submission to Dino Travel.');
                 return;
@@ -552,7 +609,8 @@ class HomePage extends React.Component {
                             React.createElement("button", { className: "nontoggle" }, "support")),
                         React.createElement(react_router_dom_1.Link, { to: '/about' },
                             React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
+                            React.createElement("button", { className: "nontoggle" }, "trips")),
                         React.createElement(react_router_dom_1.Link, { to: '/login' },
                             React.createElement("button", { className: "nontoggle" }, "login"))))),
             React.createElement("section", null,
@@ -653,10 +711,12 @@ class LoginPage extends React.Component {
                         React.createElement("div", { className: "slogan" },
                             React.createElement("h3", null, "Travel More"))),
                     React.createElement("nav", null,
-                        React.createElement("button", { className: "nontoggle" }, "support"),
+                        React.createElement(react_router_dom_1.Link, { to: '/support' },
+                            React.createElement("button", { className: "nontoggle" }, "support")),
                         React.createElement(react_router_dom_1.Link, { to: '/about' },
                             React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
+                            React.createElement("button", { className: "nontoggle" }, "trips")),
                         React.createElement(react_router_dom_1.Link, { to: '/login' },
                             React.createElement("button", { className: "nontoggle" }, "login"))))),
             React.createElement("div", { className: "center" },
@@ -704,6 +764,7 @@ const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_m
 const AboutPage_1 = __webpack_require__(/*! ./AboutPage */ "./src/AboutPage.tsx");
 const HomePage_1 = __webpack_require__(/*! ./HomePage */ "./src/HomePage.tsx");
 const LoginPage_1 = __webpack_require__(/*! ./LoginPage */ "./src/LoginPage.tsx");
+const TripsPage_1 = __webpack_require__(/*! ./TripsPage */ "./src/TripsPage.tsx");
 const SupportPage_1 = __webpack_require__(/*! ./SupportPage */ "./src/SupportPage.tsx");
 class PageRouting extends React.Component {
     constructor(props) {
@@ -737,6 +798,7 @@ class PageRouting extends React.Component {
     render() {
         return (React.createElement(react_router_dom_1.HashRouter, null,
             React.createElement(react_router_dom_1.Routes, null,
+                React.createElement(react_router_dom_1.Route, { path: "/trips", element: React.createElement(TripsPage_1.TripsPage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn }) }),
                 React.createElement(react_router_dom_1.Route, { path: "/support", element: React.createElement(SupportPage_1.SupportPage, null) }),
                 React.createElement(react_router_dom_1.Route, { path: "/about", element: React.createElement(AboutPage_1.AboutPage, null) }),
                 React.createElement(react_router_dom_1.Route, { path: "/", element: React.createElement(HomePage_1.HomePage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn }) }),
@@ -823,7 +885,8 @@ class SupportPage extends React.Component {
                             React.createElement("button", { className: "nontoggle" }, "support")),
                         React.createElement(react_router_dom_1.Link, { to: '/about' },
                             React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement("button", { className: "nontoggle" }, "trips"),
+                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
+                            React.createElement("button", { className: "nontoggle" }, "trips")),
                         React.createElement(react_router_dom_1.Link, { to: '/login' },
                             React.createElement("button", { className: "nontoggle" }, "login"))))),
             React.createElement("main", null,
@@ -843,6 +906,172 @@ class SupportPage extends React.Component {
     }
 }
 exports.SupportPage = SupportPage;
+
+
+/***/ }),
+
+/***/ "./src/TripsPage.tsx":
+/*!***************************!*\
+  !*** ./src/TripsPage.tsx ***!
+  \***************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TripsPage = void 0;
+const React = __importStar(__webpack_require__(/*! react */ "react"));
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
+const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
+const flights_1 = __webpack_require__(/*! ./api/flights */ "./src/api/flights.ts");
+const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
+const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
+const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
+const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
+const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
+const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
+const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
+const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
+const FlightsTable_1 = __importDefault(__webpack_require__(/*! ./components/TripsPage/FlightsTable */ "./src/components/TripsPage/FlightsTable.tsx"));
+__webpack_require__(/*! ./styles/TripsPage.css */ "./src/styles/TripsPage.css");
+const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+class TripsPage extends React.Component {
+    constructor(props) {
+        super(props);
+        // Change to use user token.
+        this.getUserReservations = async () => {
+            if (this.props.id_Token !== null) {
+                const response = await (0, reservations_1.getReservationsByUser)(this.props.id_Token);
+                if (response instanceof Error) {
+                    console.error("Error getting reservations");
+                    const emptyTableData = {
+                        reservationList: []
+                    };
+                    return emptyTableData;
+                }
+                else {
+                    console.log(response);
+                    return response;
+                }
+            }
+            else {
+                const emptyTableData = {
+                    reservationList: []
+                };
+                return emptyTableData;
+            }
+        };
+        this.reservations = this.getUserReservations();
+        this.createTableData = async () => {
+            const reservations = (await this.reservations);
+            const tableDataItems = [];
+            if (reservations === undefined) {
+                return;
+            }
+            const values = Object.values(reservations);
+            var index = 0;
+            for (var value of values) {
+                const flightData = await (0, flights_1.getFlightDataById)(value.flight_id);
+                if (flightData instanceof Error) {
+                    return;
+                }
+                // Create a row in the table
+                if (value.reservation_id !== undefined) {
+                    const tableItem = {
+                        index: index,
+                        airline: flightData.flight_provider,
+                        travelerName: value.traveler_name,
+                        departure: flightData.departure_airport,
+                        arrival: flightData.arrival_airport,
+                        departureDate: flightData.arrival_time.substring(0, 10),
+                        class: value.seat_class,
+                        travelerType: value.traveler_type,
+                        numCheckedBags: value.num_checked_bags,
+                        price: value.price,
+                        pnr: value.reservation_id,
+                    };
+                    // Add the finished row to the table
+                    tableDataItems.push(tableItem);
+                    index = index + 1;
+                }
+            }
+            this.setState({
+                data: tableDataItems,
+            });
+            console.log(this.state.data);
+        };
+        this.setTableData = () => {
+            this.createTableData();
+        };
+        this.state = {
+            bannerImages,
+            data: [],
+            cancel: false,
+            update: false,
+        };
+    }
+    componentDidMount() {
+        this.setTableData();
+    }
+    render() {
+        return (React.createElement(React.Fragment, null, !this.props.isLoggedIn ? React.createElement(react_router_dom_1.Navigate, { to: "/login" })
+            : React.createElement(React.Fragment, null,
+                React.createElement("header", null,
+                    React.createElement("div", { id: "headerContent" },
+                        React.createElement("div", { className: "banner" },
+                            React.createElement(react_router_dom_1.Link, { to: '/' },
+                                React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                            React.createElement("div", { className: "slogan" },
+                                React.createElement("h3", null, "Travel More"))),
+                        React.createElement("nav", null,
+                            React.createElement(react_router_dom_1.Link, { to: '/support' },
+                                React.createElement("button", { className: "nontoggle" }, "support")),
+                            React.createElement(react_router_dom_1.Link, { to: '/about' },
+                                React.createElement("button", { className: "nontoggle" }, "about us")),
+                            React.createElement(react_router_dom_1.Link, { to: '/trips' },
+                                React.createElement("button", { className: "nontoggle" }, "trips")),
+                            React.createElement(react_router_dom_1.Link, { to: '/login' },
+                                React.createElement("button", { className: "nontoggle" }, "login"))))),
+                React.createElement("main", null,
+                    React.createElement("div", { id: "tripsContent" },
+                        React.createElement("div", { id: "tripsPageTitle" },
+                            React.createElement("h1", null, "Manage your Trips")),
+                        React.createElement("div", { id: "manageButtons" },
+                            React.createElement("a", { href: "/", id: "addFlightLink" }, "Add flight"),
+                            this.state.cancel ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight")
+                                : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight"),
+                            this.state.update ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")
+                                : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")),
+                        React.createElement("div", { id: "flightsTable" },
+                            React.createElement(FlightsTable_1.default, { tableData: this.state.data, cancel: this.state.cancel, update: this.state.update, idToken: this.props.id_Token }))),
+                    React.createElement("div", { id: 'bannerCarousel' },
+                        React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages }))))));
+    }
+}
+exports.TripsPage = TripsPage;
 
 
 /***/ }),
@@ -1026,6 +1255,70 @@ exports.getInitialAirlineFromItinerary = getInitialAirlineFromItinerary;
 
 /***/ }),
 
+/***/ "./src/api/flights.ts":
+/*!****************************!*\
+  !*** ./src/api/flights.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getFlightData = exports.getFlightDataById = void 0;
+const baseURL = 'purpledinoapi.link';
+const port = '8080';
+const flightsAPI = '/api/flights';
+const flightEndpointURL = `https://www.${baseURL}:${port}${flightsAPI}`;
+const getFlightDataById = async (id) => {
+    const options = {
+        'method': 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    try {
+        const url = flightEndpointURL + "/" + id.toString();
+        const responseData = await fetch(url, options);
+        const json = await responseData.json();
+        console.log(json);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get flight data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.getFlightDataById = getFlightDataById;
+const apiDataString = `[{"flight_id":1,"seats_available":55,"flight_provider":"American Airlines","departure_airport":"ORD","departure_time":"2021-01-05 01:10:00","arrival_airport":"JFK","arrival_time":"2021-01-05 02:00:00"},{"flight_id":2,"seats_available":12,"flight_provider":"United Airlines","departure_airport":"LON","departure_time":"2021-01-06 01:10:00","arrival_airport":"YMQ","arrival_time":"2021-01-06 02:00:00"},{"flight_id":3,"seats_available":1,"flight_provider":"Alaska Airlines","departure_airport":"STO","departure_time":"2021-01-07 01:10:00","arrival_airport":"TYO","arrival_time":"2021-01-07 02:00:00"},{"flight_id":4,"seats_available":65,"flight_provider":"Jet Blue","departure_airport":"WAS","departure_time":"2021-01-08 01:10:00","arrival_airport":"DCA","arrival_time":"2021-01-08 02:00:00"},{"flight_id":5,"seats_available":123,"flight_provider":"Southwest Airlines","departure_airport":"MDW","departure_time":"2021-01-09 01:10:00","arrival_airport":"LAX","arrival_time":"2021-01-09 02:00:00"},{"flight_id":6,"seats_available":3,"flight_provider":"Spirit Airlines","departure_airport":"IAD","departure_time":"2021-01-10 01:10:00","arrival_airport":"LBG","arrival_time":"2021-01-10 02:00:00"},{"flight_id":7,"seats_available":43,"flight_provider":"United Airlines","departure_airport":"BKK","departure_time":"2021-01-11 01:10:00","arrival_airport":"GLA","arrival_time":"2021-01-11 02:00:00"},{"flight_id":8,"seats_available":16,"flight_provider":"Air Wisconsin","departure_airport":"HOU","departure_time":"2021-01-12 01:10:00","arrival_airport":"SNA","arrival_time":"2021-01-12 02:00:00"},{"flight_id":9,"seats_available":7,"flight_provider":"Mesa Airlines","departure_airport":"SEA","departure_time":"2021-01-13 01:10:00","arrival_airport":"TPE","arrival_time":"2021-01-13 02:00:00"},{"flight_id":10,"seats_available":8,"flight_provider":"Dino Airlines","departure_airport":"BHX","departure_time":"2021-01-14 01:10:00","arrival_airport":"BHM","arrival_time":"2021-01-14 02:00:00"},{"flight_id":11,"seats_available":17,"flight_provider":"LOT Polish Airlines","departure_airport":"ORD","departure_time":"2022-01-12 08:00:00","arrival_airport":"WAW","arrival_time":"2022-01-12 18:00:00"}]`;
+const getFlightData = async () => {
+    console.log(`Retrieving Flight data from: ${flightEndpointURL}`);
+    const options = {
+        'method': 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    try {
+        const responseData = await fetch(flightEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from /flight endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from /flight endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get flight data from API endpoint due to reason: ${error}`);
+    }
+    // Parse local data as backup if network call doesn't work.
+    return JSON.parse(apiDataString);
+};
+exports.getFlightData = getFlightData;
+
+
+/***/ }),
+
 /***/ "./src/api/locations.ts":
 /*!******************************!*\
   !*** ./src/api/locations.ts ***!
@@ -1102,11 +1395,19 @@ exports.getLocationsForQuery = getLocationsForQuery;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.registerReservation = exports.getAllReservations = void 0;
+exports.deleteReservation = exports.updateReservation = exports.registerReservations = exports.registerReservation = exports.getReservationById = exports.getReservationsByUser = exports.getAllReservations = exports.TravelerType = void 0;
 const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const reservationsAPI = '/api/reservations';
 const reservationsEndpointURL = `https://www.${baseURL}:${port}${reservationsAPI}`;
+var TravelerType;
+(function (TravelerType) {
+    TravelerType["Adult"] = "ADULT";
+    TravelerType["Child"] = "CHILD";
+})(TravelerType = exports.TravelerType || (exports.TravelerType = {}));
+;
+;
+;
 const getAllReservations = async () => {
     console.log(`Retrieving all Reservation data from: ${reservationsEndpointURL}`);
     const options = {
@@ -1126,16 +1427,61 @@ const getAllReservations = async () => {
     }
 };
 exports.getAllReservations = getAllReservations;
-const registerReservation = async (reservation) => {
+const getReservationsByUser = async (subject_id) => {
+    const options = {
+        'method': 'GET',
+        'headers': {
+            'Authorization': subject_id
+        }
+    };
+    const url = reservationsEndpointURL + '/user';
+    try {
+        const responseData = await fetch(url, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.getReservationsByUser = getReservationsByUser;
+const getReservationById = async (id, subject_id) => {
+    const url = reservationsEndpointURL + '/' + id.toString();
+    const options = {
+        'method': 'GET',
+        'headers': {
+            'Authorization': subject_id
+        }
+    };
+    try {
+        const responseData = await fetch(url, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        const json = await responseData.json();
+        console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
+        return json;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.getReservationById = getReservationById;
+const registerReservation = async (reservation, userID) => {
     console.log(reservation);
     console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
     const options = {
         'method': 'POST',
         headers: {
             'Accept': 'application/json',
+            'Authorization': userID,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(reservation)
+        body: `[${JSON.stringify(reservation)}]`
     };
     try {
         const responseData = await fetch(reservationsEndpointURL, options);
@@ -1149,6 +1495,75 @@ const registerReservation = async (reservation) => {
     }
 };
 exports.registerReservation = registerReservation;
+const registerReservations = async (reservations, userID) => {
+    console.log(reservations);
+    console.log(`Registering reservation with endpoint: ${reservationsEndpointURL}`);
+    const options = {
+        'method': 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': userID,
+            'Content-Type': 'application/json'
+        },
+        body: `${JSON.stringify(reservations)}`
+    };
+    try {
+        const responseData = await fetch(reservationsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.registerReservations = registerReservations;
+const updateReservation = async (newName, newBagCount, id, subject_id) => {
+    const url = reservationsEndpointURL + '/' + id.toString();
+    const options = {
+        'method': 'PUT',
+        'headers': {
+            'Authorization': subject_id,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "traveler_name": newName,
+            "num_checked_bags": newBagCount,
+        })
+    };
+    try {
+        const responseData = await fetch(url, options);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to get reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.updateReservation = updateReservation;
+const deleteReservation = async (id, subject_id) => {
+    const options = {
+        'method': 'DELETE',
+        headers: {
+            'Authorization': subject_id,
+            'Content-Type': 'application/json'
+        }
+    };
+    try {
+        const url = reservationsEndpointURL + '/' + id.toString();
+        const responseData = await fetch(url, options);
+        const statusCode = responseData.status;
+        console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to delete reservation data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.deleteReservation = deleteReservation;
 
 
 /***/ }),
@@ -2192,6 +2607,228 @@ exports.ToastMessage = ToastMessage;
 
 /***/ }),
 
+/***/ "./src/components/TripsPage/FlightsTable.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/TripsPage/FlightsTable.tsx ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const UpdateForm_1 = __importDefault(__webpack_require__(/*! ./UpdateForm */ "./src/components/TripsPage/UpdateForm.tsx"));
+const prop_types_1 = __importDefault(__webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js"));
+__webpack_require__(/*! ../../styles/FlightsTable.css */ "./src/styles/FlightsTable.css");
+const reservations_1 = __webpack_require__(/*! ../../api/reservations */ "./src/api/reservations.ts");
+function FlightsTable({ tableData, cancel, update, idToken }) {
+    const tableHeaders = [
+        { title: "" },
+        { title: "Airline" },
+        { title: "Traveler Name" },
+        { title: "Departure" },
+        { title: "Arrival" },
+        { title: "Departure Date" },
+        { title: "Class" },
+        { title: "Traveler Type" },
+        { title: "Checked Bags" },
+        { title: "Price" },
+        { title: "PNR" }
+    ];
+    const emptyItem = {
+        index: -1,
+        airline: "",
+        travelerName: "",
+        departure: "",
+        arrival: "",
+        departureDate: "",
+        class: "",
+        travelerType: "",
+        numCheckedBags: 0,
+        price: -1,
+        pnr: -1
+    };
+    const [data, setData] = (0, react_1.useState)(tableData);
+    const [newItem, setNewItem] = (0, react_1.useState)(emptyItem);
+    const [showForm, setShowForm] = (0, react_1.useState)(false);
+    (0, react_1.useEffect)(() => {
+        setData(tableData);
+    }, [tableData]);
+    const handleDelete = async (resId) => {
+        if (window.confirm("Are you sure you want you cancel your flight?")) {
+            if (idToken !== null) {
+                (0, reservations_1.deleteReservation)(resId, idToken);
+                await new Promise(r => setTimeout(r, 1500));
+                window.location.reload();
+            }
+        }
+    };
+    const handleUpdate = (idx, airline, name, departure, arrival, departureDate, classType, travelerType, numBags, price, pnr) => {
+        setNewItem({
+            index: idx,
+            airline: airline,
+            travelerName: name,
+            departure: departure,
+            arrival: arrival,
+            departureDate: departureDate,
+            class: classType,
+            travelerType: travelerType,
+            numCheckedBags: numBags,
+            price: price,
+            pnr: pnr
+        });
+        setShowForm(true);
+    };
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("table", { id: "flightsTable" },
+            react_1.default.createElement("tr", null, tableHeaders.map((item) => (react_1.default.createElement("th", { key: item.title }, item.title)))),
+            data.map((_) => (react_1.default.createElement("tr", null,
+                react_1.default.createElement("td", null, _.index),
+                react_1.default.createElement("td", null, _.airline),
+                react_1.default.createElement("td", null, _.travelerName),
+                react_1.default.createElement("td", null, _.departure),
+                react_1.default.createElement("td", null, _.arrival),
+                react_1.default.createElement("td", null, _.departureDate),
+                react_1.default.createElement("td", null, _.class),
+                react_1.default.createElement("td", null, _.travelerType),
+                react_1.default.createElement("td", null, _.numCheckedBags),
+                react_1.default.createElement("td", null,
+                    "$",
+                    _.price),
+                react_1.default.createElement("td", null, _.pnr),
+                react_1.default.createElement("td", null,
+                    cancel && react_1.default.createElement("a", { href: "javascript: void(0)", onClick: () => handleDelete(_.pnr) }, "\u274C"),
+                    update && react_1.default.createElement("a", { href: "javascript: void(0)", onClick: () => handleUpdate(_.index, _.airline, _.travelerName, _.departure, _.arrival, _.departureDate, _.class, _.travelerType, _.numCheckedBags, _.price, _.pnr) }, "\u270F\uFE0F")))))),
+        update && showForm && react_1.default.createElement(UpdateForm_1.default, { updateItem: newItem, idToken: idToken })));
+}
+exports["default"] = FlightsTable;
+FlightsTable.propTypes = {
+    tableData: prop_types_1.default.arrayOf(prop_types_1.default.shape({
+        airline: prop_types_1.default.string.isRequired
+    }))
+};
+
+
+/***/ }),
+
+/***/ "./src/components/TripsPage/UpdateForm.tsx":
+/*!*************************************************!*\
+  !*** ./src/components/TripsPage/UpdateForm.tsx ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+__webpack_require__(/*! ../../styles/UpdateForm.css */ "./src/styles/UpdateForm.css");
+const reservations_1 = __webpack_require__(/*! ../../api/reservations */ "./src/api/reservations.ts");
+function UpdateForm({ updateItem, idToken }) {
+    // Add bags from reservation
+    const [bags, setBags] = (0, react_1.useState)(updateItem.numCheckedBags);
+    const [name, setName] = (0, react_1.useState)(updateItem.travelerName);
+    const [newPrice, setNewPrice] = (0, react_1.useState)(updateItem.price);
+    (0, react_1.useEffect)(() => {
+        setBags(updateItem.numCheckedBags);
+        setName(updateItem.travelerName);
+        setNewPrice(updateItem.price);
+    }, [updateItem]);
+    const bagChangeAdd = () => {
+        if (bags < 2) {
+            setBags(bags + 1);
+            setNewPrice(newPrice + 35);
+        }
+    };
+    const bagChangeSub = () => {
+        if (bags > 0) {
+            setBags(bags - 1);
+            setNewPrice(newPrice - 35);
+        }
+    };
+    const handleReservationUpdate = async () => {
+        if (idToken !== null) {
+            const existingItem = await (0, reservations_1.getReservationById)(updateItem.pnr, idToken);
+            if (existingItem instanceof Error) {
+                return;
+            }
+            (0, reservations_1.updateReservation)(name, bags, updateItem.pnr, idToken);
+            console.log(name, bags, newPrice);
+            await new Promise(r => setTimeout(r, 1500));
+            window.location.reload();
+        }
+    };
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement("div", { id: "updateFormContent" },
+            react_1.default.createElement("div", { className: "updateFormTitle" },
+                "Update Flight: ",
+                updateItem.pnr),
+            react_1.default.createElement("div", { className: "flightDetails" },
+                updateItem.departure,
+                " \u2708\uFE0F ",
+                updateItem.arrival),
+            react_1.default.createElement("div", { id: "updateForm" },
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", { htmlFor: "txtNameChange" }, "Change Traveler's Name"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("input", { type: "text", id: "txtNameChange", placeholder: updateItem.travelerName, style: { width: "300px", height: "40px" }, onChange: (event) => setName(event.target.value) })),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("label", null, "Change Number of Checked Bags"),
+                    react_1.default.createElement("br", null),
+                    react_1.default.createElement("button", { onClick: bagChangeSub, style: { width: "30px", height: "30px", marginRight: "20px" } }, "-"),
+                    react_1.default.createElement("span", { style: { fontSize: "larger" } }, bags),
+                    react_1.default.createElement("button", { onClick: bagChangeAdd, style: { width: "30px", height: "30px", marginLeft: "20px" } }, "+")),
+                react_1.default.createElement("p", { id: "newPrice" },
+                    "Price: $",
+                    newPrice),
+                react_1.default.createElement("p", null,
+                    react_1.default.createElement("button", { id: "btnSubmitChanges", style: { width: "300px" }, onClick: () => { handleReservationUpdate(); } }, "Confirm Changes"))))));
+}
+exports["default"] = UpdateForm;
+
+
+/***/ }),
+
 /***/ "./src/enums/FlightClass.ts":
 /*!**********************************!*\
   !*** ./src/enums/FlightClass.ts ***!
@@ -2241,9 +2878,9 @@ var FlightType;
 })(FlightType = exports.FlightType || (exports.FlightType = {}));
 var FlightTypeJsonLabel;
 (function (FlightTypeJsonLabel) {
-    FlightTypeJsonLabel["One Way"] = "ONE_WAY";
-    FlightTypeJsonLabel["Multi-City"] = "ONE_WAY";
-    FlightTypeJsonLabel["Round Trip"] = "ROUND_TRIP";
+    FlightTypeJsonLabel["One Way"] = "ONEWAY";
+    FlightTypeJsonLabel["Multi-City"] = "ONEWAY";
+    FlightTypeJsonLabel["Round Trip"] = "ROUNDTRIP";
 })(FlightTypeJsonLabel = exports.FlightTypeJsonLabel || (exports.FlightTypeJsonLabel = {}));
 const flightTypeAsJsonLabel = (flightTypeValue) => {
     return FlightTypeJsonLabel[flightTypeValue];
@@ -2636,6 +3273,33 @@ ___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Stylin
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/FlightsTable.css":
+/*!***************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/FlightsTable.css ***!
+  \***************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#flightsTable {\r\n    padding-bottom: 20px;\r\n}\r\n\r\n#flightsTable th {\r\n    display: flexbox;\r\n    padding-right: 70px;\r\n}\r\n\r\n#flightsTable td {\r\n    display: flexbox;\r\n    padding-top: 15px;\r\n}\r\n\r\n#noFlights {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n#txtNameChange {\r\n    width: 110px;\r\n    height: 20px;\r\n    justify-content: center;\r\n    margin: 0%;\r\n}\r\n\r\n#flightsTable a {\r\n    text-decoration: none;\r\n    height: 5px;\r\n    width: 5px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightsTable.css"],"names":[],"mappings":"AAAA;IACI,oBAAoB;AACxB;;AAEA;IACI,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;IAChB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,uBAAuB;IACvB,UAAU;AACd;;AAEA;IACI,qBAAqB;IACrB,WAAW;IACX,UAAU;AACd","sourcesContent":["#flightsTable {\r\n    padding-bottom: 20px;\r\n}\r\n\r\n#flightsTable th {\r\n    display: flexbox;\r\n    padding-right: 70px;\r\n}\r\n\r\n#flightsTable td {\r\n    display: flexbox;\r\n    padding-top: 15px;\r\n}\r\n\r\n#noFlights {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n#txtNameChange {\r\n    width: 110px;\r\n    height: 20px;\r\n    justify-content: center;\r\n    margin: 0%;\r\n}\r\n\r\n#flightsTable a {\r\n    text-decoration: none;\r\n    height: 5px;\r\n    width: 5px;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/HomePage.css":
 /*!***********************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/HomePage.css ***!
@@ -2856,6 +3520,60 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, ".toast {\r\n    color: white;\r\n\r\n    display: flex;\r\n    width: 100%;\r\n    min-height: 40px;\r\n\r\n    /* Fix toast to the top of the screen */\r\n    float: left;\r\n    position: fixed;\r\n    top:0;\r\n\r\n    justify-content: space-between;\r\n}\r\n\r\n.invisible {\r\n    opacity: 0;\r\n}\r\n\r\n.infoToast {\r\n    background-color: rgb(69, 80, 228);\r\n    border-bottom: darkblue 3px solid;\r\n}\r\n\r\n.errorToast {\r\n    background-color: red;\r\n    border-bottom: rgb(204, 0, 0) 3px solid;\r\n}\r\n\r\n.successToast {\r\n    background-color: rgb(0, 167, 0);\r\n    border-bottom: darkgreen 3px solid;\r\n}\r\n\r\n.toast h3 {\r\n    margin-left: 15px;\r\n    font-size: 18px;\r\n}\r\n\r\n.toast .closeButton {\r\n    font-size: 24px;\r\n    font-weight: bold;\r\n    padding-right: 10px;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Toast.css"],"names":[],"mappings":"AAAA;IACI,YAAY;;IAEZ,aAAa;IACb,WAAW;IACX,gBAAgB;;IAEhB,uCAAuC;IACvC,WAAW;IACX,eAAe;IACf,KAAK;;IAEL,8BAA8B;AAClC;;AAEA;IACI,UAAU;AACd;;AAEA;IACI,kCAAkC;IAClC,iCAAiC;AACrC;;AAEA;IACI,qBAAqB;IACrB,uCAAuC;AAC3C;;AAEA;IACI,gCAAgC;IAChC,kCAAkC;AACtC;;AAEA;IACI,iBAAiB;IACjB,eAAe;AACnB;;AAEA;IACI,eAAe;IACf,iBAAiB;IACjB,mBAAmB;IACnB,gBAAgB;IAChB,mBAAmB;AACvB","sourcesContent":[".toast {\r\n    color: white;\r\n\r\n    display: flex;\r\n    width: 100%;\r\n    min-height: 40px;\r\n\r\n    /* Fix toast to the top of the screen */\r\n    float: left;\r\n    position: fixed;\r\n    top:0;\r\n\r\n    justify-content: space-between;\r\n}\r\n\r\n.invisible {\r\n    opacity: 0;\r\n}\r\n\r\n.infoToast {\r\n    background-color: rgb(69, 80, 228);\r\n    border-bottom: darkblue 3px solid;\r\n}\r\n\r\n.errorToast {\r\n    background-color: red;\r\n    border-bottom: rgb(204, 0, 0) 3px solid;\r\n}\r\n\r\n.successToast {\r\n    background-color: rgb(0, 167, 0);\r\n    border-bottom: darkgreen 3px solid;\r\n}\r\n\r\n.toast h3 {\r\n    margin-left: 15px;\r\n    font-size: 18px;\r\n}\r\n\r\n.toast .closeButton {\r\n    font-size: 24px;\r\n    font-weight: bold;\r\n    padding-right: 10px;\r\n    margin-top: auto;\r\n    margin-bottom: auto;\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/TripsPage.css":
+/*!************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/TripsPage.css ***!
+  \************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,uBAAuB;AAC3B;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/styles/UpdateForm.css":
+/*!*************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/styles/UpdateForm.css ***!
+  \*************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
+// Imports
+
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#updateFormContent {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n.updateFormTitle {\r\n    color: rgb(59, 77, 145);\r\n    font-weight: 700;\r\n    font-size: large;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.flightDetails {\r\n    font-weight: 600;\r\n}\r\n\r\n#newPrice {\r\n    font-weight: 600;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/UpdateForm.css"],"names":[],"mappings":"AAAA;IACI,qBAAqB;AACzB;;AAEA;IACI,uBAAuB;IACvB,gBAAgB;IAChB,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["#updateFormContent {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n.updateFormTitle {\r\n    color: rgb(59, 77, 145);\r\n    font-weight: 700;\r\n    font-size: large;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.flightDetails {\r\n    font-weight: 600;\r\n}\r\n\r\n#newPrice {\r\n    font-weight: 600;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -24829,6 +25547,901 @@ typeof d?d:I(d)},push:z,replace:A,go:y,back:function(){y(-1)},forward:function()
 
 /***/ }),
 
+/***/ "./node_modules/object-assign/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/object-assign/index.js ***!
+  \*********************************************/
+/***/ ((module) => {
+
+"use strict";
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+
+/* eslint-disable no-unused-vars */
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/checkPropTypes.js":
+/*!***************************************************!*\
+  !*** ./node_modules/prop-types/checkPropTypes.js ***!
+  \***************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var printWarning = function() {};
+
+if (true) {
+  var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+  var loggedTypeFailures = {};
+  var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
+
+  printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) { /**/ }
+  };
+}
+
+/**
+ * Assert that the values match with the type specs.
+ * Error messages are memorized and will only be shown once.
+ *
+ * @param {object} typeSpecs Map of name to a ReactPropType
+ * @param {object} values Runtime values that need to be type-checked
+ * @param {string} location e.g. "prop", "context", "child context"
+ * @param {string} componentName Name of the component for error messages.
+ * @param {?Function} getStack Returns the component stack.
+ * @private
+ */
+function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
+  if (true) {
+    for (var typeSpecName in typeSpecs) {
+      if (has(typeSpecs, typeSpecName)) {
+        var error;
+        // Prop type validation may throw. In case they do, we don't want to
+        // fail the render phase where it didn't fail before. So we log it.
+        // After these have been cleaned up, we'll let them throw.
+        try {
+          // This is intentionally an invariant that gets caught. It's the same
+          // behavior as without this statement except with a better message.
+          if (typeof typeSpecs[typeSpecName] !== 'function') {
+            var err = Error(
+              (componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' +
+              'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' +
+              'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.'
+            );
+            err.name = 'Invariant Violation';
+            throw err;
+          }
+          error = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, ReactPropTypesSecret);
+        } catch (ex) {
+          error = ex;
+        }
+        if (error && !(error instanceof Error)) {
+          printWarning(
+            (componentName || 'React class') + ': type specification of ' +
+            location + ' `' + typeSpecName + '` is invalid; the type checker ' +
+            'function must return `null` or an `Error` but returned a ' + typeof error + '. ' +
+            'You may have forgotten to pass an argument to the type checker ' +
+            'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' +
+            'shape all require an argument).'
+          );
+        }
+        if (error instanceof Error && !(error.message in loggedTypeFailures)) {
+          // Only monitor this failure once because there tends to be a lot of the
+          // same error.
+          loggedTypeFailures[error.message] = true;
+
+          var stack = getStack ? getStack() : '';
+
+          printWarning(
+            'Failed ' + location + ' type: ' + error.message + (stack != null ? stack : '')
+          );
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Resets warning cache when testing.
+ *
+ * @private
+ */
+checkPropTypes.resetWarningCache = function() {
+  if (true) {
+    loggedTypeFailures = {};
+  }
+}
+
+module.exports = checkPropTypes;
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/factoryWithTypeCheckers.js":
+/*!************************************************************!*\
+  !*** ./node_modules/prop-types/factoryWithTypeCheckers.js ***!
+  \************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
+
+var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
+var has = __webpack_require__(/*! ./lib/has */ "./node_modules/prop-types/lib/has.js");
+var checkPropTypes = __webpack_require__(/*! ./checkPropTypes */ "./node_modules/prop-types/checkPropTypes.js");
+
+var printWarning = function() {};
+
+if (true) {
+  printWarning = function(text) {
+    var message = 'Warning: ' + text;
+    if (typeof console !== 'undefined') {
+      console.error(message);
+    }
+    try {
+      // --- Welcome to debugging React ---
+      // This error was thrown as a convenience so that you can use this stack
+      // to find the callsite that caused this warning to fire.
+      throw new Error(message);
+    } catch (x) {}
+  };
+}
+
+function emptyFunctionThatReturnsNull() {
+  return null;
+}
+
+module.exports = function(isValidElement, throwOnDirectAccess) {
+  /* global Symbol */
+  var ITERATOR_SYMBOL = typeof Symbol === 'function' && Symbol.iterator;
+  var FAUX_ITERATOR_SYMBOL = '@@iterator'; // Before Symbol spec.
+
+  /**
+   * Returns the iterator method function contained on the iterable object.
+   *
+   * Be sure to invoke the function with the iterable as context:
+   *
+   *     var iteratorFn = getIteratorFn(myIterable);
+   *     if (iteratorFn) {
+   *       var iterator = iteratorFn.call(myIterable);
+   *       ...
+   *     }
+   *
+   * @param {?object} maybeIterable
+   * @return {?function}
+   */
+  function getIteratorFn(maybeIterable) {
+    var iteratorFn = maybeIterable && (ITERATOR_SYMBOL && maybeIterable[ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL]);
+    if (typeof iteratorFn === 'function') {
+      return iteratorFn;
+    }
+  }
+
+  /**
+   * Collection of methods that allow declaration and validation of props that are
+   * supplied to React components. Example usage:
+   *
+   *   var Props = require('ReactPropTypes');
+   *   var MyArticle = React.createClass({
+   *     propTypes: {
+   *       // An optional string prop named "description".
+   *       description: Props.string,
+   *
+   *       // A required enum prop named "category".
+   *       category: Props.oneOf(['News','Photos']).isRequired,
+   *
+   *       // A prop named "dialog" that requires an instance of Dialog.
+   *       dialog: Props.instanceOf(Dialog).isRequired
+   *     },
+   *     render: function() { ... }
+   *   });
+   *
+   * A more formal specification of how these methods are used:
+   *
+   *   type := array|bool|func|object|number|string|oneOf([...])|instanceOf(...)
+   *   decl := ReactPropTypes.{type}(.isRequired)?
+   *
+   * Each and every declaration produces a function with the same signature. This
+   * allows the creation of custom validation functions. For example:
+   *
+   *  var MyLink = React.createClass({
+   *    propTypes: {
+   *      // An optional string or URI prop named "href".
+   *      href: function(props, propName, componentName) {
+   *        var propValue = props[propName];
+   *        if (propValue != null && typeof propValue !== 'string' &&
+   *            !(propValue instanceof URI)) {
+   *          return new Error(
+   *            'Expected a string or an URI for ' + propName + ' in ' +
+   *            componentName
+   *          );
+   *        }
+   *      }
+   *    },
+   *    render: function() {...}
+   *  });
+   *
+   * @internal
+   */
+
+  var ANONYMOUS = '<<anonymous>>';
+
+  // Important!
+  // Keep this list in sync with production version in `./factoryWithThrowingShims.js`.
+  var ReactPropTypes = {
+    array: createPrimitiveTypeChecker('array'),
+    bigint: createPrimitiveTypeChecker('bigint'),
+    bool: createPrimitiveTypeChecker('boolean'),
+    func: createPrimitiveTypeChecker('function'),
+    number: createPrimitiveTypeChecker('number'),
+    object: createPrimitiveTypeChecker('object'),
+    string: createPrimitiveTypeChecker('string'),
+    symbol: createPrimitiveTypeChecker('symbol'),
+
+    any: createAnyTypeChecker(),
+    arrayOf: createArrayOfTypeChecker,
+    element: createElementTypeChecker(),
+    elementType: createElementTypeTypeChecker(),
+    instanceOf: createInstanceTypeChecker,
+    node: createNodeChecker(),
+    objectOf: createObjectOfTypeChecker,
+    oneOf: createEnumTypeChecker,
+    oneOfType: createUnionTypeChecker,
+    shape: createShapeTypeChecker,
+    exact: createStrictShapeTypeChecker,
+  };
+
+  /**
+   * inlined Object.is polyfill to avoid requiring consumers ship their own
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/is
+   */
+  /*eslint-disable no-self-compare*/
+  function is(x, y) {
+    // SameValue algorithm
+    if (x === y) {
+      // Steps 1-5, 7-10
+      // Steps 6.b-6.e: +0 != -0
+      return x !== 0 || 1 / x === 1 / y;
+    } else {
+      // Step 6.a: NaN == NaN
+      return x !== x && y !== y;
+    }
+  }
+  /*eslint-enable no-self-compare*/
+
+  /**
+   * We use an Error-like object for backward compatibility as people may call
+   * PropTypes directly and inspect their output. However, we don't use real
+   * Errors anymore. We don't inspect their stack anyway, and creating them
+   * is prohibitively expensive if they are created too often, such as what
+   * happens in oneOfType() for any type before the one that matched.
+   */
+  function PropTypeError(message, data) {
+    this.message = message;
+    this.data = data && typeof data === 'object' ? data: {};
+    this.stack = '';
+  }
+  // Make `instanceof Error` still work for returned errors.
+  PropTypeError.prototype = Error.prototype;
+
+  function createChainableTypeChecker(validate) {
+    if (true) {
+      var manualPropTypeCallCache = {};
+      var manualPropTypeWarningCount = 0;
+    }
+    function checkType(isRequired, props, propName, componentName, location, propFullName, secret) {
+      componentName = componentName || ANONYMOUS;
+      propFullName = propFullName || propName;
+
+      if (secret !== ReactPropTypesSecret) {
+        if (throwOnDirectAccess) {
+          // New behavior only for users of `prop-types` package
+          var err = new Error(
+            'Calling PropTypes validators directly is not supported by the `prop-types` package. ' +
+            'Use `PropTypes.checkPropTypes()` to call them. ' +
+            'Read more at http://fb.me/use-check-prop-types'
+          );
+          err.name = 'Invariant Violation';
+          throw err;
+        } else if ( true && typeof console !== 'undefined') {
+          // Old behavior for people using React.PropTypes
+          var cacheKey = componentName + ':' + propName;
+          if (
+            !manualPropTypeCallCache[cacheKey] &&
+            // Avoid spamming the console because they are often not actionable except for lib authors
+            manualPropTypeWarningCount < 3
+          ) {
+            printWarning(
+              'You are manually calling a React.PropTypes validation ' +
+              'function for the `' + propFullName + '` prop on `' + componentName + '`. This is deprecated ' +
+              'and will throw in the standalone `prop-types` package. ' +
+              'You may be seeing this warning due to a third-party PropTypes ' +
+              'library. See https://fb.me/react-warning-dont-call-proptypes ' + 'for details.'
+            );
+            manualPropTypeCallCache[cacheKey] = true;
+            manualPropTypeWarningCount++;
+          }
+        }
+      }
+      if (props[propName] == null) {
+        if (isRequired) {
+          if (props[propName] === null) {
+            return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required ' + ('in `' + componentName + '`, but its value is `null`.'));
+          }
+          return new PropTypeError('The ' + location + ' `' + propFullName + '` is marked as required in ' + ('`' + componentName + '`, but its value is `undefined`.'));
+        }
+        return null;
+      } else {
+        return validate(props, propName, componentName, location, propFullName);
+      }
+    }
+
+    var chainedCheckType = checkType.bind(null, false);
+    chainedCheckType.isRequired = checkType.bind(null, true);
+
+    return chainedCheckType;
+  }
+
+  function createPrimitiveTypeChecker(expectedType) {
+    function validate(props, propName, componentName, location, propFullName, secret) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== expectedType) {
+        // `propValue` being instance of, say, date/regexp, pass the 'object'
+        // check, but we can offer a more precise error message here rather than
+        // 'of type `object`'.
+        var preciseType = getPreciseType(propValue);
+
+        return new PropTypeError(
+          'Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + preciseType + '` supplied to `' + componentName + '`, expected ') + ('`' + expectedType + '`.'),
+          {expectedType: expectedType}
+        );
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createAnyTypeChecker() {
+    return createChainableTypeChecker(emptyFunctionThatReturnsNull);
+  }
+
+  function createArrayOfTypeChecker(typeChecker) {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (typeof typeChecker !== 'function') {
+        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside arrayOf.');
+      }
+      var propValue = props[propName];
+      if (!Array.isArray(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an array.'));
+      }
+      for (var i = 0; i < propValue.length; i++) {
+        var error = typeChecker(propValue, i, componentName, location, propFullName + '[' + i + ']', ReactPropTypesSecret);
+        if (error instanceof Error) {
+          return error;
+        }
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createElementTypeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      if (!isValidElement(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createElementTypeTypeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      if (!ReactIs.isValidElementType(propValue)) {
+        var propType = getPropType(propValue);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected a single ReactElement type.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createInstanceTypeChecker(expectedClass) {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (!(props[propName] instanceof expectedClass)) {
+        var expectedClassName = expectedClass.name || ANONYMOUS;
+        var actualClassName = getClassName(props[propName]);
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + actualClassName + '` supplied to `' + componentName + '`, expected ') + ('instance of `' + expectedClassName + '`.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createEnumTypeChecker(expectedValues) {
+    if (!Array.isArray(expectedValues)) {
+      if (true) {
+        if (arguments.length > 1) {
+          printWarning(
+            'Invalid arguments supplied to oneOf, expected an array, got ' + arguments.length + ' arguments. ' +
+            'A common mistake is to write oneOf(x, y, z) instead of oneOf([x, y, z]).'
+          );
+        } else {
+          printWarning('Invalid argument supplied to oneOf, expected an array.');
+        }
+      }
+      return emptyFunctionThatReturnsNull;
+    }
+
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      for (var i = 0; i < expectedValues.length; i++) {
+        if (is(propValue, expectedValues[i])) {
+          return null;
+        }
+      }
+
+      var valuesString = JSON.stringify(expectedValues, function replacer(key, value) {
+        var type = getPreciseType(value);
+        if (type === 'symbol') {
+          return String(value);
+        }
+        return value;
+      });
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of value `' + String(propValue) + '` ' + ('supplied to `' + componentName + '`, expected one of ' + valuesString + '.'));
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createObjectOfTypeChecker(typeChecker) {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (typeof typeChecker !== 'function') {
+        return new PropTypeError('Property `' + propFullName + '` of component `' + componentName + '` has invalid PropType notation inside objectOf.');
+      }
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type ' + ('`' + propType + '` supplied to `' + componentName + '`, expected an object.'));
+      }
+      for (var key in propValue) {
+        if (has(propValue, key)) {
+          var error = typeChecker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+          if (error instanceof Error) {
+            return error;
+          }
+        }
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createUnionTypeChecker(arrayOfTypeCheckers) {
+    if (!Array.isArray(arrayOfTypeCheckers)) {
+       true ? printWarning('Invalid argument supplied to oneOfType, expected an instance of array.') : 0;
+      return emptyFunctionThatReturnsNull;
+    }
+
+    for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+      var checker = arrayOfTypeCheckers[i];
+      if (typeof checker !== 'function') {
+        printWarning(
+          'Invalid argument supplied to oneOfType. Expected an array of check functions, but ' +
+          'received ' + getPostfixForTypeWarning(checker) + ' at index ' + i + '.'
+        );
+        return emptyFunctionThatReturnsNull;
+      }
+    }
+
+    function validate(props, propName, componentName, location, propFullName) {
+      var expectedTypes = [];
+      for (var i = 0; i < arrayOfTypeCheckers.length; i++) {
+        var checker = arrayOfTypeCheckers[i];
+        var checkerResult = checker(props, propName, componentName, location, propFullName, ReactPropTypesSecret);
+        if (checkerResult == null) {
+          return null;
+        }
+        if (checkerResult.data && has(checkerResult.data, 'expectedType')) {
+          expectedTypes.push(checkerResult.data.expectedType);
+        }
+      }
+      var expectedTypesMessage = (expectedTypes.length > 0) ? ', expected one of type [' + expectedTypes.join(', ') + ']': '';
+      return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`' + expectedTypesMessage + '.'));
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createNodeChecker() {
+    function validate(props, propName, componentName, location, propFullName) {
+      if (!isNode(props[propName])) {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` supplied to ' + ('`' + componentName + '`, expected a ReactNode.'));
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function invalidValidatorError(componentName, location, propFullName, key, type) {
+    return new PropTypeError(
+      (componentName || 'React class') + ': ' + location + ' type `' + propFullName + '.' + key + '` is invalid; ' +
+      'it must be a function, usually from the `prop-types` package, but received `' + type + '`.'
+    );
+  }
+
+  function createShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      for (var key in shapeTypes) {
+        var checker = shapeTypes[key];
+        if (typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+    return createChainableTypeChecker(validate);
+  }
+
+  function createStrictShapeTypeChecker(shapeTypes) {
+    function validate(props, propName, componentName, location, propFullName) {
+      var propValue = props[propName];
+      var propType = getPropType(propValue);
+      if (propType !== 'object') {
+        return new PropTypeError('Invalid ' + location + ' `' + propFullName + '` of type `' + propType + '` ' + ('supplied to `' + componentName + '`, expected `object`.'));
+      }
+      // We need to check all keys in case some are required but missing from props.
+      var allKeys = assign({}, props[propName], shapeTypes);
+      for (var key in allKeys) {
+        var checker = shapeTypes[key];
+        if (has(shapeTypes, key) && typeof checker !== 'function') {
+          return invalidValidatorError(componentName, location, propFullName, key, getPreciseType(checker));
+        }
+        if (!checker) {
+          return new PropTypeError(
+            'Invalid ' + location + ' `' + propFullName + '` key `' + key + '` supplied to `' + componentName + '`.' +
+            '\nBad object: ' + JSON.stringify(props[propName], null, '  ') +
+            '\nValid keys: ' + JSON.stringify(Object.keys(shapeTypes), null, '  ')
+          );
+        }
+        var error = checker(propValue, key, componentName, location, propFullName + '.' + key, ReactPropTypesSecret);
+        if (error) {
+          return error;
+        }
+      }
+      return null;
+    }
+
+    return createChainableTypeChecker(validate);
+  }
+
+  function isNode(propValue) {
+    switch (typeof propValue) {
+      case 'number':
+      case 'string':
+      case 'undefined':
+        return true;
+      case 'boolean':
+        return !propValue;
+      case 'object':
+        if (Array.isArray(propValue)) {
+          return propValue.every(isNode);
+        }
+        if (propValue === null || isValidElement(propValue)) {
+          return true;
+        }
+
+        var iteratorFn = getIteratorFn(propValue);
+        if (iteratorFn) {
+          var iterator = iteratorFn.call(propValue);
+          var step;
+          if (iteratorFn !== propValue.entries) {
+            while (!(step = iterator.next()).done) {
+              if (!isNode(step.value)) {
+                return false;
+              }
+            }
+          } else {
+            // Iterator will provide entry [k,v] tuples rather than values.
+            while (!(step = iterator.next()).done) {
+              var entry = step.value;
+              if (entry) {
+                if (!isNode(entry[1])) {
+                  return false;
+                }
+              }
+            }
+          }
+        } else {
+          return false;
+        }
+
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function isSymbol(propType, propValue) {
+    // Native Symbol.
+    if (propType === 'symbol') {
+      return true;
+    }
+
+    // falsy value can't be a Symbol
+    if (!propValue) {
+      return false;
+    }
+
+    // 19.4.3.5 Symbol.prototype[@@toStringTag] === 'Symbol'
+    if (propValue['@@toStringTag'] === 'Symbol') {
+      return true;
+    }
+
+    // Fallback for non-spec compliant Symbols which are polyfilled.
+    if (typeof Symbol === 'function' && propValue instanceof Symbol) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // Equivalent of `typeof` but with special handling for array and regexp.
+  function getPropType(propValue) {
+    var propType = typeof propValue;
+    if (Array.isArray(propValue)) {
+      return 'array';
+    }
+    if (propValue instanceof RegExp) {
+      // Old webkits (at least until Android 4.0) return 'function' rather than
+      // 'object' for typeof a RegExp. We'll normalize this here so that /bla/
+      // passes PropTypes.object.
+      return 'object';
+    }
+    if (isSymbol(propType, propValue)) {
+      return 'symbol';
+    }
+    return propType;
+  }
+
+  // This handles more types than `getPropType`. Only used for error messages.
+  // See `createPrimitiveTypeChecker`.
+  function getPreciseType(propValue) {
+    if (typeof propValue === 'undefined' || propValue === null) {
+      return '' + propValue;
+    }
+    var propType = getPropType(propValue);
+    if (propType === 'object') {
+      if (propValue instanceof Date) {
+        return 'date';
+      } else if (propValue instanceof RegExp) {
+        return 'regexp';
+      }
+    }
+    return propType;
+  }
+
+  // Returns a string that is postfixed to a warning about an invalid type.
+  // For example, "undefined" or "of type array"
+  function getPostfixForTypeWarning(value) {
+    var type = getPreciseType(value);
+    switch (type) {
+      case 'array':
+      case 'object':
+        return 'an ' + type;
+      case 'boolean':
+      case 'date':
+      case 'regexp':
+        return 'a ' + type;
+      default:
+        return type;
+    }
+  }
+
+  // Returns class name of the object, if any.
+  function getClassName(propValue) {
+    if (!propValue.constructor || !propValue.constructor.name) {
+      return ANONYMOUS;
+    }
+    return propValue.constructor.name;
+  }
+
+  ReactPropTypes.checkPropTypes = checkPropTypes;
+  ReactPropTypes.resetWarningCache = checkPropTypes.resetWarningCache;
+  ReactPropTypes.PropTypes = ReactPropTypes;
+
+  return ReactPropTypes;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/index.js":
+/*!******************************************!*\
+  !*** ./node_modules/prop-types/index.js ***!
+  \******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+if (true) {
+  var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
+
+  // By explicitly using `prop-types` you are opting into new development behavior.
+  // http://fb.me/prop-types-in-prod
+  var throwOnDirectAccess = true;
+  module.exports = __webpack_require__(/*! ./factoryWithTypeCheckers */ "./node_modules/prop-types/factoryWithTypeCheckers.js")(ReactIs.isElement, throwOnDirectAccess);
+} else {}
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/lib/ReactPropTypesSecret.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/prop-types/lib/ReactPropTypesSecret.js ***!
+  \*************************************************************/
+/***/ ((module) => {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
+
+module.exports = ReactPropTypesSecret;
+
+
+/***/ }),
+
+/***/ "./node_modules/prop-types/lib/has.js":
+/*!********************************************!*\
+  !*** ./node_modules/prop-types/lib/has.js ***!
+  \********************************************/
+/***/ ((module) => {
+
+module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
+
+
+/***/ }),
+
 /***/ "./node_modules/react-google-login/dist/google-login.js":
 /*!**************************************************************!*\
   !*** ./node_modules/react-google-login/dist/google-login.js ***!
@@ -24836,6 +26449,214 @@ typeof d?d:I(d)},push:z,replace:A,go:y,back:function(){y(-1)},forward:function()
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 !function(e,t){ true?module.exports=t(__webpack_require__(/*! react */ "react")):0}("undefined"!=typeof self?self:this,(function(e){return o={},t.m=n=[function(t){t.exports=e},function(e,t,n){e.exports=n(2)()},function(e,t,n){"use strict";function o(){}function r(){}var i=n(3);r.resetWarningCache=o,e.exports=function(){function e(e,t,n,o,r,a){if(a!==i){var c=Error("Calling PropTypes validators directly is not supported by the `prop-types` package. Use PropTypes.checkPropTypes() to call them. Read more at http://fb.me/use-check-prop-types");throw c.name="Invariant Violation",c}}function t(){return e}var n={array:e.isRequired=e,bool:e,func:e,number:e,object:e,string:e,symbol:e,any:e,arrayOf:t,element:e,elementType:e,instanceOf:t,node:e,objectOf:t,oneOf:t,oneOfType:t,shape:t,exact:t,checkPropTypes:r,resetWarningCache:o};return n.PropTypes=n}},function(e){"use strict";e.exports="SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED"},function(e,t,n){"use strict";function o(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return r(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?r(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function r(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function i(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return a(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?a(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function a(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function c(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return u(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?u(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function u(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function l(e,t){return function(e){if(Array.isArray(e))return e}(e)||function(e,t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(e)){var n=[],o=!0,r=!1,i=void 0;try{for(var a,c=e[Symbol.iterator]();!(o=(a=c.next()).done)&&(n.push(a.value),!t||n.length!==t);o=!0);}catch(e){r=!0,i=e}finally{try{o||null==c.return||c.return()}finally{if(r)throw i}}return n}}(e,t)||function(e,t){if(e){if("string"==typeof e)return s(e,t);var n=Object.prototype.toString.call(e).slice(8,-1);return"Object"===n&&e.constructor&&(n=e.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?s(e,t):void 0}}(e,t)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()}function s(e,t){null!=t&&t<=e.length||(t=e.length);for(var n=0,o=Array(t);n<t;n++)o[n]=e[n];return o}function f(e,t,n,o,r,i){var a=e.getElementsByTagName(t)[0],c=a,u=a;(u=e.createElement(t)).id=n,u.src=o,c&&c.parentNode?c.parentNode.insertBefore(u,c):e.head.appendChild(u),u.onerror=i,u.onload=r}function d(e,t){var n=e.getElementById(t);n&&n.parentNode.removeChild(n)}function p(e){return b.a.createElement("span",{style:{paddingRight:10,fontWeight:500,paddingLeft:e.icon?0:10,paddingTop:10,paddingBottom:10}},e.children)}function g(e){return b.a.createElement("div",{style:{marginRight:10,background:e.active?"#eee":"#fff",padding:10,borderRadius:2}},b.a.createElement("svg",{width:"18",height:"18",xmlns:"http://www.w3.org/2000/svg"},b.a.createElement("g",{fill:"#000",fillRule:"evenodd"},b.a.createElement("path",{d:"M9 3.48c1.69 0 2.83.73 3.48 1.34l2.54-2.48C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l2.91 2.26C4.6 5.05 6.62 3.48 9 3.48z",fill:"#EA4335"}),b.a.createElement("path",{d:"M17.64 9.2c0-.74-.06-1.28-.19-1.84H9v3.34h4.96c-.1.83-.64 2.08-1.84 2.92l2.84 2.2c1.7-1.57 2.68-3.88 2.68-6.62z",fill:"#4285F4"}),b.a.createElement("path",{d:"M3.88 10.78A5.54 5.54 0 0 1 3.58 9c0-.62.11-1.22.29-1.78L.96 4.96A9.008 9.008 0 0 0 0 9c0 1.45.35 2.82.96 4.04l2.92-2.26z",fill:"#FBBC05"}),b.a.createElement("path",{d:"M9 18c2.43 0 4.47-.8 5.96-2.18l-2.84-2.2c-.76.53-1.78.9-3.12.9-2.38 0-4.4-1.57-5.12-3.74L.97 13.04C2.45 15.98 5.48 18 9 18z",fill:"#34A853"}),b.a.createElement("path",{fill:"none",d:"M0 0h18v18H0z"}))))}function y(e){var t=i(Object(m.useState)(!1),2),n=t[0],o=t[1],r=i(Object(m.useState)(!1),2),a=r[0],c=r[1],u=e.tag,l=e.type,s=e.className,f=e.disabledStyle,d=e.buttonText,y=e.children,v=e.render,S=e.theme,j=e.icon,O=e.disabled,x=h({onSuccess:e.onSuccess,onAutoLoadFinished:e.onAutoLoadFinished,onRequest:e.onRequest,onFailure:e.onFailure,onScriptLoadFailure:e.onScriptLoadFailure,clientId:e.clientId,cookiePolicy:e.cookiePolicy,loginHint:e.loginHint,hostedDomain:e.hostedDomain,autoLoad:e.autoLoad,isSignedIn:e.isSignedIn,fetchBasicProfile:e.fetchBasicProfile,redirectUri:e.redirectUri,discoveryDocs:e.discoveryDocs,uxMode:e.uxMode,scope:e.scope,accessType:e.accessType,responseType:e.responseType,jsSrc:e.jsSrc,prompt:e.prompt}),I=x.signIn,w=O||!x.loaded;if(v)return v({onClick:I,disabled:w});var k={backgroundColor:"dark"===S?"rgb(66, 133, 244)":"#fff",display:"inline-flex",alignItems:"center",color:"dark"===S?"#fff":"rgba(0, 0, 0, .54)",boxShadow:"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",padding:0,borderRadius:2,border:"1px solid transparent",fontSize:14,fontWeight:"500",fontFamily:"Roboto, sans-serif"},A={cursor:"pointer",backgroundColor:"dark"===S?"#3367D6":"#eee",color:"dark"===S?"#fff":"rgba(0, 0, 0, .54)",opacity:1},_=w?Object.assign({},k,f):a?Object.assign({},k,A):n?Object.assign({},k,{cursor:"pointer",opacity:.9}):k;return b.a.createElement(u,{onMouseEnter:function(){return o(!0)},onMouseLeave:function(){o(!1),c(!1)},onMouseDown:function(){return c(!0)},onMouseUp:function(){return c(!1)},onClick:I,style:_,type:l,disabled:w,className:s},[j&&b.a.createElement(g,{key:1,active:a}),b.a.createElement(p,{icon:j,key:2},y||d)])}n.r(t),n.d(t,"default",(function(){return S})),n.d(t,"GoogleLogin",(function(){return S})),n.d(t,"GoogleLogout",(function(){return O})),n.d(t,"useGoogleLogin",(function(){return h})),n.d(t,"useGoogleLogout",(function(){return j}));var m=n(0),b=n.n(m),h=(n(1),function(e){function t(e){var t=e.getBasicProfile(),n=e.getAuthResponse(!0);e.googleId=t.getId(),e.tokenObj=n,e.tokenId=n.id_token,e.accessToken=n.access_token,e.profileObj={googleId:t.getId(),imageUrl:t.getImageUrl(),email:t.getEmail(),name:t.getName(),givenName:t.getGivenName(),familyName:t.getFamilyName()},i(e)}function n(e){if(e&&e.preventDefault(),P){var n=window.gapi.auth2.getAuthInstance(),o={prompt:L};p(),"code"===_?n.grantOfflineAccess(o).then((function(e){return i(e)}),(function(e){return l(e)})):n.signIn(o).then((function(e){return t(e)}),(function(e){return l(e)}))}}var r=e.onSuccess,i=void 0===r?function(){}:r,a=e.onAutoLoadFinished,c=void 0===a?function(){}:a,u=e.onFailure,l=void 0===u?function(){}:u,s=e.onRequest,p=void 0===s?function(){}:s,g=e.onScriptLoadFailure,y=e.clientId,b=e.cookiePolicy,h=e.loginHint,v=e.hostedDomain,S=e.autoLoad,j=e.isSignedIn,O=e.fetchBasicProfile,x=e.redirectUri,I=e.discoveryDocs,w=e.uxMode,k=e.scope,A=e.accessType,_=e.responseType,E=e.jsSrc,T=void 0===E?"https://apis.google.com/js/api.js":E,L=e.prompt,M=o(Object(m.useState)(!1),2),P=M[0],C=M[1];return Object(m.useEffect)((function(){var e=!1,n=g||l;return f(document,"script","google-login",T,(function(){var o={client_id:y,cookie_policy:b,login_hint:h,hosted_domain:v,fetch_basic_profile:O,discoveryDocs:I,ux_mode:w,redirect_uri:x,scope:k,access_type:A};"code"===_&&(o.access_type="offline"),window.gapi.load("auth2",(function(){var r=window.gapi.auth2.getAuthInstance();r?r.then((function(){e||(j&&r.isSignedIn.get()?(C(!0),c(!0),t(r.currentUser.get())):(C(!0),c(!1)))}),(function(e){l(e)})):window.gapi.auth2.init(o).then((function(n){if(!e){C(!0);var o=j&&n.isSignedIn.get();c(o),o&&t(n.currentUser.get())}}),(function(e){C(!0),c(!1),n(e)}))}))}),(function(e){n(e)})),function(){e=!0,d(document,"google-login")}}),[]),Object(m.useEffect)((function(){S&&n()}),[P]),{signIn:n,loaded:P}});function v(e){var t=l(Object(m.useState)(!1),2),n=t[0],o=t[1],r=l(Object(m.useState)(!1),2),i=r[0],a=r[1],c=e.tag,u=e.type,s=e.className,f=e.disabledStyle,d=e.buttonText,y=e.children,h=e.render,v=e.theme,S=e.icon,O=e.disabled,x=j({jsSrc:e.jsSrc,onFailure:e.onFailure,onScriptLoadFailure:e.onScriptLoadFailure,clientId:e.clientId,cookiePolicy:e.cookiePolicy,loginHint:e.loginHint,hostedDomain:e.hostedDomain,fetchBasicProfile:e.fetchBasicProfile,discoveryDocs:e.discoveryDocs,uxMode:e.uxMode,redirectUri:e.redirectUri,scope:e.scope,accessType:e.accessType,onLogoutSuccess:e.onLogoutSuccess}),I=x.signOut,w=O||!x.loaded;if(h)return h({onClick:I,disabled:w});var k={backgroundColor:"dark"===v?"rgb(66, 133, 244)":"#fff",display:"inline-flex",alignItems:"center",color:"dark"===v?"#fff":"rgba(0, 0, 0, .54)",boxShadow:"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",padding:0,borderRadius:2,border:"1px solid transparent",fontSize:14,fontWeight:"500",fontFamily:"Roboto, sans-serif"},A={cursor:"pointer",backgroundColor:"dark"===v?"#3367D6":"#eee",color:"dark"===v?"#fff":"rgba(0, 0, 0, .54)",opacity:1},_=w?Object.assign({},k,f):i?Object.assign({},k,A):n?Object.assign({},k,{cursor:"pointer",opacity:.9}):k;return b.a.createElement(c,{onMouseEnter:function(){return o(!0)},onMouseLeave:function(){o(!1),a(!1)},onMouseDown:function(){return a(!0)},onMouseUp:function(){return a(!1)},onClick:I,style:_,type:u,disabled:w,className:s},[S&&b.a.createElement(g,{key:1,active:i}),b.a.createElement(p,{icon:S,key:2},y||d)])}y.defaultProps={type:"button",tag:"button",buttonText:"Sign in with Google",scope:"profile email",accessType:"online",prompt:"",cookiePolicy:"single_host_origin",fetchBasicProfile:!0,isSignedIn:!1,uxMode:"popup",disabledStyle:{opacity:.6},icon:!0,theme:"light",onRequest:function(){}};var S=y,j=function(e){var t=e.jsSrc,n=void 0===t?"https://apis.google.com/js/api.js":t,o=e.onFailure,r=e.onScriptLoadFailure,i=e.clientId,a=e.cookiePolicy,u=e.loginHint,l=e.hostedDomain,s=e.fetchBasicProfile,p=e.discoveryDocs,g=e.uxMode,y=e.redirectUri,b=e.scope,h=e.accessType,v=e.onLogoutSuccess,S=c(Object(m.useState)(!1),2),j=S[0],O=S[1],x=Object(m.useCallback)((function(){if(window.gapi){var e=window.gapi.auth2.getAuthInstance();null!=e&&e.then((function(){e.signOut().then((function(){e.disconnect(),v()}))}),(function(e){return o(e)}))}}),[v]);return Object(m.useEffect)((function(){var e=r||o;return f(document,"script","google-login",n,(function(){var t={client_id:i,cookie_policy:a,login_hint:u,hosted_domain:l,fetch_basic_profile:s,discoveryDocs:p,ux_mode:g,redirect_uri:y,scope:b,access_type:h};window.gapi.load("auth2",(function(){window.gapi.auth2.getAuthInstance()?O(!0):window.gapi.auth2.init(t).then((function(){return O(!0)}),(function(t){return e(t)}))}))}),(function(t){e(t)})),function(){d(document,"google-login")}}),[]),{signOut:x,loaded:j}};v.defaultProps={type:"button",tag:"button",buttonText:"Logout of Google",disabledStyle:{opacity:.6},icon:!0,theme:"light",jsSrc:"https://apis.google.com/js/api.js"};var O=v}],t.c=o,t.d=function(e,n,o){t.o(e,n)||Object.defineProperty(e,n,{enumerable:!0,get:o})},t.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.t=function(e,n){if(1&n&&(e=t(e)),8&n)return e;if(4&n&&"object"==typeof e&&e&&e.__esModule)return e;var o=Object.create(null);if(t.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:e}),2&n&&"string"!=typeof e)for(var r in e)t.d(o,r,function(t){return e[t]}.bind(null,r));return o},t.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(n,"a",n),n},t.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},t.p="",t(t.s=4);function t(e){if(o[e])return o[e].exports;var r=o[e]={i:e,l:!1,exports:{}};return n[e].call(r.exports,r,r.exports,t),r.l=!0,r.exports}var n,o}));
+
+/***/ }),
+
+/***/ "./node_modules/react-is/cjs/react-is.development.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-is/cjs/react-is.development.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+/** @license React v16.13.1
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+// (unstable) APIs that have been removed. Can we remove the symbols?
+
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_CONCURRENT_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+} // AsyncMode is deprecated along with isAsyncMode
+
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+    }
+  }
+
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isConcurrentMode(object) {
+  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+
+exports.AsyncMode = AsyncMode;
+exports.ConcurrentMode = ConcurrentMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-is/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/react-is/index.js ***!
+  \****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/react-is/cjs/react-is.development.js");
+}
+
 
 /***/ }),
 
@@ -27659,6 +29480,61 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./src/styles/FlightsTable.css":
+/*!*************************************!*\
+  !*** ./src/styles/FlightsTable.css ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_FlightsTable_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./FlightsTable.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/FlightsTable.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_FlightsTable_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_FlightsTable_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_FlightsTable_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_FlightsTable_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
 /***/ "./src/styles/HomePage.css":
 /*!*********************************!*\
   !*** ./src/styles/HomePage.css ***!
@@ -28095,6 +29971,116 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
        /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_Toast_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_Toast_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_Toast_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/styles/TripsPage.css":
+/*!**********************************!*\
+  !*** ./src/styles/TripsPage.css ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_TripsPage_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./TripsPage.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/TripsPage.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_TripsPage_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_TripsPage_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_TripsPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_TripsPage_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
+
+
+/***/ }),
+
+/***/ "./src/styles/UpdateForm.css":
+/*!***********************************!*\
+  !*** ./src/styles/UpdateForm.css ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_UpdateForm_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./UpdateForm.css */ "./node_modules/css-loader/dist/cjs.js!./src/styles/UpdateForm.css");
+
+      
+      
+      
+      
+      
+      
+      
+      
+      
+
+var options = {};
+
+options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
+options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
+
+      options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
+    
+options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
+options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_UpdateForm_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
+
+
+
+
+       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_UpdateForm_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_UpdateForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_UpdateForm_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
 
 
 /***/ }),
