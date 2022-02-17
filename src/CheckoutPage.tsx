@@ -224,7 +224,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
             return false;
         }
 
-        if (response.status !== 200) {
+        if (response.status !== 200 && response.status != 201) {
             this.displayError('Failed to register reservation.');
             console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
             return false;
