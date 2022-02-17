@@ -553,14 +553,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
             finalizedFlightSelections,
             searchProgress: currentSearchProgress
         }, async () => {
-            // Submit reservations once finalized selections are set
-            const didSucceed = await this.submitReservations();
-
-            if (didSucceed) {
-                // Navigate to checkout page
-                const navigate = useNavigate();
-                navigate('/checkout');
-            }
+            // Navigate to checkout page after updating state with final selections
+            const navigate = useNavigate();
+            navigate('/checkout');
         });
     }
 
