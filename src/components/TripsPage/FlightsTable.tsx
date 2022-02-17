@@ -9,7 +9,7 @@ import { deleteReservation} from '../../api/reservations';
 
 export type TableData = Array<ITableData>;
 
-export default function FlightsTable({tableData, cancel, update} : {tableData: TableData, cancel: boolean, update: boolean}) {
+export default function FlightsTable({tableData, cancel, update, idToken} : {tableData: TableData, cancel: boolean, update: boolean, idToken: string | null}) {
     const tableHeaders = [
         {title: ""},
         {title: "Airline"},
@@ -19,8 +19,9 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
         {title: "Departure Date"},
         {title: "Class"},
         {title: "Traveler Type"},
+        {title: "Checked Bags"},
         {title: "Price"},
-        {title: "PNR"}, // Equivalent to reservation number
+        {title: "PNR"}
     ]
 
     const emptyItem: ITableData = {
@@ -32,6 +33,7 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
         departureDate: "",
         class: "",
         travelerType: "",
+        numCheckedBags: 0,
         price: -1,
         pnr: -1
     }
@@ -44,16 +46,19 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
         setData(tableData);
     }, [tableData]);
 
-    // Would normally send a /delete request instead
-    const handleDelete = (resId: number) => {
-        if (window.confirm("Are you sure you want you cancel your flight? This will cancel all flights connected to this booking number")) {
+    const handleDelete = async (resId: number) => {
+        if (window.confirm("Are you sure you want you cancel your flight?")) {
 
-            deleteReservation(resId);
+            if (idToken !== null) {
+                deleteReservation(resId, idToken);
+
+            await new Promise(r => setTimeout(r, 1500));
+            window.location.reload()
+            }
         }
     }
 
-    // TODO add number of checked bags
-    const handleUpdate = (idx: number, airline: string, name: string, departure: string, arrival: string, departureDate: string, classType: string, travelerType: string, price: number, pnr: number) => {
+    const handleUpdate = (idx: number, airline: string, name: string, departure: string, arrival: string, departureDate: string, classType: string, travelerType: string ,numBags: number, price: number, pnr: number) => {
         setNewItem({
             index: idx,
             airline: airline,
@@ -63,6 +68,7 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
             departureDate: departureDate,
             class: classType,
             travelerType: travelerType,
+            numCheckedBags: numBags,
             price: price,
             pnr: pnr
         });
@@ -115,6 +121,10 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
                         </td>
 
                         <td>
+                            {_.numCheckedBags}
+                        </td>
+
+                        <td>
                             ${_.price}
                         </td>
 
@@ -127,12 +137,12 @@ export default function FlightsTable({tableData, cancel, update} : {tableData: T
                                 () => handleDelete(_.pnr)}>❌</a>}
                             
                             {update && <a href="javascript: void(0)" onClick={
-                                () => handleUpdate(_.index, _.airline, _.travelerName, _.departure, _.arrival, _.departureDate, _.class, _.travelerType, _.price, _.pnr)}>✏️</a>}
+                                () => handleUpdate(_.index, _.airline, _.travelerName, _.departure, _.arrival, _.departureDate, _.class, _.travelerType, _.numCheckedBags, _.price, _.pnr)}>✏️</a>}
                         </td>
                     </tr>
                 ))}
             </table>
-            {update && showForm && <UpdateForm updateItem={newItem} />}
+            {update && showForm && <UpdateForm updateItem={newItem} idToken={idToken} />}
         </>
     );
 }

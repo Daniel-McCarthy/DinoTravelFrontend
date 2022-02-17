@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, Navigate} from "react-router-dom";
 import { ImageCarousel } from "./components/ImageCarousel";
-import { getReservationsByUser, IEmbeddedReservations } from "./api/reservations";
+import { getReservationsByUser, IReservationList } from "./api/reservations";
 import { getFlightDataById} from "./api/flights";
 
 import * as bannerImage1 from '../assets/banner_images/flight.jpg';
@@ -27,6 +27,7 @@ export interface ITableData {
     departureDate: string,
     class: string,
     travelerType: string,
+    numCheckedBags: number,
     price: number,
     pnr: number
 }
@@ -57,28 +58,36 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
     }
 
     // Change to use user token.
-    getUserReservations = async (id: number): Promise<IEmbeddedReservations> => {
-        const response = await getReservationsByUser(id);
-        if (response instanceof Error) {
-            console.error("Error getting reservations");
+    getUserReservations = async (): Promise<IReservationList> => {
 
-            const emptyTableData: IEmbeddedReservations = {
-                _embedded: {reservationList: []}
+        if (this.props.id_Token !== null) {
+
+            const response = await getReservationsByUser(this.props.id_Token);
+            if (response instanceof Error) {
+                console.error("Error getting reservations");
+    
+                const emptyTableData: IReservationList = {
+                    reservationList: []
+                }
+    
+                return emptyTableData;
+            } else {
+                console.log(response);
+                return response
+            }
+        } else {
+            const emptyTableData: IReservationList = {
+                reservationList: []
             }
 
-            return emptyTableData;
-        } else {
-            console.log(response);
-            return response
+            return emptyTableData
         }
     }
 
-    // User ID is currently hardcoded
-    // Would normally pull the current user_id from a prop
-    reservations = this.getUserReservations(7);
+    reservations = this.getUserReservations();
 
     createTableData = async () => {
-        const reservations = (await this.reservations)._embedded.reservationList;
+        const reservations = (await this.reservations);
 
         const tableDataItems = [];
 
@@ -105,10 +114,11 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                     departure: flightData.departure_airport,
                     arrival: flightData.arrival_airport,
                     departureDate: flightData.arrival_time.substring(0,10),
-                    class: value.seat_type,
+                    class: value.seat_class,
                     travelerType: value.traveler_type,
+                    numCheckedBags: value.num_checked_bags,
                     price: value.price,
-                    pnr: value.reservation_id
+                    pnr: value.reservation_id,
                 }
 
                 // Add the finished row to the table
@@ -188,7 +198,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                             </div>
 
                             <div id="flightsTable">
-                                <FlightsTable tableData={this.state.data} cancel={this.state.cancel} update={this.state.update} />
+                                <FlightsTable tableData={this.state.data} cancel={this.state.cancel} update={this.state.update} idToken={this.props.id_Token} />
                             </div>
                         </div>
                         

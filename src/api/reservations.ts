@@ -15,10 +15,6 @@ export interface IReservationData {
     price: number
 }
 
-export interface IEmbeddedReservations {
-    _embedded: IReservationList
-}
-
 export interface IReservationList {
     reservationList: IReservationDataNew[]
 }
@@ -28,16 +24,17 @@ export interface IReservationList {
 // might break something that was being worked on
 export interface IReservationDataNew {
     reservation_id?: number,
-    user_id: number,
+    booking_id?: number,
+    subject_id?: string,
+    price: number,
     trip_type: string,
     flight_id: number,
     traveler_type: string,
     traveler_name: string,
     seat_id: string,
-    seat_type: string,
-    price: number
+    seat_class: string,
+    num_checked_bags: number,
 }
-export type ReservationsNew = IEmbeddedReservations;
 
 export type Reservations = Array<IReservationData>;
 
@@ -59,19 +56,23 @@ export const getAllReservations = async () : Promise<Reservations | Error> => {
     }
 };
 
-export const getReservationsByUser = async (id: number): Promise<IEmbeddedReservations | Error> => {
+export const getReservationsByUser = async (subject_id: string): Promise<IReservationList | Error> => {
     const options = {
-        'method': 'GET'
+        'method': 'GET',
+        'headers' : {
+            'Authorization': subject_id
+        }
     };
-    const url = reservationsEndpointURL + '/user?id=' + id.toString();
+
+    const url = reservationsEndpointURL + '/user';
 
     try {
-        const responseData: Response = await fetch(url, options);
+        const responseData: Response = await fetch(url, options,);
 
         const statusCode = responseData.status;
         console.log(`Recieved response from ${reservationsEndpointURL} endpoint with status: '${statusCode}'`);
 
-        const json: IEmbeddedReservations = await responseData.json();
+        const json: IReservationList = await responseData.json();
         console.log(`JSON recieved from ${reservationsEndpointURL} endpoint: '${JSON.stringify(json)}'`);
 
         return json;
@@ -82,11 +83,14 @@ export const getReservationsByUser = async (id: number): Promise<IEmbeddedReserv
     }
 }
 
-export const getReservationById = async (id: number): Promise<IReservationDataNew | Error> => {
+export const getReservationById = async (id: number, subject_id: string): Promise<IReservationDataNew | Error> => {
     const url = reservationsEndpointURL + '/' + id.toString();
 
     const options = {
-        'method': 'GET'
+        'method': 'GET',
+        'headers' : {
+            'Authorization': subject_id
+        }
     };
 
     try {
@@ -129,16 +133,21 @@ export const registerReservation = async (reservation: IReservationData): Promis
     }
 };
 
-export const updateReservation = async (reservation: IReservationDataNew, id: number): Promise<Response | Error> => {
+export const updateReservation = async (newName: string, newBagCount: number, id: number, subject_id: string): Promise<Response | Error> => {
     const url = reservationsEndpointURL + '/' + id.toString();
 
     const options = {
         'method': 'PUT',
-        headers: {
+        'headers': {
+            'Authorization': subject_id,
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(reservation)
+    
+        body: JSON.stringify({
+            "traveler_name": newName,
+            "num_checked_bags": newBagCount,
+        })
     };
 
     try {
@@ -151,10 +160,11 @@ export const updateReservation = async (reservation: IReservationDataNew, id: nu
     }
 }
 
-export const deleteReservation = async (id: number) : Promise<Response | Error> => {
+export const deleteReservation = async (id: number, subject_id: string) : Promise<Response | Error> => {
     const options = {
         'method': 'DELETE',
         headers: {
+            'Authorization': subject_id,
             'Content-Type': 'application/json'
         }
     }

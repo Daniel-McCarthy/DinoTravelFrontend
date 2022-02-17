@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { ITableData } from '../../TripsPage';
 import '../../styles/UpdateForm.css'
-import { getReservationById, updateReservation, IReservationDataNew } from '../../api/reservations';
+import { getReservationById, updateReservation} from '../../api/reservations';
 
-export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
+export default function UpdateForm({updateItem, idToken} : {updateItem : ITableData, idToken: string | null}) {
 
     // Add bags from reservation
-    const [bags, setBags] = useState(3);
+    const [bags, setBags] = useState(updateItem.numCheckedBags);
     const [name, setName] = useState(updateItem.travelerName);
     const [newPrice, setNewPrice] = useState(updateItem.price);
 
     useEffect(() => {
-        setBags(1);
+        setBags(updateItem.numCheckedBags);
         setName(updateItem.travelerName);
         setNewPrice(updateItem.price);
     }, [updateItem])
@@ -31,28 +31,19 @@ export default function UpdateForm({updateItem} : {updateItem : ITableData}) {
     }
 
     const handleReservationUpdate = async () => {
-        const existingItem = await getReservationById(updateItem.pnr);
+        if (idToken !== null) {
+            const existingItem = await getReservationById(updateItem.pnr, idToken);
 
-        if (existingItem instanceof Error) {
-            return;
+            if (existingItem instanceof Error) {
+                return;
+            }
+    
+            updateReservation(name, bags, updateItem.pnr, idToken);
+            console.log(name, bags, newPrice);
+    
+            await new Promise(r => setTimeout(r, 1500));
+            window.location.reload()
         }
-
-        const newItem: IReservationDataNew = {
-            user_id: existingItem.user_id, // will change to user_subject
-            trip_type: existingItem.trip_type,
-            flight_id: existingItem.flight_id,
-            traveler_type: existingItem.traveler_type,
-            traveler_name: name,
-            seat_id: existingItem.seat_id,
-            seat_type: existingItem.seat_type,
-            price: newPrice
-        }
-
-        updateReservation(newItem, updateItem.pnr);
-        console.log(name, bags, newPrice);
-
-        await new Promise(r => setTimeout(r, 2000));
-        window.location.reload()
     }
 
     return (
