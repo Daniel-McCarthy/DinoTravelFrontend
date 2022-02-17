@@ -37,7 +37,7 @@ export class SupportPage extends React.Component<ISupportPageProps, ISupportPage
         this.state = {
             showComplaints: false,
             showReviews: false,
-            showPolicies: false,
+            showPolicies: true,
             bannerImages
         }
     }

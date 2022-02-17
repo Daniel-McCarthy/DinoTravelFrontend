@@ -3,6 +3,7 @@ import { ToastType } from '../../enums/ToastType';
 import { ToastMessage } from '../ToastMessage';
 
 import '../../styles/ComplaintForm.css';
+import {IComplaintsData, makeComplaint} from "../../api/complaints";
 
 export default function ComplaintForm() {
     interface IToast {
@@ -16,18 +17,32 @@ export default function ComplaintForm() {
     const [email, setEmail] = useState<string>();
     const [resNumber, setResNumber] = useState<string>();
     const [complaint, setComplaint] = useState<string>();
+    const [val, setVal] = useState<string>();
 
 
     // TODO make resNumber optional
     console.log(resNumber);
 
-    const validateComplaint = () => {
+    const validateComplaint = async () => {
         if (name && email && complaint) {
-            setToast({
-                message: "Thank you for your feedback. Complaint recieved.",
-                toastType: ToastType.SuccessToast,
-                show: true
-            });
+            //send post with all info
+            const reservation: IComplaintsData = {
+                fullName: name,
+                email: email,
+                reservation_id: Number(resNumber),
+                complaint: complaint
+            };
+            const response: Response | Error = await makeComplaint(reservation);
+            if (response instanceof Error) {
+                console.log('Failed to send reservation submission to Dino Travel.');
+            } else {
+                setVal("");
+                setToast({
+                    message: "We appreciate the feedback. Your complaint has been received.",
+                    toastType: ToastType.SuccessToast,
+                    show: true
+                });
+            }
         } else {
             setToast({
                 message: "Please enter full name, email, and complaint.",
@@ -35,6 +50,10 @@ export default function ComplaintForm() {
                 show: true
             });
         }
+    }
+
+    const isFormValid = () => {
+        return name && email && complaint;
     }
 
     const onToastClosed = () => {
@@ -49,39 +68,43 @@ export default function ComplaintForm() {
         <>
             <div id="complaint">
                 <p>
-                    <label htmlFor="txtFullName">Full Name</label><br></br>
-                    <input type="text" id="txtFullName" placeholder="First and Last" onChange={
+                    <label htmlFor="txtFullName">Full Name</label>
+                    <br/>
+                    <input type="text" id="txtFullName" placeholder="John Smith" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setName(_.currentTarget.value)
-                    }></input>
+                    } value={val}/>
                 </p>
 
                 <p>
-                    <label htmlFor="txtEmail">Email Address</label><br></br>
+                    <label htmlFor="txtEmail">Email Address</label>
+                    <br/>
                     <input type="text" id="txtFullName" placeholder="email@domain.com" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setEmail(_.currentTarget.value)
-                    }></input>
+                    } value={val}/>
                 </p>
 
                 <p>
-                    <label htmlFor="txtResNum">Reservation Number (Optional)</label><br></br>
-                    <input type="text" id="txtResNum" placeholder="000" onChange={
+                    <label htmlFor="txtResNum">Reservation ID (Optional)</label>
+                    <br/>
+                    <input type="text" id="txtResNum" placeholder="123456" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setResNumber(_.currentTarget.value)
-                    }></input>
+                    } value={val}/>
                 </p>
 
                 <p>
-                    <label htmlFor="txtarComplaint">Complaint</label><br></br>
-                    <textarea id="txtarComplaint" placeholder="Type Here" onChange={
+                    <label htmlFor="txtarComplaint">Complaint</label>
+                    <br/>
+                    <textarea id="txtarComplaint" placeholder="Type Complaint Here" onChange={
                         (_ : React.ChangeEvent<HTMLTextAreaElement>) => setComplaint(_.currentTarget.value)
-                    }></textarea>
+                    } value={val}/>
                 </p>
 
                 <p>
-                    <button id="btnSubmit" onClick={validateComplaint}>Submit</button>
+                    <button id="btnSubmit" onClick={validateComplaint} disabled={!isFormValid()}>Submit</button>
                 </p>
             </div>
 
-            <ToastMessage toastType={toast.toastType} show={toast.show} message={toast.message} onToastClosed={onToastClosed}></ToastMessage>
+            <ToastMessage toastType={toast.toastType} show={toast.show} message={toast.message} onToastClosed={onToastClosed}/>
         </>
     );
 }
