@@ -20,7 +20,7 @@ import * as bannerImage7 from '../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
 import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
 import { getFlightOffersWithFilters, IFlightOfferArguments, IFlightOfferData } from "./api/flightOffers";
@@ -530,13 +530,21 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         let classes = isFlightSelected ? 'nontoggle':'disabledButton';
 
         if (isOnFinalPage) {
-            return <Link to={"/checkout"}><button className={classes} id="submitButton" onClick={this.onSubmitClicked} disabled={!isFlightSelected}>Submit</button></Link>
+            if (this.props.id_Token == null) {
+                return <button id='submitButton' disabled={!isFlightSelected} onClick={this.displayLoginSubmissionError}>Submit</button>
+            } else {
+                return <Link to={"/checkout"} onClick={this.onSubmitClicked}><button className={classes} id="submitButton" disabled={!isFlightSelected}>Submit</button></Link>
+            }
         } else {
             return <button className={classes} id="nextFlightButton" onClick={this.onNextFlightClicked} disabled={!isFlightSelected}>Next Flight</button>
         }
     }
 
-    onSubmitClicked = async () => {
+    displayLoginSubmissionError = () => {
+        this.displayError('Cannot submit until you have logged in.');
+    }
+
+    onSubmitClicked = () => {
         if (this.props.id_Token == null) {
             this.displayError('Cannot submit due to not being logged in.');
             return;
@@ -557,10 +565,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.setState({
             finalizedFlightSelections,
             searchProgress: currentSearchProgress
-        }, async () => {
-            // Navigate to checkout page after updating state with final selections
-            const navigate = useNavigate();
-            navigate('/checkout');
         });
     }
 
