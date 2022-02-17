@@ -7,7 +7,7 @@ import { ToastMessage } from "./components/ToastMessage";
 import './styles/HomePage.css';
 import './styles/theme.css';
 import { FlightList } from "./components/FlightList";
-import { IReservationData, registerReservation } from "./api/reservations";
+import { IFlightRequestInfo, IReservationData, registerReservations, TravelerType } from "./api/reservations";
 import { ImageCarousel } from "./components/ImageCarousel";
 
 // Import banner images needed to load in Image Carousel
@@ -25,6 +25,7 @@ import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
 import { getFlightOffersWithFilters, IFlightOfferArguments, IFlightOfferData } from "./api/flightOffers";
+import { getAirlineNameFromIataCode } from "./lib/AirlineMapping";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 interface IFlight {
@@ -320,8 +321,8 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 numberOfChildren: this.state.numChildTravelers,
             };
 
-            if (this.state.flightType === FlightType.RoundTrip)
-                flightOfferArguments.returnDate = this.state.returnFlightDate;
+            // if (this.state.flightType === FlightType.RoundTrip)
+            //     flightOfferArguments.returnDate = this.state.returnFlightDate;
             const flightOffers: Array<IFlightOfferData> | Error = await getFlightOffersWithFilters(flightOfferArguments);
             console.log(flightOffers);
 
@@ -536,10 +537,29 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         let classes = isFlightSelected ? 'nontoggle':'disabledButton';
 
         if (isOnFinalPage) {
-            return <button className={classes} id="submitButton" onClick={this.submitReservation} disabled={!isFlightSelected}>Submit</button>
+            return <button className={classes} id="submitButton" onClick={this.onSubmitClicked} disabled={!isFlightSelected}>Submit</button>
         } else {
             return <button className={classes} id="nextFlightButton" onClick={this.onNextFlightClicked} disabled={!isFlightSelected}>Next Flight</button>
         }
+    }
+
+    onSubmitClicked = () => {
+        // Update status of search progress and add final flight to flight selections
+        if (this.state.selectedFlightOffer == null) {
+            return;
+        }
+        const finalizedFlightSelections = this.state.finalizedFlightSelections;
+        finalizedFlightSelections.push(this.state.selectedFlightOffer);
+        const currentSearchProgress = this.state.searchProgress;
+        currentSearchProgress.searchStatus = SearchStatus.Finished;
+
+        this.setState({
+            finalizedFlightSelections,
+            searchProgress: currentSearchProgress
+        }, () => {
+            // Submit reservations once finalized selections are set
+            this.submitReservations();
+        });
     }
 
     onNextFlightClicked = () => {
@@ -592,23 +612,68 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         });
     }
 
-    submitReservation = async () => {
+    submitReservations = async () => {
+        const userId = this.props.id_Token;
+        if (userId == null) {
+            this.displayError('Failed to reserve flights due to not being logged in.');
+            return;
+        }
+
         // Reject submission and warn user if submitting without a flight selection.
         if (this.state.selectedFlightOffer == null) {
             this.displayError(`A flight to book must be selected before submission.`)
             return;
         }
 
-        const reservation: IReservationData = {
-            user_id: 1, // Set as a constant until login/sessions is supported.
-            trip_type: flightTypeAsJsonLabel(this.state.flightType),
-            outgoing_flight_type: flightClassAsJsonLabel(this.state.flightClass),
-            outgoing_flight_id: parseInt(this.state.selectedFlightOffer.id),
-            returning_flight_type: undefined, // Empty until return flight selection is supported.
-            returning_flight_id: undefined,
-            price: parseFloat(this.state.selectedFlightOffer.price.grandTotal)
-        };
-        const response: Response | Error = await registerReservation(reservation);
+        // Will need to submit a copy of every flight once for each passenger
+        const numAdults = this.state.numAdultTravelers;
+        const numChildren = this.state.numChildTravelers;
+        const flightsToReserve = this.state.finalizedFlightSelections;
+        const finalReservations: IReservationData[] = [];
+
+        flightsToReserve.forEach(async flight => {
+            // Submit reservations for each traveler
+            let adultsLeft = numAdults;
+            let childrenLeft = numChildren;
+
+            while (adultsLeft > 0 || childrenLeft > 0) {
+                // Figure out what kind of traveler we are reserving for and ensure they are counted as reserved.
+                const travelerType = adultsLeft > 0 ? TravelerType.Adult : TravelerType.Child;
+                if (travelerType === TravelerType.Adult) {
+                    adultsLeft -= 1;
+                } else {
+                    childrenLeft -= 1;
+                }
+
+                const itinerary = flight.itineraries[0];
+                const flightRequestInfo: IFlightRequestInfo[] = itinerary.segments.map(segment => {
+                    return {
+                        arrival_airport: segment.arrival.iataCode,
+                        departure_airport: segment.departure.iataCode,
+                        departure_time: segment.departure.at,
+                        arrival_time: segment.arrival.at,
+                        flight_provider: getAirlineNameFromIataCode(segment.carrierCode),
+                        flight_code: ''
+                    }
+                });
+
+                const reservation: IReservationData = {
+                    price: parseFloat(flight.price.grandTotal),
+                    trip_type: flightTypeAsJsonLabel(this.state.flightType),
+                    traveler_type: travelerType,
+                    traveler_name: 'FlightPassenger',
+                    seat_id: '',
+                    seat_class: flightClassAsJsonLabel(this.state.flightClass),
+                    num_checked_bags: 0,
+                    flight_request_info: flightRequestInfo
+                };
+
+                finalReservations.push(reservation);
+            }
+        });
+
+        const response: Response | Error = await registerReservations(finalReservations, userId);
+
         if (response instanceof Error) {
             this.displayError('Failed to send reservation submission to Dino Travel.');
             return;

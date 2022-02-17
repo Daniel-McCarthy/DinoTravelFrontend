@@ -5,9 +5,9 @@ export enum FlightType {
 }
 
 export enum FlightTypeJsonLabel {
-    'One Way' = 'ONE_WAY',
-    'Multi-City' = 'ONE_WAY', // Multi-city will be handled as a series of one way flights.
-    'Round Trip' = 'ROUND_TRIP',
+    'One Way' = 'ONEWAY',
+    'Multi-City' = 'ONEWAY', // Multi-city will be handled as a series of one way flights.
+    'Round Trip' = 'ROUNDTRIP',
 }
 
 export const flightTypeAsJsonLabel = (flightTypeValue: FlightType): FlightTypeJsonLabel => {
