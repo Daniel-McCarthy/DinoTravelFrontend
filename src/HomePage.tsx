@@ -668,7 +668,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 });
 
                 const reservation: IReservationData = {
-                    price: parseFloat(flight.price.grandTotal),
+                    price: parseFloat(flight.price.grandTotal ? flight.price.grandTotal : '0'),
                     trip_type: flightTypeAsJsonLabel(this.state.flightType),
                     traveler_type: travelerType,
                     traveler_name: 'FlightPassenger',
