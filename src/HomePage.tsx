@@ -88,6 +88,7 @@ interface IHomePageState {
 interface IHomePageProps {
     id_Token: string | null
     isLoggedIn: boolean
+    onReservedFlightsFinalized: (finalFlightSelections: IFlightOfferData[]) => void
 }
 
 interface IToastMessage {
@@ -552,6 +553,9 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         finalizedFlightSelections.push(this.state.selectedFlightOffer);
         const currentSearchProgress = this.state.searchProgress;
         currentSearchProgress.searchStatus = SearchStatus.Finished;
+
+        // Update PageRouter parent component with our final flight offer data
+        this.props.onReservedFlightsFinalized(finalizedFlightSelections);
 
         this.setState({
             finalizedFlightSelections,
