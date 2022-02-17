@@ -16,6 +16,11 @@ interface IToastProps {
     onToastClosed: () => void;
 }
 
+export interface IToastMessage {
+    message: string;
+    toastType: ToastType,
+}
+
 export class ToastMessage extends React.Component<IToastProps, IToastState> {
 
     public constructor(props: IToastProps) {
