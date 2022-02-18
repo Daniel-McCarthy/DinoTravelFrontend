@@ -535,7 +535,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
         if (isOnFinalPage) {
             if (this.props.id_Token == null) {
-                return <button id='submitButton' disabled={!isFlightSelected} onClick={this.displayLoginSubmissionError}>Submit</button>
+                return <Link to={"/login"}><button id='submitButton'>Go to Login</button></Link>
             } else {
                 return <Link to={"/checkout"} onClick={this.onSubmitClicked}><button className={classes} id="submitButton" disabled={!isFlightSelected}>Submit</button></Link>
             }
