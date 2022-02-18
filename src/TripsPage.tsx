@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, Navigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ImageCarousel } from "./components/ImageCarousel";
 import { getReservationsByUser, IReservationList } from "./api/reservations";
 import { getFlightDataById} from "./api/flights";
@@ -147,8 +147,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
     render() {
         return (
             <>
-                {!this.props.isLoggedIn ? <Navigate to="/login" />
-                :<>
+                <>
                     <header>
                         <div id="headerContent">
                             <div className="banner">
@@ -176,6 +175,8 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                             </nav>
                         </div>
                     </header>
+
+                    {this.props.isLoggedIn ?
                     <main>
                         <div id="tripsContent">
                             <div id="tripsPageTitle">
@@ -208,7 +209,15 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
                             <ImageCarousel height={300} imagesToUse={this.state.bannerImages} />
                         </div>
                     </main>
-                </>}
+                    : 
+                        <div id="loginRedirect">
+                            <h1>Please sign in first</h1>
+                            <Link to="/login">
+                                <button className="nontoggle">Visit login page</button>
+                            </Link>
+                        </div>
+                    }
+                </>
             </>
         )
     }
