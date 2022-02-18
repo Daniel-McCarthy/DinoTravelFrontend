@@ -206,7 +206,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                     price: parseFloat(!!flight.price.grandTotal ? flight.price.grandTotal : '0'),
                     trip_type: flightTypeAsJsonLabel(this.props.flightType),
                     traveler_type: travelerType,
-                    traveler_name: 'FlightPassenger',
+                    traveler_name: `${this.state.firstName} ${this.state.lastName}`,
                     seat_id: '',
                     seat_class: flightClassAsJsonLabel(this.props.flightClass),
                     num_checked_bags: 0,
