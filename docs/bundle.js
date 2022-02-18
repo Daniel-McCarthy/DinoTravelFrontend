@@ -627,7 +627,8 @@ class HomePage extends React.Component {
             let classes = isFlightSelected ? 'nontoggle' : 'disabledButton';
             if (isOnFinalPage) {
                 if (this.props.id_Token == null) {
-                    return React.createElement("button", { id: 'submitButton', disabled: !isFlightSelected, onClick: this.displayLoginSubmissionError }, "Submit");
+                    return React.createElement(react_router_dom_1.Link, { to: "/login" },
+                        React.createElement("button", { id: 'submitButton' }, "Go to Login"));
                 }
                 else {
                     return React.createElement(react_router_dom_1.Link, { to: "/checkout", onClick: this.onSubmitClicked },
@@ -1300,7 +1301,8 @@ class TripsPage extends React.Component {
                             React.createElement("div", { id: "tripsPageTitle" },
                                 React.createElement("h1", null, "Manage your Trips")),
                             React.createElement("div", { id: "manageButtons" },
-                                React.createElement("a", { href: "/", id: "addFlightLink" }, "Add flight"),
+                                React.createElement(react_router_dom_1.Link, { to: "/" },
+                                    React.createElement("a", { id: "addFlightLink" }, "Add flight")),
                                 this.state.cancel ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight")
                                     : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight"),
                                 this.state.update ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")
