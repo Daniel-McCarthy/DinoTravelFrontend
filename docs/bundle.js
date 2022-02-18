@@ -234,7 +234,7 @@ class CheckoutPage extends React.Component {
                         price: parseFloat(!!flight.price.grandTotal ? flight.price.grandTotal : '0'),
                         trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.props.flightType),
                         traveler_type: travelerType,
-                        traveler_name: 'FlightPassenger',
+                        traveler_name: `${this.state.firstName} ${this.state.lastName}`,
                         seat_id: '',
                         seat_class: (0, FlightClass_1.flightClassAsJsonLabel)(this.props.flightClass),
                         num_checked_bags: 0,
@@ -1276,8 +1276,8 @@ class TripsPage extends React.Component {
         this.setTableData();
     }
     render() {
-        return (React.createElement(React.Fragment, null, !this.props.isLoggedIn ? React.createElement(react_router_dom_1.Navigate, { to: "/login" })
-            : React.createElement(React.Fragment, null,
+        return (React.createElement(React.Fragment, null,
+            React.createElement(React.Fragment, null,
                 React.createElement("header", null,
                     React.createElement("div", { id: "headerContent" },
                         React.createElement("div", { className: "banner" },
@@ -1294,20 +1294,26 @@ class TripsPage extends React.Component {
                                 React.createElement("button", { className: "nontoggle" }, "trips")),
                             React.createElement(react_router_dom_1.Link, { to: '/login' },
                                 React.createElement("button", { className: "nontoggle" }, "login"))))),
-                React.createElement("main", null,
-                    React.createElement("div", { id: "tripsContent" },
-                        React.createElement("div", { id: "tripsPageTitle" },
-                            React.createElement("h1", null, "Manage your Trips")),
-                        React.createElement("div", { id: "manageButtons" },
-                            React.createElement("a", { href: "/", id: "addFlightLink" }, "Add flight"),
-                            this.state.cancel ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight")
-                                : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight"),
-                            this.state.update ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")
-                                : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")),
-                        React.createElement("div", { id: "flightsTable" },
-                            React.createElement(FlightsTable_1.default, { tableData: this.state.data, cancel: this.state.cancel, update: this.state.update, idToken: this.props.id_Token }))),
-                    React.createElement("div", { id: 'bannerCarousel' },
-                        React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages }))))));
+                this.props.isLoggedIn ?
+                    React.createElement("main", null,
+                        React.createElement("div", { id: "tripsContent" },
+                            React.createElement("div", { id: "tripsPageTitle" },
+                                React.createElement("h1", null, "Manage your Trips")),
+                            React.createElement("div", { id: "manageButtons" },
+                                React.createElement("a", { href: "/", id: "addFlightLink" }, "Add flight"),
+                                this.state.cancel ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight")
+                                    : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight"),
+                                this.state.update ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")
+                                    : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")),
+                            React.createElement("div", { id: "flightsTable" },
+                                React.createElement(FlightsTable_1.default, { tableData: this.state.data, cancel: this.state.cancel, update: this.state.update, idToken: this.props.id_Token }))),
+                        React.createElement("div", { id: 'bannerCarousel' },
+                            React.createElement(ImageCarousel_1.ImageCarousel, { height: 300, imagesToUse: this.state.bannerImages })))
+                    :
+                        React.createElement("div", { id: "loginRedirect" },
+                            React.createElement("h1", null, "Please sign in first"),
+                            React.createElement(react_router_dom_1.Link, { to: "/login" },
+                                React.createElement("button", { className: "nontoggle" }, "Visit login page"))))));
     }
 }
 exports.TripsPage = TripsPage;
@@ -4182,7 +4188,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,uBAAuB;AAC3B;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,uBAAuB;AAC3B;;AAEA;IACI,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
