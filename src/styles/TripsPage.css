@@ -21,6 +21,11 @@
     color: rgb(59, 77, 145);
 }
 
+#loginRedirect {
+    margin: auto;
+    text-align: center;
+}
+
 .toggleSelected {
     color: rgb(33, 33, 33);
 }
