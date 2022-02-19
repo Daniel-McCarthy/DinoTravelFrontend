@@ -52,6 +52,10 @@ export interface ISearchProgress {
     flightsTotalToSearch: number;
 }
 
+export enum SortOrder {
+    Ascending,
+    Descending
+}
 
 interface IHomePageState {
     flightType: FlightType;
@@ -325,8 +329,10 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 throw flightOffers;
             }
 
+            const sortedFlightOffers = this.sortFlightsByPrice(flightOffers, SortOrder.Ascending);
+
             this.setState({
-                flightOfferData: flightOffers,
+                flightOfferData: sortedFlightOffers,
                 flightListLoading: false,
                 showingFlightList: true
             });
@@ -340,6 +346,12 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 flightOfferData: []
             });
         }
+    }
+
+    sortFlightsByPrice = (flightOffers: IFlightOfferData[], priceSortOrder: SortOrder) => {
+        return priceSortOrder === SortOrder.Ascending
+            ? flightOffers.sort((a, b) => { return parseFloat(a.price.grandTotal || '0') - parseFloat(b.price.grandTotal || '0')})
+            : flightOffers.sort((a, b) => { return parseFloat(b.price.grandTotal || '0') - parseFloat(a.price.grandTotal || '0')});
     }
 
     displayError = (message: string) => {
