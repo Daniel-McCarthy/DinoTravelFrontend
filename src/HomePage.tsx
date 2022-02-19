@@ -1,13 +1,12 @@
 import * as React from "react";
-import { FlightClass, flightClassAsJsonLabel } from "./enums/FlightClass";
-import { FlightType, flightTypeAsJsonLabel } from "./enums/FlightType";
+import { FlightClass } from "./enums/FlightClass";
+import { FlightType } from "./enums/FlightType";
 import { ToastType } from "./enums/ToastType";
 import { IToastMessage, ToastMessage } from "./components/ToastMessage";
 
 import './styles/HomePage.css';
 import './styles/theme.css';
 import { FlightList } from "./components/FlightList";
-import { IFlightRequestInfo, IReservationData, registerReservations, TravelerType } from "./api/reservations";
 import { ImageCarousel } from "./components/ImageCarousel";
 
 // Import banner images needed to load in Image Carousel
@@ -25,7 +24,6 @@ import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
 import { getFlightOffersWithFilters, IFlightOfferArguments, IFlightOfferData } from "./api/flightOffers";
-import { getAirlineNameFromIataCode } from "./lib/AirlineMapping";
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 interface IFlight {
@@ -620,81 +618,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
         this.setState({
             flightType: FlightType.MultiCity
         });
-    }
-
-    submitReservations = async () => {
-        const userId = this.props.id_Token;
-        if (userId == null) {
-            this.displayError('Failed to reserve flights due to not being logged in.');
-            return;
-        }
-
-        // Reject submission and warn user if submitting without a flight selection.
-        if (this.state.selectedFlightOffer == null) {
-            this.displayError(`A flight to book must be selected before submission.`)
-            return;
-        }
-
-        // Will need to submit a copy of every flight once for each passenger
-        const numAdults = this.state.numAdultTravelers;
-        const numChildren = this.state.numChildTravelers;
-        const flightsToReserve = this.state.finalizedFlightSelections;
-        const finalReservations: IReservationData[] = [];
-
-        flightsToReserve.forEach(async flight => {
-            // Submit reservations for each traveler
-            let adultsLeft = numAdults;
-            let childrenLeft = numChildren;
-
-            while (adultsLeft > 0 || childrenLeft > 0) {
-                // Figure out what kind of traveler we are reserving for and ensure they are counted as reserved.
-                const travelerType = adultsLeft > 0 ? TravelerType.Adult : TravelerType.Child;
-                if (travelerType === TravelerType.Adult) {
-                    adultsLeft -= 1;
-                } else {
-                    childrenLeft -= 1;
-                }
-
-                const itinerary = flight.itineraries[0];
-                const flightRequestInfo: IFlightRequestInfo[] = itinerary.segments.map(segment => {
-                    return {
-                        arrival_airport: segment.arrival.iataCode,
-                        departure_airport: segment.departure.iataCode,
-                        departure_time: segment.departure.at,
-                        arrival_time: segment.arrival.at,
-                        flight_provider: getAirlineNameFromIataCode(segment.carrierCode),
-                        flight_code: ''
-                    }
-                });
-
-                const reservation: IReservationData = {
-                    price: parseFloat(flight.price.grandTotal ? flight.price.grandTotal : '0'),
-                    trip_type: flightTypeAsJsonLabel(this.state.flightType),
-                    traveler_type: travelerType,
-                    traveler_name: 'FlightPassenger',
-                    seat_id: '',
-                    seat_class: flightClassAsJsonLabel(this.state.flightClass),
-                    num_checked_bags: 0,
-                    flight_request_info: flightRequestInfo
-                };
-
-                finalReservations.push(reservation);
-            }
-        });
-
-        const response: Response | Error = await registerReservations(finalReservations, userId);
-
-        if (response instanceof Error) {
-            this.displayError('Failed to send reservation submission to Dino Travel.');
-            return;
-        }
-
-        if (response.status !== 200) {
-            this.displayError('Failed to register reservation.');
-            console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
-        } else {
-            this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
-        }
     }
 
     selectedFlightOfferUpdated = (flightOfferSelection: IFlightOfferData | null) => {
