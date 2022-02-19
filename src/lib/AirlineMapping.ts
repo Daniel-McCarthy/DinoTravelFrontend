@@ -1,5 +1,7 @@
 const airlineMappings = new Map<string, string>([
+    ['NK', 'Spirit Airlines'],
     ['AA', 'American Airlines'],
+    ['B6', 'Jetblue Airways Corporation'],
     ['2G', 'CargoItalia (alternate)'],
     ['CO', 'Continental Airlines'],
     ['DL', 'Delta Air Lines'],
