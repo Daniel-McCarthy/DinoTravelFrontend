@@ -185,7 +185,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
 
                             <div id="manageButtons">
                                 <Link to="/">
-                                    <a id="addFlightLink">Add flight</a>
+                                    <span id="addFlightLink">Add flight</span>
                                 </Link>
 
                                 {this.state.cancel ? <a href="javascript: void(0)" className="toggleSelected" onClick={
