@@ -1000,7 +1000,7 @@ class SupportPage extends React.Component {
         this.state = {
             showComplaints: false,
             showReviews: false,
-            showPolicies: false,
+            showPolicies: true,
             bannerImages
         };
     }
@@ -1186,6 +1186,47 @@ class TripsPage extends React.Component {
     }
 }
 exports.TripsPage = TripsPage;
+
+
+/***/ }),
+
+/***/ "./src/api/complaints.ts":
+/*!*******************************!*\
+  !*** ./src/api/complaints.ts ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.makeComplaint = void 0;
+const baseURL = 'purpledinoapi.link';
+const port = '8080';
+const complaintsAPI = '/api/complaints';
+const complaintsEndpointURL = `https://www.${baseURL}:${port}${complaintsAPI}`;
+const makeComplaint = async (complaint) => {
+    console.log(complaint);
+    console.log(`Making a complaint with endpoint: ${complaintsEndpointURL}`);
+    const options = {
+        'method': 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(complaint)
+    };
+    try {
+        const responseData = await fetch(complaintsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Received response from ${complaintsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to post complaint data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.makeComplaint = makeComplaint;
 
 
 /***/ }),
@@ -2807,21 +2848,37 @@ const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const ToastType_1 = __webpack_require__(/*! ../../enums/ToastType */ "./src/enums/ToastType.ts");
 const ToastMessage_1 = __webpack_require__(/*! ../ToastMessage */ "./src/components/ToastMessage.tsx");
 __webpack_require__(/*! ../../styles/ComplaintForm.css */ "./src/styles/ComplaintForm.css");
+const complaints_1 = __webpack_require__(/*! ../../api/complaints */ "./src/api/complaints.ts");
 function ComplaintForm() {
     const [toast, setToast] = (0, react_1.useState)({ toastType: ToastType_1.ToastType.InfoToast, message: "", show: false });
     const [name, setName] = (0, react_1.useState)();
     const [email, setEmail] = (0, react_1.useState)();
     const [resNumber, setResNumber] = (0, react_1.useState)();
     const [complaint, setComplaint] = (0, react_1.useState)();
+    const [val, setVal] = (0, react_1.useState)();
     // TODO make resNumber optional
     console.log(resNumber);
-    const validateComplaint = () => {
+    const validateComplaint = async () => {
         if (name && email && complaint) {
-            setToast({
-                message: "Thank you for your feedback. Complaint recieved.",
-                toastType: ToastType_1.ToastType.SuccessToast,
-                show: true
-            });
+            //send post with all info
+            const reservation = {
+                fullName: name,
+                email: email,
+                reservation_id: Number(resNumber),
+                complaint: complaint
+            };
+            const response = await (0, complaints_1.makeComplaint)(reservation);
+            if (response instanceof Error) {
+                console.log('Failed to send reservation submission to Dino Travel.');
+            }
+            else {
+                setVal("");
+                setToast({
+                    message: "We appreciate the feedback. Your complaint has been received.",
+                    toastType: ToastType_1.ToastType.SuccessToast,
+                    show: true
+                });
+            }
         }
         else {
             setToast({
@@ -2831,6 +2888,9 @@ function ComplaintForm() {
                 show: true
             });
         }
+    };
+    const isFormValid = () => {
+        return name && email && complaint;
     };
     const onToastClosed = () => {
         setToast({
@@ -2844,21 +2904,21 @@ function ComplaintForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtFullName" }, "Full Name"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "First and Last", onChange: (_) => setName(_.currentTarget.value) })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "John Smith", onChange: (_) => setName(_.currentTarget.value), value: val })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", required: true, placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value) })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value), value: val })),
             react_1.default.createElement("p", null,
-                react_1.default.createElement("label", { htmlFor: "txtResNum" }, "Reservation Number (Optional)"),
+                react_1.default.createElement("label", { htmlFor: "txtResNum" }, "Reservation ID (Optional)"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtResNum", placeholder: "000", onChange: (_) => setResNumber(_.currentTarget.value) })),
+                react_1.default.createElement("input", { type: "text", id: "txtResNum", placeholder: "123456", onChange: (_) => setResNumber(_.currentTarget.value), value: val })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtarComplaint" }, "Complaint"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("textarea", { id: "txtarComplaint", placeholder: "Type Here", onChange: (_) => setComplaint(_.currentTarget.value) })),
+                react_1.default.createElement("textarea", { id: "txtarComplaint", placeholder: "Type Complaint Here", onChange: (_) => setComplaint(_.currentTarget.value), value: val })),
             react_1.default.createElement("p", null,
-                react_1.default.createElement("button", { id: "btnSubmit", onClick: validateComplaint }, "Submit"))),
+                react_1.default.createElement("button", { id: "btnSubmit", onClick: validateComplaint, disabled: !isFormValid() }, "Submit"))),
         react_1.default.createElement(ToastMessage_1.ToastMessage, { toastType: toast.toastType, show: toast.show, message: toast.message, onToastClosed: onToastClosed })));
 }
 exports["default"] = ComplaintForm;
@@ -3748,7 +3808,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ComplaintForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n    text-decoration: none;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    background: gray;\r\n    font-weight: normal;\r\n    text-transform: uppercase;\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnSubmit:enabled{\r\n    background: rgb(59, 77, 145);;\r\n}\r\n\r\n#btnSubmit:hover:enabled{\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ComplaintForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;IACZ,qBAAqB;IACrB,+BAA+B;IAC/B,gBAAgB;IAChB,mBAAmB;IACnB,yBAAyB;IACzB,gCAAgC;AACpC;;AAEA;IACI,4BAA4B;AAChC;;AAEA;IACI,6BAA6B;IAC7B,sCAAsC;AAC1C","sourcesContent":["#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n    text-decoration: none;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    background: gray;\r\n    font-weight: normal;\r\n    text-transform: uppercase;\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnSubmit:enabled{\r\n    background: rgb(59, 77, 145);;\r\n}\r\n\r\n#btnSubmit:hover:enabled{\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
