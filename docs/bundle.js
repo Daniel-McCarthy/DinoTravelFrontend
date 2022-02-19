@@ -336,7 +336,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.HomePage = void 0;
+exports.HomePage = exports.SortOrder = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enums/FlightClass.ts");
 const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
@@ -345,7 +345,6 @@ const ToastMessage_1 = __webpack_require__(/*! ./components/ToastMessage */ "./s
 __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
-const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
 // Import banner images needed to load in Image Carousel
 const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
@@ -361,7 +360,6 @@ const MultiCityFlightSelection_1 = __webpack_require__(/*! ./components/MultiCit
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const AirportSelector_1 = __webpack_require__(/*! ./components/AirportSelector */ "./src/components/AirportSelector.tsx");
 const flightOffers_1 = __webpack_require__(/*! ./api/flightOffers */ "./src/api/flightOffers.ts");
-const AirlineMapping_1 = __webpack_require__(/*! ./lib/AirlineMapping */ "./src/lib/AirlineMapping.ts");
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 var SearchStatus;
 (function (SearchStatus) {
@@ -369,6 +367,11 @@ var SearchStatus;
     SearchStatus[SearchStatus["Searching"] = 1] = "Searching";
     SearchStatus[SearchStatus["Finished"] = 2] = "Finished";
 })(SearchStatus || (SearchStatus = {}));
+var SortOrder;
+(function (SortOrder) {
+    SortOrder[SortOrder["Ascending"] = 0] = "Ascending";
+    SortOrder[SortOrder["Descending"] = 1] = "Descending";
+})(SortOrder = exports.SortOrder || (exports.SortOrder = {}));
 // noinspection DuplicatedCode
 class HomePage extends React.Component {
     constructor(props) {
@@ -553,8 +556,9 @@ class HomePage extends React.Component {
                 if (flightOffers instanceof Error) {
                     throw flightOffers;
                 }
+                const sortedFlightOffers = this.sortFlightsByPrice(flightOffers, SortOrder.Ascending);
                 this.setState({
-                    flightOfferData: flightOffers,
+                    flightOfferData: sortedFlightOffers,
                     flightListLoading: false,
                     showingFlightList: true
                 });
@@ -569,6 +573,11 @@ class HomePage extends React.Component {
                     flightOfferData: []
                 });
             }
+        };
+        this.sortFlightsByPrice = (flightOffers, priceSortOrder) => {
+            return priceSortOrder === SortOrder.Ascending
+                ? flightOffers.sort((a, b) => { return parseFloat(a.price.grandTotal || '0') - parseFloat(b.price.grandTotal || '0'); })
+                : flightOffers.sort((a, b) => { return parseFloat(b.price.grandTotal || '0') - parseFloat(a.price.grandTotal || '0'); });
         };
         this.displayError = (message) => {
             this.setState({
@@ -704,72 +713,6 @@ class HomePage extends React.Component {
             this.setState({
                 flightType: FlightType_1.FlightType.MultiCity
             });
-        };
-        this.submitReservations = async () => {
-            const userId = this.props.id_Token;
-            if (userId == null) {
-                this.displayError('Failed to reserve flights due to not being logged in.');
-                return;
-            }
-            // Reject submission and warn user if submitting without a flight selection.
-            if (this.state.selectedFlightOffer == null) {
-                this.displayError(`A flight to book must be selected before submission.`);
-                return;
-            }
-            // Will need to submit a copy of every flight once for each passenger
-            const numAdults = this.state.numAdultTravelers;
-            const numChildren = this.state.numChildTravelers;
-            const flightsToReserve = this.state.finalizedFlightSelections;
-            const finalReservations = [];
-            flightsToReserve.forEach(async (flight) => {
-                // Submit reservations for each traveler
-                let adultsLeft = numAdults;
-                let childrenLeft = numChildren;
-                while (adultsLeft > 0 || childrenLeft > 0) {
-                    // Figure out what kind of traveler we are reserving for and ensure they are counted as reserved.
-                    const travelerType = adultsLeft > 0 ? reservations_1.TravelerType.Adult : reservations_1.TravelerType.Child;
-                    if (travelerType === reservations_1.TravelerType.Adult) {
-                        adultsLeft -= 1;
-                    }
-                    else {
-                        childrenLeft -= 1;
-                    }
-                    const itinerary = flight.itineraries[0];
-                    const flightRequestInfo = itinerary.segments.map(segment => {
-                        return {
-                            arrival_airport: segment.arrival.iataCode,
-                            departure_airport: segment.departure.iataCode,
-                            departure_time: segment.departure.at,
-                            arrival_time: segment.arrival.at,
-                            flight_provider: (0, AirlineMapping_1.getAirlineNameFromIataCode)(segment.carrierCode),
-                            flight_code: ''
-                        };
-                    });
-                    const reservation = {
-                        price: parseFloat(flight.price.grandTotal ? flight.price.grandTotal : '0'),
-                        trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.state.flightType),
-                        traveler_type: travelerType,
-                        traveler_name: 'FlightPassenger',
-                        seat_id: '',
-                        seat_class: (0, FlightClass_1.flightClassAsJsonLabel)(this.state.flightClass),
-                        num_checked_bags: 0,
-                        flight_request_info: flightRequestInfo
-                    };
-                    finalReservations.push(reservation);
-                }
-            });
-            const response = await (0, reservations_1.registerReservations)(finalReservations, userId);
-            if (response instanceof Error) {
-                this.displayError('Failed to send reservation submission to Dino Travel.');
-                return;
-            }
-            if (response.status !== 200) {
-                this.displayError('Failed to register reservation.');
-                console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
-            }
-            else {
-                this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
-            }
         };
         this.selectedFlightOfferUpdated = (flightOfferSelection) => {
             this.setState({
