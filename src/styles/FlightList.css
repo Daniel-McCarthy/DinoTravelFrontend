@@ -48,8 +48,8 @@
     background-color: rgb(220, 216, 230);
 }
 
-.stopsMessage {
-    width: 305px;
+td {
+    width: 250px;
 }
 
 #loadingImageContainer {

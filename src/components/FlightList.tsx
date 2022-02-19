@@ -106,6 +106,9 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
                             <tr>
                                 <td>{takeOffLandingTime}</td>
                                 <td>{flightLengthLabel}</td>
+                                <td className="ticketPrice">
+                                    <text>{`$${flightOffer.price.grandTotal}`}</text>
+                                </td>
                             </tr>
                             <tr>
                                 <td>({takeOffLocationIata}) - ({landingLocationIata})</td>
@@ -115,9 +118,6 @@ export class FlightList extends React.Component<IFlightListProps, IFlightListSta
                                 <td>{airline}</td>
                             </tr>
                         </table>
-                        <div className="ticketPrice">
-                            <text>{`$${flightOffer.price.grandTotal}`}</text>
-                        </div>
                     </div>
                 })}
             </div>
