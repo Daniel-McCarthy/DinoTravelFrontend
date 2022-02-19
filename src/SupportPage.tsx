@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
 import ComplaintForm from "./components/SupportPage/ComplaintForm";
 import Policies from "./components/SupportPage/Policies";
 import ReviewForm from "./components/SupportPage/ReviewForm";
@@ -18,6 +17,7 @@ const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, b
 
 
 import './styles/SupportPage.css';
+import Header from "./components/Header";
 
 interface ISupportPageState {
     showComplaints: boolean,
@@ -49,33 +49,7 @@ export class SupportPage extends React.Component<ISupportPageProps, ISupportPage
         const policiesButtonClass = this.state.showPolicies ? "selected" : "";
         return (
             <>
-                <header>
-                    <div id="headerContent">
-                        <div className="banner">
-                            <Link to='/'>
-                                <img className="logo" alt="Dino Travel Logo" />
-                            </Link>
-                            <div className="slogan">
-                                <h3>Travel More</h3>
-                            </div>
-                        </div>
-
-                        <nav>
-                            <Link to='/support' >
-                                <button className="nontoggle">support</button>
-                            </Link>
-                            <Link to='/about'>
-                                <button className="nontoggle">about us</button>
-                            </Link>
-                            <Link to='/trips'>
-                                <button className="nontoggle">trips</button>
-                            </Link>
-                            <Link to='/login'>
-                                <button className="nontoggle">login</button>
-                            </Link>
-                        </nav>
-                    </div>
-                </header>
+                <Header />
                 <main>
                     <div id="supportPageTitle">
                         <h1>Customer Support</h1>

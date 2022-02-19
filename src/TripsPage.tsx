@@ -15,6 +15,7 @@ import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import FlightsTable from "./components/TripsPage/FlightsTable";
 
 import './styles/TripsPage.css'
+import Header from "./components/Header";
 
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
@@ -148,34 +149,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
         return (
             <>
                 <>
-                    <header>
-                        <div id="headerContent">
-                            <div className="banner">
-                                <Link to='/'>
-                                    <img className="logo" alt="Dino Travel Logo" />
-                                </Link>
-                                <div className="slogan">
-                                    <h3>Travel More</h3>
-                                </div>
-                            </div>
-
-                            <nav>
-                                <Link to='/support' >
-                                    <button className="nontoggle">support</button>
-                                </Link>
-                                <Link to='/about'>
-                                    <button className="nontoggle">about us</button>
-                                </Link>
-                                <Link to='/trips' >
-                                    <button className="nontoggle">trips</button>    
-                                </Link>
-                                <Link to='/login'>
-                                    <button className="nontoggle">login</button>
-                                </Link>
-                            </nav>
-                        </div>
-                    </header>
-
+                    <Header />
                     {this.props.isLoggedIn ?
                     <main>
                         <div id="tripsContent">
