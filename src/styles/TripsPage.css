@@ -17,6 +17,10 @@
     font-weight: 500;
 }
 
+#manageButtons a:visited {
+    color: rgb(59, 77, 145);
+}
+
 #loginRedirect {
     margin: auto;
     text-align: center;
