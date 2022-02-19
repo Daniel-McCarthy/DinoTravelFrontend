@@ -149,7 +149,7 @@ export class TripsPage extends React.Component<ITripsPageProps, ITripsPageState>
         return (
             <>
                 <>
-                    <Header />
+                    <Header isLoggedIn={this.props.isLoggedIn} />
                     {this.props.isLoggedIn ?
                     <main>
                         <div id="tripsContent">

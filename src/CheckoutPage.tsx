@@ -87,7 +87,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
     render() {
         return (
             <div>
-                <Header />
+                <Header isLoggedIn={this.props.isLoggedIn} />
                 <main>
                     <div id="checkoutComponents">
                         <div id="checkoutFormContainer">

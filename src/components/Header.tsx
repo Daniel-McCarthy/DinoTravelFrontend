@@ -4,7 +4,7 @@ import '../styles/theme.css';
 
 import { Link } from "react-router-dom";
 
-function Header() {
+function Header({isLoggedIn}:{isLoggedIn: boolean}) {
   return (
         <header>
             <div id="headerContent">
@@ -28,7 +28,7 @@ function Header() {
                         <button className="nontoggle">My Trips</button>
                     </Link>
                     <Link to='/login'>
-                        <button className="nontoggle">Login</button>
+                        <button className="nontoggle">{isLoggedIn ? 'Logout' : 'Login'}</button>
                     </Link>
                 </nav>
             </div>

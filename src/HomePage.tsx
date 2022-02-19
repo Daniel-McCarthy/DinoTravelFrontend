@@ -401,7 +401,7 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
 
         return (
             <div>
-                <Header />
+                <Header isLoggedIn={this.props.isLoggedIn} />
                 <section>
                     <div id="filterRow">
                         <h1>Search Flights</h1>

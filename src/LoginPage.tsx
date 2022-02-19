@@ -26,7 +26,7 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
     render() {
         return (
             <div>
-                <Header />
+                <Header isLoggedIn={this.props.isLoggedIn} />
                 <div className="center">
                     <h1>Sign in with Google</h1>
                     <div id="googleButton">

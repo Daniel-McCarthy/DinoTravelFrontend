@@ -16,11 +16,11 @@ import { ImageCarousel } from "../ImageCarousel";
 import Header from '../Header';
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
-export default function SuccessPage() {
+export default function SuccessPage({isLoggedIn}:{isLoggedIn: boolean}) {
     return (
         <>
             <div>
-                <Header />
+                <Header isLoggedIn={isLoggedIn} />
                 <div id="successContent">
                     <div id="successHeader">
                         <h1>Success!</h1>

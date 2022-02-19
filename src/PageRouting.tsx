@@ -52,7 +52,7 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
     updateIdToken = (newID: string | null) => {
         this.setState({
             IDToken: newID,
-            isLoggedIn: newID !== null
+            isLoggedIn: newID != null
         });
         console.log("updated to: " + newID);
         this.render();
@@ -73,10 +73,10 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
             <Router>
                 <Routes>
                     <Route path="/trips" element={<TripsPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn}/>} />
-                    <Route path="/support" element={<SupportPage/>} />
-                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/support" element={<SupportPage isLoggedIn={this.state.isLoggedIn} />} />
+                    <Route path="/about" element={<AboutPage isLoggedIn={this.state.isLoggedIn} />} />
                     <Route path="/checkout" element={<CheckoutPage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} reservedFlightOffers={this.state.reservedFlights} numAdultTravelers={this.state.reservedAdultSeats} numChildTravelers={this.state.reservedChildSeats} flightClass={this.state.flightClass} flightType={this.state.flightType} />} />
-                    <Route path="/success" element={<SuccessPage />} />
+                    <Route path="/success" element={<SuccessPage isLoggedIn={this.state.isLoggedIn} />} />
                     <Route path="/" element={<HomePage id_Token={this.state.IDToken} isLoggedIn={this.state.isLoggedIn} onReservedFlightsFinalized={this.updateReservedFlights} />} />
                     <Route path="/login" element={<LoginPage updateIDToken={this.updateIdToken} isLoggedIn={this.state.isLoggedIn}/>} />
                 </Routes>

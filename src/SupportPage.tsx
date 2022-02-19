@@ -27,6 +27,7 @@ interface ISupportPageState {
 }
 
 interface ISupportPageProps {
+    isLoggedIn: boolean
 }
 
 export class SupportPage extends React.Component<ISupportPageProps, ISupportPageState> {
@@ -49,7 +50,7 @@ export class SupportPage extends React.Component<ISupportPageProps, ISupportPage
         const policiesButtonClass = this.state.showPolicies ? "selected" : "";
         return (
             <>
-                <Header />
+                <Header isLoggedIn={this.props.isLoggedIn} />
                 <main>
                     <div id="supportPageTitle">
                         <h1>Customer Support</h1>

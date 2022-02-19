@@ -21,6 +21,7 @@ interface IAboutPageState {
 }
 
 interface IAboutPageProps {
+    isLoggedIn: boolean
 }
 
 export class AboutPage extends React.Component<IAboutPageProps, IAboutPageState> {
@@ -37,7 +38,7 @@ export class AboutPage extends React.Component<IAboutPageProps, IAboutPageState>
     render() {
         return (
             <>
-                <Header />
+                <Header isLoggedIn={this.props.isLoggedIn} />
                 <main>
                     <div id="aboutUsContainer">
                         <div id="aboutUsTitle">
