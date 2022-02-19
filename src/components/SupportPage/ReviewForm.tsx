@@ -27,7 +27,9 @@ export default function ReviewForm() {
             })
         } else {
             setToast({
-                message: "Please fill out the whole form before submitting.",
+                message: "Please enter: " + (name? "" : "(full name)") + "\t" + (email? "" 
+                    : "(email)") + "\t" + (experience? "\t" : "(experience)" + "\t" + (recommendation? "\t" : "(recommendation)" 
+                    + "\t" + (review? "\t" : "(review)"))),
                 toastType: ToastType.ErrorToast,
                 show: true
             })

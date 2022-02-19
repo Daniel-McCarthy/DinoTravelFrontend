@@ -30,7 +30,8 @@ export default function ComplaintForm() {
             });
         } else {
             setToast({
-                message: "Please enter full name, email, and complaint.",
+                message: "Please enter: " + (name? "" : "(full name)") + "\t" 
+                    + (email? "" : "(email)") + "\t" + (complaint? "" : "(complaint)"),
                 toastType: ToastType.ErrorToast,
                 show: true
             });
@@ -57,7 +58,7 @@ export default function ComplaintForm() {
 
                 <p>
                     <label htmlFor="txtEmail">Email Address</label><br></br>
-                    <input type="text" id="txtFullName" placeholder="email@domain.com" onChange={
+                    <input type="text" id="txtFullName" required placeholder="email@domain.com" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setEmail(_.currentTarget.value)
                     }></input>
                 </p>
