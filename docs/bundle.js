@@ -3444,7 +3444,9 @@ ReactDOM.render(React.createElement(PageRouting_1.PageRouting, null), document.g
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getAirlineNameFromIataCode = void 0;
 const airlineMappings = new Map([
+    ['NK', 'Spirit Airlines'],
     ['AA', 'American Airlines'],
+    ['B6', 'Jetblue Airways Corporation'],
     ['2G', 'CargoItalia (alternate)'],
     ['CO', 'Continental Airlines'],
     ['DL', 'Delta Air Lines'],
