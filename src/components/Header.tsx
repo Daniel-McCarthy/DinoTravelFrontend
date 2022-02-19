@@ -19,16 +19,16 @@ function Header() {
 
                 <nav>
                     <Link to='/support' >
-                        <button className="nontoggle">support</button>
+                        <button className="nontoggle">Support</button>
                     </Link>
                     <Link to='/about'>
-                        <button className="nontoggle">about us</button>
+                        <button className="nontoggle">About us</button>
                     </Link>
                     <Link to='/trips'>
-                        <button className="nontoggle">trips</button>
+                        <button className="nontoggle">My Trips</button>
                     </Link>
                     <Link to='/login'>
-                        <button className="nontoggle">login</button>
+                        <button className="nontoggle">Login</button>
                     </Link>
                 </nav>
             </div>
