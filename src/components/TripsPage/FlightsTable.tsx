@@ -11,17 +11,17 @@ export type TableData = Array<ITableData>;
 
 export default function FlightsTable({tableData, cancel, update, idToken} : {tableData: TableData, cancel: boolean, update: boolean, idToken: string | null}) {
     const tableHeaders = [
-        {title: ""},
-        {title: "Airline"},
-        {title: "Traveler Name"},
-        {title: "Departure"},
-        {title: "Arrival"},
-        {title: "Departure Date"},
-        {title: "Class"},
-        {title: "Traveler Type"},
-        {title: "Checked Bags"},
-        {title: "Price"},
-        {title: "PNR"}
+        {title: "", padding: "20px"},
+        {title: "Airline", padding: "70px"},
+        {title: "Traveler Name", padding: "60px"},
+        {title: "Departure", padding: "20px"},
+        {title: "Arrival", padding: "20px"},
+        {title: "Departure Date", padding: "20px"},
+        {title: "Class", padding: "70px"},
+        {title: "Traveler Type", padding: "20px"},
+        {title: "Checked Bags", padding: "20px"},
+        {title: "Price", padding: "50px"},
+        {title: "PNR", padding: "20px"}
     ]
 
     const emptyItem: ITableData = {
@@ -81,7 +81,7 @@ export default function FlightsTable({tableData, cancel, update, idToken} : {tab
             <table id="flightsTable">
                 <tr>
                     {tableHeaders.map((item) => (
-                        <th key={item.title}>
+                        <th key={item.title} style={{"paddingRight" : item.padding}}>
                             {item.title}
                         </th>
                     ))}
@@ -92,7 +92,7 @@ export default function FlightsTable({tableData, cancel, update, idToken} : {tab
                             {_.index}
                         </td>
 
-                        <td>
+                        <td >
                             {_.airline}
                         </td>
 

@@ -4,7 +4,6 @@
 
 #flightsTable th {
     display: flexbox;
-    padding-right: 70px;
 }
 
 #flightsTable td {

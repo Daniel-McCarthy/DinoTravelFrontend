@@ -54,7 +54,11 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
                     </div>
                 </header>
                 <div className="center">
-                    <AuthenticationButton updateIDToken={this.props.updateIDToken} isLoggedIn={this.props.isLoggedIn}/>
+                    <h1>Sign in with Google</h1>
+                    <div id="googleButton">
+                        <AuthenticationButton updateIDToken={this.props.updateIDToken} isLoggedIn={this.props.isLoggedIn}/>
+                    </div>
+                    <span style={{"fontSize": "12px"}}>Account login must be done through Google. By signing in, you accept DinoTravel's Terms of Service and Privacy Policy</span>
                 </div>
 
                 <div id='bannerCarousel'>
