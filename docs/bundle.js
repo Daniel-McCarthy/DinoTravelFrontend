@@ -28,10 +28,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AboutPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
 const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
 const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
@@ -43,6 +45,7 @@ const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_image
 const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 __webpack_require__(/*! ./styles/AboutPage.css */ "./src/styles/AboutPage.css");
+const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 class AboutPage extends React.Component {
     constructor(props) {
         super(props);
@@ -52,22 +55,7 @@ class AboutPage extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement("header", null,
-                React.createElement("div", { id: "headerContent" },
-                    React.createElement("div", { className: "banner" },
-                        React.createElement(react_router_dom_1.Link, { to: '/' },
-                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                        React.createElement("div", { className: "slogan" },
-                            React.createElement("h3", null, "Travel More"))),
-                    React.createElement("nav", null,
-                        React.createElement(react_router_dom_1.Link, { to: '/support' },
-                            React.createElement("button", { className: "nontoggle" }, "support")),
-                        React.createElement(react_router_dom_1.Link, { to: '/about' },
-                            React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
-                            React.createElement("button", { className: "nontoggle" }, "trips")),
-                        React.createElement(react_router_dom_1.Link, { to: '/login' },
-                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement(Header_1.default, null),
             React.createElement("main", null,
                 React.createElement("div", { id: "aboutUsContainer" },
                     React.createElement("div", { id: "aboutUsTitle" },
@@ -134,7 +122,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CheckoutPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const CheckoutForm_1 = __importDefault(__webpack_require__(/*! ./components/CheckoutPage/CheckoutForm */ "./src/components/CheckoutPage/CheckoutForm.tsx"));
 const CheckoutReceipt_1 = __importDefault(__webpack_require__(/*! ./components/CheckoutPage/CheckoutReceipt */ "./src/components/CheckoutPage/CheckoutReceipt.tsx"));
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
@@ -146,6 +133,7 @@ const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/
 const AirlineMapping_1 = __webpack_require__(/*! ./lib/AirlineMapping */ "./src/lib/AirlineMapping.ts");
 const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
 const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enums/FlightClass.ts");
+const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 class CheckoutPage extends React.Component {
     constructor(props) {
         super(props);
@@ -276,22 +264,7 @@ class CheckoutPage extends React.Component {
     }
     render() {
         return (React.createElement("div", null,
-            React.createElement("header", null,
-                React.createElement("div", { id: "headerContent" },
-                    React.createElement("div", { className: "banner" },
-                        React.createElement(react_router_dom_1.Link, { to: '/' },
-                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                        React.createElement("div", { className: "slogan" },
-                            React.createElement("h3", null, "Travel More"))),
-                    React.createElement("nav", null,
-                        React.createElement(react_router_dom_1.Link, { to: "/support" },
-                            React.createElement("button", { className: "nontoggle" }, "support")),
-                        React.createElement(react_router_dom_1.Link, { to: "/about" },
-                            React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement(react_router_dom_1.Link, { to: "/trips" },
-                            React.createElement("button", { className: "nontoggle" }, "trips")),
-                        React.createElement(react_router_dom_1.Link, { to: '/login' },
-                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement(Header_1.default, null),
             React.createElement("main", null,
                 React.createElement("div", { id: "checkoutComponents" },
                     React.createElement("div", { id: "checkoutFormContainer" },
@@ -335,6 +308,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.HomePage = exports.SortOrder = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
@@ -342,6 +318,7 @@ const FlightClass_1 = __webpack_require__(/*! ./enums/FlightClass */ "./src/enum
 const FlightType_1 = __webpack_require__(/*! ./enums/FlightType */ "./src/enums/FlightType.ts");
 const ToastType_1 = __webpack_require__(/*! ./enums/ToastType */ "./src/enums/ToastType.ts");
 const ToastMessage_1 = __webpack_require__(/*! ./components/ToastMessage */ "./src/components/ToastMessage.tsx");
+const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
@@ -760,22 +737,7 @@ class HomePage extends React.Component {
         const oneWayButtonClass = isOneWaySelected ? 'selected' : '';
         const multiCityButtonClass = isMultiCitySelected ? 'selected' : '';
         return (React.createElement("div", null,
-            React.createElement("header", null,
-                React.createElement("div", { id: "headerContent" },
-                    React.createElement("div", { className: "banner" },
-                        React.createElement(react_router_dom_1.Link, { to: '/' },
-                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                        React.createElement("div", { className: "slogan" },
-                            React.createElement("h3", null, "Travel More"))),
-                    React.createElement("nav", null,
-                        React.createElement(react_router_dom_1.Link, { to: '/support' },
-                            React.createElement("button", { className: "nontoggle" }, "support")),
-                        React.createElement(react_router_dom_1.Link, { to: '/about' },
-                            React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
-                            React.createElement("button", { className: "nontoggle" }, "trips")),
-                        React.createElement(react_router_dom_1.Link, { to: '/login' },
-                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement(Header_1.default, null),
             React.createElement("section", null,
                 React.createElement("div", { id: "filterRow" },
                     React.createElement("h1", null, "Search Flights"),
@@ -850,13 +812,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.LoginPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const AuthenticationButton_1 = __webpack_require__(/*! ./components/AuthenticationButton */ "./src/components/AuthenticationButton.tsx");
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
 __webpack_require__(/*! ./styles/Login.css */ "./src/styles/Login.css");
+const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -866,24 +831,12 @@ class LoginPage extends React.Component {
     }
     render() {
         return (React.createElement("div", null,
-            React.createElement("header", null,
-                React.createElement("div", { id: "headerContent" },
-                    React.createElement("div", { className: "banner" },
-                        React.createElement(react_router_dom_1.Link, { to: '/' },
-                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                        React.createElement("div", { className: "slogan" },
-                            React.createElement("h3", null, "Travel More"))),
-                    React.createElement("nav", null,
-                        React.createElement(react_router_dom_1.Link, { to: '/support' },
-                            React.createElement("button", { className: "nontoggle" }, "support")),
-                        React.createElement(react_router_dom_1.Link, { to: '/about' },
-                            React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
-                            React.createElement("button", { className: "nontoggle" }, "trips")),
-                        React.createElement(react_router_dom_1.Link, { to: '/login' },
-                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement(Header_1.default, null),
             React.createElement("div", { className: "center" },
-                React.createElement(AuthenticationButton_1.AuthenticationButton, { updateIDToken: this.props.updateIDToken, isLoggedIn: this.props.isLoggedIn })),
+                React.createElement("h1", null, "Sign in with Google"),
+                React.createElement("div", { id: "googleButton" },
+                    React.createElement(AuthenticationButton_1.AuthenticationButton, { updateIDToken: this.props.updateIDToken, isLoggedIn: this.props.isLoggedIn })),
+                React.createElement("span", { style: { "fontSize": "12px" } }, "Account login must be done through Google. By signing in, you accept DinoTravel's Terms of Service and Privacy Policy")),
             React.createElement("div", { id: 'bannerCarousel' },
                 React.createElement(ImageCarousel_1.ImageCarousel, { height: 500, imagesToUse: this.state.bannerImages }))));
     }
@@ -1026,7 +979,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SupportPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
-const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const ComplaintForm_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/ComplaintForm */ "./src/components/SupportPage/ComplaintForm.tsx"));
 const Policies_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/Policies */ "./src/components/SupportPage/Policies.tsx"));
 const ReviewForm_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/ReviewForm */ "./src/components/SupportPage/ReviewForm.tsx"));
@@ -1041,6 +993,7 @@ const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_image
 const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 __webpack_require__(/*! ./styles/SupportPage.css */ "./src/styles/SupportPage.css");
+const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 class SupportPage extends React.Component {
     constructor(props) {
         super(props);
@@ -1056,22 +1009,7 @@ class SupportPage extends React.Component {
         const reviewsButtonClass = this.state.showReviews ? "selected" : "";
         const policiesButtonClass = this.state.showPolicies ? "selected" : "";
         return (React.createElement(React.Fragment, null,
-            React.createElement("header", null,
-                React.createElement("div", { id: "headerContent" },
-                    React.createElement("div", { className: "banner" },
-                        React.createElement(react_router_dom_1.Link, { to: '/' },
-                            React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                        React.createElement("div", { className: "slogan" },
-                            React.createElement("h3", null, "Travel More"))),
-                    React.createElement("nav", null,
-                        React.createElement(react_router_dom_1.Link, { to: '/support' },
-                            React.createElement("button", { className: "nontoggle" }, "support")),
-                        React.createElement(react_router_dom_1.Link, { to: '/about' },
-                            React.createElement("button", { className: "nontoggle" }, "about us")),
-                        React.createElement(react_router_dom_1.Link, { to: '/trips' },
-                            React.createElement("button", { className: "nontoggle" }, "trips")),
-                        React.createElement(react_router_dom_1.Link, { to: '/login' },
-                            React.createElement("button", { className: "nontoggle" }, "login"))))),
+            React.createElement(Header_1.default, null),
             React.createElement("main", null,
                 React.createElement("div", { id: "supportPageTitle" },
                     React.createElement("h1", null, "Customer Support"),
@@ -1140,6 +1078,7 @@ const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_image
 const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const FlightsTable_1 = __importDefault(__webpack_require__(/*! ./components/TripsPage/FlightsTable */ "./src/components/TripsPage/FlightsTable.tsx"));
 __webpack_require__(/*! ./styles/TripsPage.css */ "./src/styles/TripsPage.css");
+const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 class TripsPage extends React.Component {
     constructor(props) {
@@ -1222,22 +1161,7 @@ class TripsPage extends React.Component {
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement(React.Fragment, null,
-                React.createElement("header", null,
-                    React.createElement("div", { id: "headerContent" },
-                        React.createElement("div", { className: "banner" },
-                            React.createElement(react_router_dom_1.Link, { to: '/' },
-                                React.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                            React.createElement("div", { className: "slogan" },
-                                React.createElement("h3", null, "Travel More"))),
-                        React.createElement("nav", null,
-                            React.createElement(react_router_dom_1.Link, { to: '/support' },
-                                React.createElement("button", { className: "nontoggle" }, "support")),
-                            React.createElement(react_router_dom_1.Link, { to: '/about' },
-                                React.createElement("button", { className: "nontoggle" }, "about us")),
-                            React.createElement(react_router_dom_1.Link, { to: '/trips' },
-                                React.createElement("button", { className: "nontoggle" }, "trips")),
-                            React.createElement(react_router_dom_1.Link, { to: '/login' },
-                                React.createElement("button", { className: "nontoggle" }, "login"))))),
+                React.createElement(Header_1.default, null),
                 this.props.isLoggedIn ?
                     React.createElement("main", null,
                         React.createElement("div", { id: "tripsContent" },
@@ -1245,7 +1169,7 @@ class TripsPage extends React.Component {
                                 React.createElement("h1", null, "Manage your Trips")),
                             React.createElement("div", { id: "manageButtons" },
                                 React.createElement(react_router_dom_1.Link, { to: "/" },
-                                    React.createElement("a", { id: "addFlightLink" }, "Add flight")),
+                                    React.createElement("span", { id: "addFlightLink" }, "Add flight")),
                                 this.state.cancel ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight")
                                     : React.createElement("a", { href: "javascript: void(0)", className: "toggleUnselected", onClick: () => this.setState({ cancel: !this.state.cancel, update: false }) }, "Cancel flight"),
                                 this.state.update ? React.createElement("a", { href: "javascript: void(0)", className: "toggleSelected", onClick: () => this.setState({ update: !this.state.update, cancel: false }) }, "Update flight")
@@ -2346,25 +2270,12 @@ const bannerImage6 = __importStar(__webpack_require__(/*! ../../../assets/banner
 const bannerImage7 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
 const bannerImage8 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const ImageCarousel_1 = __webpack_require__(/*! ../ImageCarousel */ "./src/components/ImageCarousel.tsx");
+const Header_1 = __importDefault(__webpack_require__(/*! ../Header */ "./src/components/Header.tsx"));
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
 function SuccessPage() {
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", null,
-            react_1.default.createElement("header", null,
-                react_1.default.createElement("div", { id: "headerContent" },
-                    react_1.default.createElement("div", { className: "banner" },
-                        react_1.default.createElement(react_router_dom_1.Link, { to: '/' },
-                            react_1.default.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
-                        react_1.default.createElement("div", { className: "slogan" },
-                            react_1.default.createElement("h3", null, "Travel More"))),
-                    react_1.default.createElement("nav", null,
-                        react_1.default.createElement(react_router_dom_1.Link, { to: '/support' },
-                            react_1.default.createElement("button", { className: "nontoggle" }, "support")),
-                        react_1.default.createElement(react_router_dom_1.Link, { to: '/about' },
-                            react_1.default.createElement("button", { className: "nontoggle" }, "about us")),
-                        react_1.default.createElement("button", { className: "nontoggle" }, "trips"),
-                        react_1.default.createElement(react_router_dom_1.Link, { to: '/login' },
-                            react_1.default.createElement("button", { className: "nontoggle" }, "login"))))),
+            react_1.default.createElement(Header_1.default, null),
             react_1.default.createElement("div", { id: "successContent" },
                 react_1.default.createElement("div", { id: "successHeader" },
                     react_1.default.createElement("h1", null, "Success!"),
@@ -2465,7 +2376,9 @@ class FlightList extends React.Component {
                     React.createElement("table", null,
                         React.createElement("tr", null,
                             React.createElement("td", null, takeOffLandingTime),
-                            React.createElement("td", null, flightLengthLabel)),
+                            React.createElement("td", null, flightLengthLabel),
+                            React.createElement("td", { className: "ticketPrice" },
+                                React.createElement("text", null, `$${flightOffer.price.grandTotal}`))),
                         React.createElement("tr", null,
                             React.createElement("td", null,
                                 "(",
@@ -2475,9 +2388,7 @@ class FlightList extends React.Component {
                                 ")"),
                             this.renderFlightStops(flightOffer)),
                         React.createElement("tr", null,
-                            React.createElement("td", null, airline))),
-                    React.createElement("div", { className: "ticketPrice" },
-                        React.createElement("text", null, `$${flightOffer.price.grandTotal}`)));
+                            React.createElement("td", null, airline))));
             })));
         };
         this.renderFlightStops = (flightOffer) => {
@@ -2599,6 +2510,44 @@ class FlightList extends React.Component {
     }
 }
 exports.FlightList = FlightList;
+
+
+/***/ }),
+
+/***/ "./src/components/Header.tsx":
+/*!***********************************!*\
+  !*** ./src/components/Header.tsx ***!
+  \***********************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
+__webpack_require__(/*! ../styles/theme.css */ "./src/styles/theme.css");
+const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
+function Header() {
+    return (react_1.default.createElement("header", null,
+        react_1.default.createElement("div", { id: "headerContent" },
+            react_1.default.createElement("div", { className: "banner" },
+                react_1.default.createElement(react_router_dom_1.Link, { to: '/' },
+                    react_1.default.createElement("img", { className: "logo", alt: "Dino Travel Logo" })),
+                react_1.default.createElement("div", { className: "slogan" },
+                    react_1.default.createElement("h3", null, "Travel More"))),
+            react_1.default.createElement("nav", null,
+                react_1.default.createElement(react_router_dom_1.Link, { to: '/support' },
+                    react_1.default.createElement("button", { className: "nontoggle" }, "Support")),
+                react_1.default.createElement(react_router_dom_1.Link, { to: '/about' },
+                    react_1.default.createElement("button", { className: "nontoggle" }, "About us")),
+                react_1.default.createElement(react_router_dom_1.Link, { to: '/trips' },
+                    react_1.default.createElement("button", { className: "nontoggle" }, "My Trips")),
+                react_1.default.createElement(react_router_dom_1.Link, { to: '/login' },
+                    react_1.default.createElement("button", { className: "nontoggle" }, "Login"))))));
+}
+exports["default"] = Header;
 
 
 /***/ }),
@@ -2876,7 +2825,8 @@ function ComplaintForm() {
         }
         else {
             setToast({
-                message: "Please enter full name, email, and complaint.",
+                message: "Please enter: " + (name ? "" : "(full name)") + "\t"
+                    + (email ? "" : "(email)") + "\t" + (complaint ? "" : "(complaint)"),
                 toastType: ToastType_1.ToastType.ErrorToast,
                 show: true
             });
@@ -2898,7 +2848,7 @@ function ComplaintForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value) })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", required: true, placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value) })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtResNum" }, "Reservation Number (Optional)"),
                 react_1.default.createElement("br", null),
@@ -3001,7 +2951,9 @@ function ReviewForm() {
         }
         else {
             setToast({
-                message: "Please fill out the whole form before submitting.",
+                message: "Please enter: " + (name ? "" : "(full name)") + "\t" + (email ? ""
+                    : "(email)") + "\t" + (experience ? "\t" : "(experience)" + "\t" + (recommendation ? "\t" : "(recommendation)"
+                    + "\t" + (review ? "\t" : "(review)"))),
                 toastType: ToastType_1.ToastType.ErrorToast,
                 show: true
             });
@@ -3178,17 +3130,17 @@ __webpack_require__(/*! ../../styles/FlightsTable.css */ "./src/styles/FlightsTa
 const reservations_1 = __webpack_require__(/*! ../../api/reservations */ "./src/api/reservations.ts");
 function FlightsTable({ tableData, cancel, update, idToken }) {
     const tableHeaders = [
-        { title: "" },
-        { title: "Airline" },
-        { title: "Traveler Name" },
-        { title: "Departure" },
-        { title: "Arrival" },
-        { title: "Departure Date" },
-        { title: "Class" },
-        { title: "Traveler Type" },
-        { title: "Checked Bags" },
-        { title: "Price" },
-        { title: "PNR" }
+        { title: "", padding: "20px" },
+        { title: "Airline", padding: "70px" },
+        { title: "Traveler Name", padding: "60px" },
+        { title: "Departure", padding: "20px" },
+        { title: "Arrival", padding: "20px" },
+        { title: "Departure Date", padding: "20px" },
+        { title: "Class", padding: "70px" },
+        { title: "Traveler Type", padding: "20px" },
+        { title: "Checked Bags", padding: "20px" },
+        { title: "Price", padding: "50px" },
+        { title: "PNR", padding: "20px" }
     ];
     const emptyItem = {
         index: -1,
@@ -3236,7 +3188,7 @@ function FlightsTable({ tableData, cancel, update, idToken }) {
     };
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("table", { id: "flightsTable" },
-            react_1.default.createElement("tr", null, tableHeaders.map((item) => (react_1.default.createElement("th", { key: item.title }, item.title)))),
+            react_1.default.createElement("tr", null, tableHeaders.map((item) => (react_1.default.createElement("th", { key: item.title, style: { "paddingRight": item.padding } }, item.title)))),
             data.map((_) => (react_1.default.createElement("tr", null,
                 react_1.default.createElement("td", null, _.index),
                 react_1.default.createElement("td", null, _.airline),
@@ -3826,7 +3778,7 @@ var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n    border-bottom: solid lightgray 1px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n\r\n.stopsMessage {\r\n    width: 305px;\r\n}\r\n\r\n#loadingImageContainer {\r\n    display: flex;\r\n    width: 100%;\r\n}\r\n\r\n#loadingImage {\r\n    width: 300px;\r\n    height: 300px;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightList.css"],"names":[],"mappings":"AAAA;;EAEE;AACF;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,gBAAgB;AACpB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;IACjB,kCAAkC;AACtC;;AAEA;IACI,mBAAmB;IACnB,yBAAyB;AAC7B;;AAEA,iEAAiE;AACjE;IACI,oBAAoB;CACvB;;AAED;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;IACjB,eAAe;IACf,qBAAqB;AACzB;;AAEA;IACI,oCAAoC;AACxC;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,WAAW;AACf;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,cAAc;IACd,iBAAiB;IACjB,kBAAkB;IAClB,yDAAiD;AACrD","sourcesContent":["/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n    border-bottom: solid lightgray 1px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n\r\n.stopsMessage {\r\n    width: 305px;\r\n}\r\n\r\n#loadingImageContainer {\r\n    display: flex;\r\n    width: 100%;\r\n}\r\n\r\n#loadingImage {\r\n    width: 300px;\r\n    height: 300px;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    background-image: url(\"../../assets/loading.gif\");\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n    border-bottom: solid lightgray 1px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n\r\ntd {\r\n    width: 250px;\r\n}\r\n\r\n#loadingImageContainer {\r\n    display: flex;\r\n    width: 100%;\r\n}\r\n\r\n#loadingImage {\r\n    width: 300px;\r\n    height: 300px;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightList.css"],"names":[],"mappings":"AAAA;;EAEE;AACF;IACI,iBAAiB;IACjB,kBAAkB;AACtB;;AAEA;;EAEE;;AAEF;IACI,gBAAgB;AACpB;;AAEA;IACI,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;IACjB,kCAAkC;AACtC;;AAEA;IACI,mBAAmB;IACnB,yBAAyB;AAC7B;;AAEA,iEAAiE;AACjE;IACI,oBAAoB;CACvB;;AAED;IACI,qBAAqB;AACzB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;IACjB,eAAe;IACf,qBAAqB;AACzB;;AAEA;IACI,oCAAoC;AACxC;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,aAAa;IACb,WAAW;AACf;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,cAAc;IACd,iBAAiB;IACjB,kBAAkB;IAClB,yDAAiD;AACrD","sourcesContent":["/*\r\n * No Flight Data Message Styling\r\n */\r\n.noDataList {\r\n    padding-top: 20px;\r\n    text-align: center;\r\n}\r\n\r\n/*\r\n * Flight List Styling\r\n */\r\n\r\n.flightList {\r\n    margin-top: 30px;\r\n}\r\n\r\n.flightListHeader {\r\n    font-weight: bold;\r\n}\r\n\r\n.flightRow {\r\n    padding-top: 15px;\r\n    border-bottom: solid lightgray 1px;\r\n}\r\n\r\n.flightRow table td {\r\n    padding-right: 70px;\r\n    /* padding-bottom: 8px; */\r\n}\r\n\r\n/* Add more vertical spacing between first row and rest of rows */\r\n.flightRow table tr:first-of-type td {\r\n    padding-bottom: 16px;\r\n }\r\n\r\n.flightRow table {\r\n    display: inline-block;\r\n}\r\n\r\n.flightRow .ticketPrice {\r\n    display: inline-block;\r\n    font-weight: bold;\r\n    font-size: 24px;\r\n    align-content: center;\r\n}\r\n\r\n.selectedFlight {\r\n    background-color: rgb(220, 216, 230);\r\n}\r\n\r\ntd {\r\n    width: 250px;\r\n}\r\n\r\n#loadingImageContainer {\r\n    display: flex;\r\n    width: 100%;\r\n}\r\n\r\n#loadingImage {\r\n    width: 300px;\r\n    height: 300px;\r\n    display: block;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    background-image: url(\"../../assets/loading.gif\");\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3853,7 +3805,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#flightsTable {\r\n    padding-bottom: 20px;\r\n}\r\n\r\n#flightsTable th {\r\n    display: flexbox;\r\n    padding-right: 70px;\r\n}\r\n\r\n#flightsTable td {\r\n    display: flexbox;\r\n    padding-top: 15px;\r\n}\r\n\r\n#noFlights {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n#txtNameChange {\r\n    width: 110px;\r\n    height: 20px;\r\n    justify-content: center;\r\n    margin: 0%;\r\n}\r\n\r\n#flightsTable a {\r\n    text-decoration: none;\r\n    height: 5px;\r\n    width: 5px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightsTable.css"],"names":[],"mappings":"AAAA;IACI,oBAAoB;AACxB;;AAEA;IACI,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;IAChB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,uBAAuB;IACvB,UAAU;AACd;;AAEA;IACI,qBAAqB;IACrB,WAAW;IACX,UAAU;AACd","sourcesContent":["#flightsTable {\r\n    padding-bottom: 20px;\r\n}\r\n\r\n#flightsTable th {\r\n    display: flexbox;\r\n    padding-right: 70px;\r\n}\r\n\r\n#flightsTable td {\r\n    display: flexbox;\r\n    padding-top: 15px;\r\n}\r\n\r\n#noFlights {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n#txtNameChange {\r\n    width: 110px;\r\n    height: 20px;\r\n    justify-content: center;\r\n    margin: 0%;\r\n}\r\n\r\n#flightsTable a {\r\n    text-decoration: none;\r\n    height: 5px;\r\n    width: 5px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#flightsTable {\r\n    padding-bottom: 20px;\r\n}\r\n\r\n#flightsTable th {\r\n    display: flexbox;\r\n}\r\n\r\n#flightsTable td {\r\n    display: flexbox;\r\n    padding-top: 15px;\r\n}\r\n\r\n#noFlights {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n#txtNameChange {\r\n    width: 110px;\r\n    height: 20px;\r\n    justify-content: center;\r\n    margin: 0%;\r\n}\r\n\r\n#flightsTable a {\r\n    text-decoration: none;\r\n    height: 5px;\r\n    width: 5px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/FlightsTable.css"],"names":[],"mappings":"AAAA;IACI,oBAAoB;AACxB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,gBAAgB;IAChB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,uBAAuB;IACvB,UAAU;AACd;;AAEA;IACI,qBAAqB;IACrB,WAAW;IACX,UAAU;AACd","sourcesContent":["#flightsTable {\r\n    padding-bottom: 20px;\r\n}\r\n\r\n#flightsTable th {\r\n    display: flexbox;\r\n}\r\n\r\n#flightsTable td {\r\n    display: flexbox;\r\n    padding-top: 15px;\r\n}\r\n\r\n#noFlights {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n#txtNameChange {\r\n    width: 110px;\r\n    height: 20px;\r\n    justify-content: center;\r\n    margin: 0%;\r\n}\r\n\r\n#flightsTable a {\r\n    text-decoration: none;\r\n    height: 5px;\r\n    width: 5px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3944,7 +3896,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".center{\r\n    width: 0;\r\n    margin: 0 auto;\r\n}", "",{"version":3,"sources":["webpack://./src/styles/Login.css"],"names":[],"mappings":"AAAA;IACI,QAAQ;IACR,cAAc;AAClB","sourcesContent":[".center{\r\n    width: 0;\r\n    margin: 0 auto;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".center {\r\n    width: 300px;\r\n    margin: auto;\r\n}\r\n\r\n#googleButton {\r\n    padding-bottom: 10px;\r\n    width: 150px;\r\n    margin: auto;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Login.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,YAAY;AAChB;;AAEA;IACI,oBAAoB;IACpB,YAAY;IACZ,YAAY;AAChB","sourcesContent":[".center {\r\n    width: 300px;\r\n    margin: auto;\r\n}\r\n\r\n#googleButton {\r\n    padding-bottom: 10px;\r\n    width: 150px;\r\n    margin: auto;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4133,7 +4085,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,uBAAuB;AAC3B;;AAEA;IACI,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1600px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#addFlightLink {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1180px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1180px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
