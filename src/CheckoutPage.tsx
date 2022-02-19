@@ -1,5 +1,4 @@
 import * as React from "react";
-import {Link} from "react-router-dom";
 import CheckoutForm from "./components/CheckoutPage/CheckoutForm";
 import CheckoutReceipt from "./components/CheckoutPage/CheckoutReceipt";
 import {ImageCarousel} from "./components/ImageCarousel";
@@ -12,6 +11,7 @@ import { IFlightRequestInfo, IReservationData, registerReservations, TravelerTyp
 import { getAirlineNameFromIataCode } from "./lib/AirlineMapping";
 import { FlightType, flightTypeAsJsonLabel } from "./enums/FlightType";
 import { FlightClass, flightClassAsJsonLabel } from "./enums/FlightClass";
+import Header from "./components/Header";
 
 interface ICheckoutPageState {
     bannerImages: string[];
@@ -87,33 +87,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
     render() {
         return (
             <div>
-                <header>
-                    <div id="headerContent">
-                        <div className="banner">
-                            <Link to='/'>
-                                <img className="logo" alt="Dino Travel Logo" />
-                            </Link>
-                            <div className="slogan">
-                                <h3>Travel More</h3>
-                            </div>
-                        </div>
-
-                        <nav>
-                            <Link to="/support">
-                                <button className="nontoggle">support</button>
-                            </Link>
-                            <Link to="/about">
-                                <button className="nontoggle">about us</button>
-                            </Link>
-                            <Link to="/trips">
-                                <button className="nontoggle">trips</button>
-                            </Link>
-                            <Link to='/login'>
-                                <button className="nontoggle">login</button>
-                            </Link>
-                        </nav>
-                    </div>
-                </header>
+                <Header />
                 <main>
                     <div id="checkoutComponents">
                         <div id="checkoutFormContainer">

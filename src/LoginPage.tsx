@@ -1,8 +1,8 @@
 import * as React from "react";
 import {AuthenticationButton} from "./components/AuthenticationButton";
-import {Link} from "react-router-dom";
 import {ImageCarousel} from "./components/ImageCarousel";
 import './styles/Login.css';
+import Header from "./components/Header";
 
 interface ILoginPageState {
     bannerImages: string[];
@@ -26,33 +26,7 @@ export class LoginPage extends React.Component<ILoginPageProps, ILoginPageState>
     render() {
         return (
             <div>
-                <header>
-                    <div id="headerContent">
-                        <div className="banner">
-                            <Link to='/'>
-                                <img className="logo" alt="Dino Travel Logo" />
-                            </Link>
-                            <div className="slogan">
-                                <h3>Travel More</h3>
-                            </div>
-                        </div>
-
-                        <nav>
-                            <Link to='/support'>
-                                <button className="nontoggle">support</button>
-                            </Link>
-                            <Link to='/about'>
-                                <button className="nontoggle">about us</button>
-                            </Link>
-                            <Link to='/trips'>
-                                <button className="nontoggle">trips</button>
-                            </Link>
-                            <Link to='/login'>
-                                <button className="nontoggle">login</button>
-                            </Link>
-                        </nav>
-                    </div>
-                </header>
+                <Header />
                 <div className="center">
                     <h1>Sign in with Google</h1>
                     <div id="googleButton">

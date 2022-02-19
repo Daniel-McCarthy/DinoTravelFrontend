@@ -13,37 +13,14 @@ import * as bannerImage6 from '../../../assets/banner_images/vacation2.png';
 import * as bannerImage7 from '../../../assets/banner_images/vacation3.png';
 import * as bannerImage8 from '../../../assets/banner_images/vacation4.png';
 import { ImageCarousel } from "../ImageCarousel";
+import Header from '../Header';
 const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
 
 export default function SuccessPage() {
     return (
         <>
             <div>
-                <header>
-                    <div id="headerContent">
-                        <div className="banner">
-                            <Link to='/'>
-                                <img className="logo" alt="Dino Travel Logo" />
-                            </Link>
-                            <div className="slogan">
-                                <h3>Travel More</h3>
-                            </div>
-                        </div>
-
-                        <nav>
-                            <Link to='/support' >
-                                <button className="nontoggle">support</button>
-                            </Link>
-                            <Link to='/about'>
-                                <button className="nontoggle">about us</button>
-                            </Link>
-                            <button className="nontoggle">trips</button>
-                            <Link to='/login'>
-                                <button className="nontoggle">login</button>
-                            </Link>
-                        </nav>
-                    </div>
-                </header>
+                <Header />
                 <div id="successContent">
                     <div id="successHeader">
                         <h1>Success!</h1>
