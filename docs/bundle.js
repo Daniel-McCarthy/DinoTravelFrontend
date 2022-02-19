@@ -55,7 +55,7 @@ class AboutPage extends React.Component {
     }
     render() {
         return (React.createElement(React.Fragment, null,
-            React.createElement(Header_1.default, null),
+            React.createElement(Header_1.default, { isLoggedIn: this.props.isLoggedIn }),
             React.createElement("main", null,
                 React.createElement("div", { id: "aboutUsContainer" },
                     React.createElement("div", { id: "aboutUsTitle" },
@@ -264,7 +264,7 @@ class CheckoutPage extends React.Component {
     }
     render() {
         return (React.createElement("div", null,
-            React.createElement(Header_1.default, null),
+            React.createElement(Header_1.default, { isLoggedIn: this.props.isLoggedIn }),
             React.createElement("main", null,
                 React.createElement("div", { id: "checkoutComponents" },
                     React.createElement("div", { id: "checkoutFormContainer" },
@@ -737,7 +737,7 @@ class HomePage extends React.Component {
         const oneWayButtonClass = isOneWaySelected ? 'selected' : '';
         const multiCityButtonClass = isMultiCitySelected ? 'selected' : '';
         return (React.createElement("div", null,
-            React.createElement(Header_1.default, null),
+            React.createElement(Header_1.default, { isLoggedIn: this.props.isLoggedIn }),
             React.createElement("section", null,
                 React.createElement("div", { id: "filterRow" },
                     React.createElement("h1", null, "Search Flights"),
@@ -831,7 +831,7 @@ class LoginPage extends React.Component {
     }
     render() {
         return (React.createElement("div", null,
-            React.createElement(Header_1.default, null),
+            React.createElement(Header_1.default, { isLoggedIn: this.props.isLoggedIn }),
             React.createElement("div", { className: "center" },
                 React.createElement("h1", null, "Sign in with Google"),
                 React.createElement("div", { id: "googleButton" },
@@ -897,7 +897,7 @@ class PageRouting extends React.Component {
         this.updateIdToken = (newID) => {
             this.setState({
                 IDToken: newID,
-                isLoggedIn: newID !== null
+                isLoggedIn: newID != null
             });
             console.log("updated to: " + newID);
             this.render();
@@ -933,10 +933,10 @@ class PageRouting extends React.Component {
         return (React.createElement(react_router_dom_1.HashRouter, null,
             React.createElement(react_router_dom_1.Routes, null,
                 React.createElement(react_router_dom_1.Route, { path: "/trips", element: React.createElement(TripsPage_1.TripsPage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn }) }),
-                React.createElement(react_router_dom_1.Route, { path: "/support", element: React.createElement(SupportPage_1.SupportPage, null) }),
-                React.createElement(react_router_dom_1.Route, { path: "/about", element: React.createElement(AboutPage_1.AboutPage, null) }),
+                React.createElement(react_router_dom_1.Route, { path: "/support", element: React.createElement(SupportPage_1.SupportPage, { isLoggedIn: this.state.isLoggedIn }) }),
+                React.createElement(react_router_dom_1.Route, { path: "/about", element: React.createElement(AboutPage_1.AboutPage, { isLoggedIn: this.state.isLoggedIn }) }),
                 React.createElement(react_router_dom_1.Route, { path: "/checkout", element: React.createElement(CheckoutPage_1.CheckoutPage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn, reservedFlightOffers: this.state.reservedFlights, numAdultTravelers: this.state.reservedAdultSeats, numChildTravelers: this.state.reservedChildSeats, flightClass: this.state.flightClass, flightType: this.state.flightType }) }),
-                React.createElement(react_router_dom_1.Route, { path: "/success", element: React.createElement(SuccessPage_1.default, null) }),
+                React.createElement(react_router_dom_1.Route, { path: "/success", element: React.createElement(SuccessPage_1.default, { isLoggedIn: this.state.isLoggedIn }) }),
                 React.createElement(react_router_dom_1.Route, { path: "/", element: React.createElement(HomePage_1.HomePage, { id_Token: this.state.IDToken, isLoggedIn: this.state.isLoggedIn, onReservedFlightsFinalized: this.updateReservedFlights }) }),
                 React.createElement(react_router_dom_1.Route, { path: "/login", element: React.createElement(LoginPage_1.LoginPage, { updateIDToken: this.updateIdToken, isLoggedIn: this.state.isLoggedIn }) }))));
     }
@@ -1009,7 +1009,7 @@ class SupportPage extends React.Component {
         const reviewsButtonClass = this.state.showReviews ? "selected" : "";
         const policiesButtonClass = this.state.showPolicies ? "selected" : "";
         return (React.createElement(React.Fragment, null,
-            React.createElement(Header_1.default, null),
+            React.createElement(Header_1.default, { isLoggedIn: this.props.isLoggedIn }),
             React.createElement("main", null,
                 React.createElement("div", { id: "supportPageTitle" },
                     React.createElement("h1", null, "Customer Support"),
@@ -1161,7 +1161,7 @@ class TripsPage extends React.Component {
     render() {
         return (React.createElement(React.Fragment, null,
             React.createElement(React.Fragment, null,
-                React.createElement(Header_1.default, null),
+                React.createElement(Header_1.default, { isLoggedIn: this.props.isLoggedIn }),
                 this.props.isLoggedIn ?
                     React.createElement("main", null,
                         React.createElement("div", { id: "tripsContent" },
@@ -2272,10 +2272,10 @@ const bannerImage8 = __importStar(__webpack_require__(/*! ../../../assets/banner
 const ImageCarousel_1 = __webpack_require__(/*! ../ImageCarousel */ "./src/components/ImageCarousel.tsx");
 const Header_1 = __importDefault(__webpack_require__(/*! ../Header */ "./src/components/Header.tsx"));
 const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
-function SuccessPage() {
+function SuccessPage({ isLoggedIn }) {
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", null,
-            react_1.default.createElement(Header_1.default, null),
+            react_1.default.createElement(Header_1.default, { isLoggedIn: isLoggedIn }),
             react_1.default.createElement("div", { id: "successContent" },
                 react_1.default.createElement("div", { id: "successHeader" },
                     react_1.default.createElement("h1", null, "Success!"),
@@ -2529,7 +2529,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 __webpack_require__(/*! ../styles/theme.css */ "./src/styles/theme.css");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
-function Header() {
+function Header({ isLoggedIn }) {
     return (react_1.default.createElement("header", null,
         react_1.default.createElement("div", { id: "headerContent" },
             react_1.default.createElement("div", { className: "banner" },
@@ -2545,7 +2545,7 @@ function Header() {
                 react_1.default.createElement(react_router_dom_1.Link, { to: '/trips' },
                     react_1.default.createElement("button", { className: "nontoggle" }, "My Trips")),
                 react_1.default.createElement(react_router_dom_1.Link, { to: '/login' },
-                    react_1.default.createElement("button", { className: "nontoggle" }, "Login"))))));
+                    react_1.default.createElement("button", { className: "nontoggle" }, isLoggedIn ? 'Logout' : 'Login'))))));
 }
 exports["default"] = Header;
 
