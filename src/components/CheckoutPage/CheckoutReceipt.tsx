@@ -47,32 +47,35 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
                 <div id="receiptFlights">
                     {flightOffers.map((offer) => {
                         return offer.itineraries.map((itenary) => {
-                            return itenary.segments.map((segment) => {
-                                return (
-                                    <>
-                                        <p>({segment.departure.iataCode}) to ({segment.arrival.iataCode})</p>
-                                        <p>{(segment.departure.at).substring(11)} - {(segment.arrival.at).substring(11)}
-                                            {/* How to save time in a single variable?*/}
-                                            ({getTotalFlightTimeFromItinerary(itenary).totalHours}h {getTotalFlightTimeFromItinerary(itenary).totalMinutes}m)
-                                        </p>
-                                        <p>
-                                            {segment.carrierCode}
-                                        </p>
-                                        <p>
-                                            {/* Display grandTotal if it exists */}
-                                            ${offer.price.grandTotal && offer.price.grandTotal}
-                                        </p>
-                                        <br></br>
-                                    </>
-                                )
-                            })
+                            return  ( 
+                                <>
+                                    <p>
+                                        ${offer.price.grandTotal && parseFloat(offer.price.grandTotal).toFixed(2)}
+                                    </p>
+                                    {itenary.segments.map((segment) => {
+                                        return (
+                                            <>
+                                                <p>({segment.departure.iataCode}) to ({segment.arrival.iataCode})</p>
+                                                <p>{(segment.departure.at).substring(11)} - {(segment.arrival.at).substring(11)}
+                                                    {/* How to save time in a single variable?*/}
+                                                    ({getTotalFlightTimeFromItinerary(itenary).totalHours}h {getTotalFlightTimeFromItinerary(itenary).totalMinutes}m)
+                                                </p>
+                                                <p>
+                                                    {segment.carrierCode}
+                                                </p>
+                                                <br></br>
+                                            </>
+                                        )
+                                    })}
+                                </>
+                            )
                         })
                     })}
                 </div>
 
                 <div id="receiptTotal">
                     <h3>Your estimated total:</h3>
-                    <p>${total}</p>
+                    <p>${total.toFixed(2)}</p>
                 </div>
 
                 <p>
