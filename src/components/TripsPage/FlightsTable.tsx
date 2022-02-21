@@ -125,7 +125,7 @@ export default function FlightsTable({tableData, cancel, update, idToken} : {tab
                         </td>
 
                         <td>
-                            ${_.price}
+                            ${_.price.toFixed(2)}
                         </td>
 
                         <td>
