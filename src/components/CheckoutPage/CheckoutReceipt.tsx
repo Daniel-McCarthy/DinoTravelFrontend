@@ -14,10 +14,18 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
 
     const validateUser = (): boolean => {
         for (const info of Object.values(checkoutFormInfo)) {
-            console.log(info);
             if (!info) {
+                console.log("No user info")
                 return false;
             }
+        }
+        return true;
+    }
+
+    const validateFlights = (): boolean => {
+        if (flightOffers.length === 0) {
+            console.log("No flights")
+            return false;
         }
         return true;
     }
@@ -25,7 +33,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
     const completeBooking = async () => {
         console.log("booking");
 
-        if (idToken !== null && validateUser()) {
+        if (idToken !== null && validateUser() && validateFlights()) {
             // TODO send error message if booking could not go through
 
             updateUser(checkoutFormInfo.firstName, checkoutFormInfo.lastName, checkoutFormInfo.email, checkoutFormInfo.birthday, idToken);
@@ -61,7 +69,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
             <div id="bookingReceipt">
                 <div id="receiptTitle">
                     <h2>Booking Information</h2>
-                    <h3>{flightOffers.length} Reservations</h3>
+                    <h3>{flightOffers.length} {(flightOffers.length === 1)? "Reservation": "Reservations"}</h3>
                 </div>
 
                 <div id="receiptFlights">
