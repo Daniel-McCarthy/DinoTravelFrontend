@@ -5,6 +5,17 @@
     padding-bottom: 100px;
 }
 
+#checkoutForm input:required {
+    border-color: #800000;
+    border-width: 2px;
+}
+
+#checkoutForm input:valid {
+    border-width: 1px;
+    border-color: #d8dee9;
+    background-color: #fcfcfc;
+}
+
 input {
     height: 40px;
     width: 300px;
@@ -38,11 +49,11 @@ textarea {
     transition: all 0.2s ease-in-out;
 }
 
-#btnSubmit:enabled{
-    background: rgb(59, 77, 145);;
+#btnSubmit:enabled {
+    background: rgb(59, 77, 145);
 }
 
-#btnSubmit:hover:enabled{
+#btnSubmit:hover:enabled {
     color: rgba(255, 255, 255, 1);
     box-shadow: 0 5px 15px rgb(63, 0, 114);
 }
