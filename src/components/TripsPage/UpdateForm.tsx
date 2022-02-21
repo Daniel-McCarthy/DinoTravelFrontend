@@ -72,7 +72,7 @@ export default function UpdateForm({updateItem, idToken} : {updateItem : ITableD
                     </p>
 
                     <p id="newPrice">
-                        Price: ${newPrice}
+                        Price: ${newPrice.toFixed(2)}
                     </p>
 
                     <p>
