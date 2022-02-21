@@ -50,7 +50,7 @@ export default function CheckoutForm({updateFirstName, updateLastName, updateCou
                         <input type="radio" name="radGender" id="male" value="male" onChange={(event) => updateGender(event.target.value)} required></input>
                         <label htmlFor="male">Male</label>
                         
-                        <input type="radio" name="radGender" id="female" value="female" onChange={(event) => updateGender(event.target.value)}></input>
+                        <input type="radio" name="radGender" id="female" value="female" onChange={(event) => updateGender(event.target.value)} required></input>
                         <label htmlFor="female">Female</label>
                     </p>
 
