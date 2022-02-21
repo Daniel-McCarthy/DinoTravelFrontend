@@ -29,7 +29,7 @@ export default function SuccessPage({isLoggedIn}:{isLoggedIn: boolean}) {
                     </div>
 
                     <div id="successRedirects">
-                        <Link to="/trip">
+                        <Link to="/trips">
                             <button className="nontoggle">Update your trip</button>
                         </Link>
 
