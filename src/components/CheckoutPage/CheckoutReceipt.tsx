@@ -5,7 +5,9 @@ import { updateUser } from '../../api/users';
 import { ICheckoutFormInfo } from '../../CheckoutPage';
 import '../../styles/CheckoutPage.css';
 
-export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken, onBookingComplete} : {checkoutFormInfo: ICheckoutFormInfo, idToken: string | null, flightOffers: IFlightOfferData[], onBookingComplete: () => void}) {
+export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken, onBookingComplete, displayError}: 
+        {checkoutFormInfo: ICheckoutFormInfo, idToken: string | null, 
+            flightOffers: IFlightOfferData[], onBookingComplete: () => void, displayError: (message :string) => void}) {
 
     const [total, setTotal] = useState(0);
     const [success, setSuccess] = useState(false);
@@ -16,6 +18,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
         for (const info of Object.values(checkoutFormInfo)) {
             if (!info) {
                 console.log("No user info")
+                displayError("Please fill out all fields.");
                 return false;
             }
         }
@@ -25,6 +28,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
     const validateFlights = (): boolean => {
         if (flightOffers.length === 0) {
             console.log("No flights")
+            displayError("Please add a flight first.")
             return false;
         }
         return true;
@@ -33,7 +37,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
     const completeBooking = async () => {
         console.log("booking");
 
-        if (idToken !== null && validateUser() && validateFlights()) {
+        if (idToken !== null && validateFlights() && validateUser()) {
             // TODO send error message if booking could not go through
 
             updateUser(checkoutFormInfo.firstName, checkoutFormInfo.lastName, checkoutFormInfo.email, checkoutFormInfo.birthday, idToken);

@@ -186,7 +186,8 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                                 updatePhoneNo={this.updatePhoneNo} updateGender={this.updateGender} updateBirthday={this.updateBirthday} updateEmail={this.updateEmail} />
                         </div>
                         <div id="checkoutReceiptContainer">
-                            <CheckoutReceipt checkoutFormInfo={this.state.user} idToken={this.props.id_Token} flightOffers={this.props.reservedFlightOffers} onBookingComplete={this.onBookingCompleteClicked} />
+                            <CheckoutReceipt checkoutFormInfo={this.state.user} idToken={this.props.id_Token} flightOffers={this.props.reservedFlightOffers} 
+                            onBookingComplete={this.onBookingCompleteClicked} displayError={this.displayError}/>
                         </div>
                     </div>
                 </main>
