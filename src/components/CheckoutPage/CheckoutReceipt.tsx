@@ -1,22 +1,53 @@
-import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { getTotalFlightTimeFromItinerary, IFlightOfferData } from '../../api/flightOffers';
 import { updateUser } from '../../api/users';
+import { ICheckoutFormInfo } from '../../CheckoutPage';
 import '../../styles/CheckoutPage.css';
 
-export default function CheckoutReceipt({firstName, lastName, email, dob, idToken, flightOffers, onBookingComplete} : {firstName: string, lastName: string, email: string, dob: moment.Moment, idToken: string | null, flightOffers: IFlightOfferData[], onBookingComplete: () => void}) {
+export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken, onBookingComplete, displayError}: 
+        {checkoutFormInfo: ICheckoutFormInfo, idToken: string | null, 
+            flightOffers: IFlightOfferData[], onBookingComplete: () => void, displayError: (message :string) => void}) {
 
     const [total, setTotal] = useState(0);
+    const [success, setSuccess] = useState(false);
 
-    const completeBooking = () => {
+    const navigate = useNavigate();
+
+    const validateUser = (): boolean => {
+        for (const info of Object.values(checkoutFormInfo)) {
+            if (!info) {
+                console.log("No user info")
+                displayError("Please fill out all fields.");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    const validateFlights = (): boolean => {
+        if (flightOffers.length === 0) {
+            console.log("No flights")
+            displayError("Please add a flight first.")
+            return false;
+        }
+        return true;
+    }
+
+    const completeBooking = async () => {
         console.log("booking");
 
-        if (idToken !== null) {
-            updateUser(firstName, lastName, email, dob, idToken);
-        }
+            if (idToken !== null && validateFlights() && validateUser()) {
 
-        onBookingComplete();
+            updateUser(checkoutFormInfo.firstName, checkoutFormInfo.lastName, checkoutFormInfo.birthday, idToken);
+
+            onBookingComplete();
+
+            await new Promise(r => setTimeout(r, 1000));
+            setSuccess(true);
+        }
     }
+
 
     const getTotal = (offers: IFlightOfferData[]) => {
         
@@ -41,7 +72,7 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
             <div id="bookingReceipt">
                 <div id="receiptTitle">
                     <h2>Booking Information</h2>
-                    <h3>{flightOffers.length} Reservations</h3>
+                    <h3>{flightOffers.length} {(flightOffers.length === 1)? "Reservation": "Reservations"}</h3>
                 </div>
 
                 <div id="receiptFlights">
@@ -80,6 +111,7 @@ export default function CheckoutReceipt({firstName, lastName, email, dob, idToke
 
                 <p>
                     <button id="btnCompleteBooking" onClick={() => completeBooking()}>Complete Booking</button>
+                    {success && navigate("/success")}
                 </p>
             </div>
         </>

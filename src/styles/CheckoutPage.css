@@ -13,6 +13,17 @@
 
 #btnCompleteBooking {
     width: 310px;
+    transition: all 0.2s ease-in-out;
+}
+
+#btnCompleteBooking:active {
+    background-color: rgb(59, 77, 145);
+}
+
+#btnCompleteBooking:hover:enabled {
+    color: rgba(255, 255, 255, 1);
+    background-color: rgb(59, 77, 145);
+    box-shadow: 0 5px 15px rgb(63, 0, 114);
 }
 
 #checkoutFormContainer {

@@ -15,10 +15,7 @@ import Header from "./components/Header";
 
 interface ICheckoutPageState {
     bannerImages: string[];
-    firstName: string;
-    lastName: string;
-    birthday: moment.Moment;
-    email: string;
+    user: ICheckoutFormInfo;
 
     // Error/Message Toast display and configuration
     showToast: boolean;
@@ -35,6 +32,15 @@ interface ICheckoutPageProps{
     flightClass: FlightClass
 }
 
+export interface ICheckoutFormInfo {
+    firstName: string,
+    lastName: string,
+    country: string,
+    phoneNo: string,
+    gender: string,
+    birthday: moment.Moment,
+}
+
 export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutPageState> {
 
     public constructor(props: ICheckoutPageProps) {
@@ -44,15 +50,21 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
 
         this.updateFirstName.bind(this);
         this.updateLastName.bind(this);
+        this.updateCountry.bind(this);
+        this.updatePhoneNo.bind(this);
+        this.updateGender.bind(this);
         this.updateBirthday.bind(this);
-        this.updateEmail.bind(this);
 
         this.state = {
             bannerImages: [],
-            firstName: "",
-            lastName: "",
-            birthday: moment(),
-            email: "",
+            user: {
+                firstName: "",
+                lastName: "",
+                country: "",
+                phoneNo: "",
+                gender: "",
+                birthday: moment(),
+            },
 
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType.InfoToast, message: "" },
@@ -60,27 +72,83 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         }
     }
 
+    // Sorry for adding all of these update functions. I'm not sure how to update a specific field
+    // through a more generic function call
     updateFirstName = (newFirstName: string) => {
         this.setState({
-            firstName: newFirstName,
+            user: {
+                firstName: newFirstName,
+                lastName : this.state.user.lastName,
+                country : this.state.user.country,
+                phoneNo : this.state.user.phoneNo,
+                gender : this.state.user.gender,
+                birthday : this.state.user.birthday,
+            }
         })
     }
 
     updateLastName = (newLastName: string) => {
         this.setState({
-            lastName: newLastName
+            user: {
+                firstName: this.state.user.firstName,
+                lastName : newLastName,
+                country : this.state.user.country,
+                phoneNo : this.state.user.phoneNo,
+                gender : this.state.user.gender,
+                birthday : this.state.user.birthday,
+            }
+        })
+    }
+
+    updateCountry = (newCountry: string) => {
+        this.setState({
+            user: {
+                firstName: this.state.user.firstName,
+                lastName : this.state.user.lastName,
+                country : newCountry,
+                phoneNo : this.state.user.phoneNo,
+                gender : this.state.user.gender,
+                birthday : this.state.user.birthday,
+            }
+        })
+    }
+
+    updatePhoneNo = (newPhoneNo: string) => {
+        this.setState({
+            user: {
+                firstName: this.state.user.firstName,
+                lastName : this.state.user.lastName,
+                country : this.state.user.country,
+                phoneNo : newPhoneNo,
+                gender : this.state.user.gender,
+                birthday : this.state.user.birthday,
+            }
+        })
+    }
+
+    updateGender = (newGender: string) => {
+        this.setState({
+            user: {
+                firstName: this.state.user.firstName,
+                lastName : this.state.user.lastName,
+                country : this.state.user.country,
+                phoneNo : this.state.user.phoneNo,
+                gender : newGender,
+                birthday : this.state.user.birthday,
+            }
         })
     }
 
     updateBirthday = (newBirthday: moment.Moment) => {
         this.setState({
-            birthday: newBirthday
-        })
-    }
-
-    updateEmail = (newEmail: string) =>{
-        this.setState({
-            email: newEmail
+            user: {
+                firstName: this.state.user.firstName,
+                lastName : this.state.user.lastName,
+                country : this.state.user.country,
+                phoneNo : this.state.user.phoneNo,
+                gender : this.state.user.gender,
+                birthday : newBirthday,
+            }
         })
     }
 
@@ -91,10 +159,12 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 <main>
                     <div id="checkoutComponents">
                         <div id="checkoutFormContainer">
-                            <CheckoutForm updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateBirthday={this.updateBirthday} updateEmail={this.updateEmail} />
+                            <CheckoutForm updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateCountry={this.updateCountry}
+                                updatePhoneNo={this.updatePhoneNo} updateGender={this.updateGender} updateBirthday={this.updateBirthday} />
                         </div>
                         <div id="checkoutReceiptContainer">
-                            <CheckoutReceipt firstName={this.state.firstName} lastName={this.state.lastName} email={this.state.email} dob={(this.state.birthday)} idToken={this.props.id_Token} flightOffers={this.props.reservedFlightOffers} onBookingComplete={this.onBookingCompleteClicked} />
+                            <CheckoutReceipt checkoutFormInfo={this.state.user} idToken={this.props.id_Token} flightOffers={this.props.reservedFlightOffers} 
+                            onBookingComplete={this.onBookingCompleteClicked} displayError={this.displayError}/>
                         </div>
                     </div>
                 </main>
@@ -180,7 +250,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                     price: parseFloat(!!flight.price.grandTotal ? flight.price.grandTotal : '0'),
                     trip_type: flightTypeAsJsonLabel(this.props.flightType),
                     traveler_type: travelerType,
-                    traveler_name: `${this.state.firstName} ${this.state.lastName}`,
+                    traveler_name: `${this.state.user.firstName} ${this.state.user.lastName}`,
                     seat_id: '',
                     seat_class: flightClassAsJsonLabel(this.props.flightClass),
                     num_checked_bags: 0,
@@ -203,7 +273,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
             console.error(`Reservation registration failed with error status '${response.status} and error: '${response.statusText}'.'`);
             return false;
         } else {
-            this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
             return true;
         }
     }

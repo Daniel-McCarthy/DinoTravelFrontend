@@ -1,11 +1,13 @@
 import React from 'react';
 import moment = require("moment");
 
-export default function CheckoutForm({updateFirstName, updateLastName, updateBirthday, updateEmail}: {
+export default function CheckoutForm({updateFirstName, updateLastName, updateCountry, updatePhoneNo, updateGender, updateBirthday}: {
     updateFirstName: (newFirstName: string) => void, 
     updateLastName: (newLastName: string) => void,
+    updateCountry: (newCountry: string) => void,
+    updatePhoneNo: (newPhoneNo: string) => void,
+    updateGender: (newGender: string) => void,
     updateBirthday: (newBirthday: moment.Moment) => void,
-    updateEmail: (newEmail: string) => void,
     }) {
 
     // Gender, Country, and Phone no. don't need to be added to the users DB
@@ -23,37 +25,38 @@ export default function CheckoutForm({updateFirstName, updateLastName, updateBir
                 <div id="userInfoCheckout">
                     <p>
                         <label htmlFor="txtFirstName">First Name*</label><br></br>
-                        <input type="text" onChange={(event) => updateFirstName(event.target.value)}></input>
+                        <input type="text" onChange={(event) => updateFirstName(event.target.value)} required></input>
                     </p>
 
                     <p>
                         <label htmlFor="txtLastName">Last Name*</label><br></br>
-                        <input type="text" onChange={(event) => updateLastName(event.target.value)}></input>
+                        <input type="text" onChange={(event) => updateLastName(event.target.value)} required></input>
                     </p>
 
                     <p>
                         <label htmlFor="txtCountry">Country*</label><br></br>
-                        <input type="text"></input>
+                        <input type="text" onChange={(event) => updateCountry(event.target.value)} required></input>
                     </p>
 
                     <p>
                         <label htmlFor="txtPhoneNo">Phone Number*</label><br></br>
-                        <input type="text"></input>
+                        <input type="text" onChange={(event) => updatePhoneNo(event.target.value)} required></input>
                     </p>
 
                     <p>
                         <label>Gender*</label><br></br>
 
-                        <input type="radio" name="radGender" id="male" value="male"></input>
+                        <input type="radio" name="radGender" id="male" value="male" onChange={(event) => updateGender(event.target.value)} required></input>
                         <label htmlFor="male">Male</label>
                         
-                        <input type="radio" name="radGender" id="female" value="female"></input>
+                        <input type="radio" name="radGender" id="female" value="female" onChange={(event) => updateGender(event.target.value)} required></input>
                         <label htmlFor="female">Female</label>
                     </p>
 
                     <p>
                         <label htmlFor="txtBirthDate">Date of birth*</label><br></br>
-                        <input className="datePicker" type="date" placeholder="yyyy-mm-dd" onChange={(event) => updateBirthday(moment(event.currentTarget.value, "YYYY-MM-DD"))}></input>
+                        <input className="datePicker" type="date" placeholder="yyyy-mm-dd" required
+                            onChange={(event) => updateBirthday(moment(event.currentTarget.value, "YYYY-MM-DD"))}></input>
                     </p>
                 </div>
 
@@ -63,14 +66,7 @@ export default function CheckoutForm({updateFirstName, updateLastName, updateBir
                     <div id="manageCheckoutHeader">
                         <h2>Manage your booking</h2>
                         <span style={{"fontWeight": "bold"}}>Confirmation email</span>
-                        <p>Please enter the email address where you would like to receive your confirmation.</p>
-                    </div>
-
-                    <div id="inputEmail">
-                        <p>
-                            <label htmlFor="txtEmail">Email address*</label><br></br>
-                            <input type="txtEmail" onChange={(event) => updateEmail(event.target.value)}></input>
-                        </p>
+                        <p>You will recieve a booking confirmation through the email associated with your account. </p>
                     </div>
                 </div>
 
