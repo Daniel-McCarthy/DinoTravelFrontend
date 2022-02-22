@@ -21,6 +21,10 @@
     color: rgb(59, 77, 145);
 }
 
+#manageButtons a:hover {
+    color: rgb(108, 140, 255);
+}
+
 #loginRedirect {
     margin: auto;
     text-align: center;
