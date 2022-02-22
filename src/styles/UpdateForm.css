@@ -16,3 +16,13 @@
 #newPrice {
     font-weight: 600;
 }
+
+#btnSubmitChanges:enabled {
+    background: rgb(59, 77, 145);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#btnSubmitChanges:hover:enabled {
+    color: rgba(255, 255, 255, 1);
+    box-shadow: 0 5px 15px rgb(63, 0, 114);
+}
