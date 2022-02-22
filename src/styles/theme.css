@@ -1,17 +1,22 @@
 button {
     background-color: rgb(124, 124, 124);
-    color: white;
+    color: rgba(255, 255, 255, 0.8);
     height: 50px;
     width: 150px;
     font-size: large;
     border-radius: 7px;
 }
 
+button:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
 .disabledButton {
     background-color: darkgray;
 }
 
-.selected, .nontoggle {
+.selected,
+.nontoggle {
     background-color: rgb(59, 77, 145);
 }
 
