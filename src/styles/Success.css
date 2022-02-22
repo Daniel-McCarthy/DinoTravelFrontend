@@ -11,3 +11,7 @@
     text-decoration: none;
     color: rgb(59, 77, 145);
 }
+
+#successRedirects a:hover {
+    color: rgb(108, 140, 255);
+}
