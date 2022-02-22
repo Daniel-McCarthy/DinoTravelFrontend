@@ -18,7 +18,7 @@ export default function CheckoutForm({updateFirstName, updateLastName, updateCou
                 <div id="checkoutHeader">
                     <h1>Secure Booking - only takes a few minutes!</h1>
                     <h2>Traveler Info</h2>
-                    <p>Traveler names must match government-issued photo ID exactly.<br></br>
+                    <p>Your name must match government-issued photo ID exactly.<br></br>
                         All fields must be filled out.</p>
                 </div>
 
@@ -75,7 +75,7 @@ export default function CheckoutForm({updateFirstName, updateLastName, updateCou
                 <div id="reviewCheckout">
                     <h2>Review and book your trip</h2>
                     <p>Review your trip details to make sure the dates and times are correct</p>
-                    <p>Check your spelling. Flight passenger names must match government-issued photo ID exactly.</p>
+                    <p>Check your spelling. Your name must match government-issued photo ID exactly.</p>
                     <p>Review the terms of your booking on the flight website.</p>
                     <p>By clicking the complete booking button, I acknowledge 
                         that I have reviewed the Privacy Statement and Government 
