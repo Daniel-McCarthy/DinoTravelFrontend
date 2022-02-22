@@ -51,14 +51,14 @@ export default function ReviewForm() {
                     <label htmlFor="txtFullName">Full Name</label><br></br>
                     <input type="text" id="txtFullName" placeholder="First and Last" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setName(_.currentTarget.value)
-                    }></input>
+                    } required></input>
                 </p>
 
                 <p>
                     <label htmlFor="txtEmail">Email Address</label><br></br>
                     <input type="text" id="txtFullName" placeholder="email@domain.com" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setEmail(_.currentTarget.value)
-                    }></input>
+                    } required></input>
                 </p>
 
                 <p>
@@ -67,27 +67,27 @@ export default function ReviewForm() {
 
                     <input type="radio" name="radExperience" id="exp1" value="1" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setExperience(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="exp1">1</label>
                     
                     <input type="radio" name="radExperience" id="exp2" value="2" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setExperience(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="exp2">2</label>
 
                     <input type="radio" name="radExperience" id="exp3" value="3" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setExperience(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="exp3">3</label>
 
                     <input type="radio" name="radExperience" id="exp4" value="4" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setExperience(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="exp4">4</label>
 
                     <input type="radio" name="radExperience" id="exp5" value="5" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setExperience(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="exp5">5</label>
                 </p>
 
@@ -97,27 +97,27 @@ export default function ReviewForm() {
 
                     <input type="radio" name="radRecomend" id="rec1" value="1" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setRecommendation(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="rec1">1</label>
                     
                     <input type="radio" name="radRecomend" id="rec2" value="2" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setRecommendation(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="rec2">2</label>
 
                     <input type="radio" name="radRecomend" id="rec3" value="3" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setRecommendation(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="rec3">3</label>
 
                     <input type="radio" name="radRecomend" id="rec4" value="4" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setRecommendation(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="rec4">4</label>
 
                     <input type="radio" name="radRecomend" id="rec5" value="5" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setRecommendation(parseInt(_.currentTarget.value))
-                    }></input>
+                    } required></input>
                     <label htmlFor="rec5">5</label>
                 </p>
 
@@ -125,7 +125,7 @@ export default function ReviewForm() {
                     <label htmlFor="txtarReview">Is there anything we can do to improve?</label><br></br>
                     <textarea id="txtarReview" placeholder="Type Here" onChange={
                         (_ : React.ChangeEvent<HTMLTextAreaElement>) => setReview(_.currentTarget.value)
-                    }></textarea>
+                    } required></textarea>
                 </p>
 
                 <p>

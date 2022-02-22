@@ -41,3 +41,33 @@ label {
 #btnSubmit {
     width: 310px;
 }
+
+#review input:required {
+    border-color: #a50000;
+    border-width: 2px;
+}
+
+#review textarea:required {
+    border-color: #a50000;
+    border-width: 2px;
+}
+
+#review input:required + label {
+    color: #a50000;
+}
+
+#review input:valid {
+    border-width: 1px;
+    border-color: #d8dee9;
+    background-color: #fcfcfc;
+}
+
+#review textarea:valid {
+    border-width: 1px;
+    border-color: #d8dee9;
+    background-color: #fcfcfc;
+}
+
+#review input:valid + label {
+    color: black;
+}
