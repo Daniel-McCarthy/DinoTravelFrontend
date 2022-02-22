@@ -35,3 +35,22 @@
     display: inline-flex;
     margin: 5px;
 }
+
+#checkoutForm input:required {
+    border-color: #a50000;
+    border-width: 2px;
+}
+
+#checkoutForm input:required + label {
+    color: #a50000;
+}
+
+#checkoutForm input:valid {
+    border-width: 1px;
+    border-color: #d8dee9;
+    background-color: #fcfcfc;
+}
+
+#checkoutForm input:valid + label {
+    color: black;
+}
