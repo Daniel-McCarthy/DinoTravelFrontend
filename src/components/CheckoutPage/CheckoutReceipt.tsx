@@ -40,7 +40,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
         if (idToken !== null && validateFlights() && validateUser()) {
             // TODO send error message if booking could not go through
 
-            updateUser(checkoutFormInfo.firstName, checkoutFormInfo.lastName, checkoutFormInfo.email, checkoutFormInfo.birthday, idToken);
+            updateUser(checkoutFormInfo.firstName, checkoutFormInfo.lastName, checkoutFormInfo.birthday, idToken);
 
             onBookingComplete();
 

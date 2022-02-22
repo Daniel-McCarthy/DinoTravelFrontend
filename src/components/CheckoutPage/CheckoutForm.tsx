@@ -1,14 +1,13 @@
 import React from 'react';
 import moment = require("moment");
 
-export default function CheckoutForm({updateFirstName, updateLastName, updateCountry, updatePhoneNo, updateGender, updateBirthday, updateEmail}: {
+export default function CheckoutForm({updateFirstName, updateLastName, updateCountry, updatePhoneNo, updateGender, updateBirthday}: {
     updateFirstName: (newFirstName: string) => void, 
     updateLastName: (newLastName: string) => void,
     updateCountry: (newCountry: string) => void,
     updatePhoneNo: (newPhoneNo: string) => void,
     updateGender: (newGender: string) => void,
     updateBirthday: (newBirthday: moment.Moment) => void,
-    updateEmail: (newEmail: string) => void,
     }) {
 
     // Gender, Country, and Phone no. don't need to be added to the users DB
@@ -67,14 +66,7 @@ export default function CheckoutForm({updateFirstName, updateLastName, updateCou
                     <div id="manageCheckoutHeader">
                         <h2>Manage your booking</h2>
                         <span style={{"fontWeight": "bold"}}>Confirmation email</span>
-                        <p>Please enter the email address where you would like to receive your confirmation.</p>
-                    </div>
-
-                    <div id="inputEmail">
-                        <p>
-                            <label htmlFor="txtEmail">Email address*</label><br></br>
-                            <input type="txtEmail" onChange={(event) => updateEmail(event.target.value)} required></input>
-                        </p>
+                        <p>You will recieve a booking confirmation through the email associated with your account. </p>
                     </div>
                 </div>
 

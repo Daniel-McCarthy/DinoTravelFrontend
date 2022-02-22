@@ -39,7 +39,6 @@ export interface ICheckoutFormInfo {
     phoneNo: string,
     gender: string,
     birthday: moment.Moment,
-    email: string
 }
 
 export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutPageState> {
@@ -55,7 +54,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
         this.updatePhoneNo.bind(this);
         this.updateGender.bind(this);
         this.updateBirthday.bind(this);
-        this.updateEmail.bind(this);
 
         this.state = {
             bannerImages: [],
@@ -66,7 +64,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo: "",
                 gender: "",
                 birthday: moment(),
-                email: ""
             },
 
             // Initialize toast data, invisible by default until is configured for a message to be shown.
@@ -86,7 +83,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo : this.state.user.phoneNo,
                 gender : this.state.user.gender,
                 birthday : this.state.user.birthday,
-                email : this.state.user.email,
             }
         })
     }
@@ -100,7 +96,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo : this.state.user.phoneNo,
                 gender : this.state.user.gender,
                 birthday : this.state.user.birthday,
-                email : this.state.user.email,
             }
         })
     }
@@ -114,7 +109,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo : this.state.user.phoneNo,
                 gender : this.state.user.gender,
                 birthday : this.state.user.birthday,
-                email : this.state.user.email,
             }
         })
     }
@@ -128,7 +122,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo : newPhoneNo,
                 gender : this.state.user.gender,
                 birthday : this.state.user.birthday,
-                email : this.state.user.email,
             }
         })
     }
@@ -142,7 +135,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo : this.state.user.phoneNo,
                 gender : newGender,
                 birthday : this.state.user.birthday,
-                email : this.state.user.email,
             }
         })
     }
@@ -156,21 +148,6 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 phoneNo : this.state.user.phoneNo,
                 gender : this.state.user.gender,
                 birthday : newBirthday,
-                email : this.state.user.email,
-            }
-        })
-    }
-
-    updateEmail = (newEmail: string) =>{
-        this.setState({
-            user: {
-                firstName: this.state.user.firstName,
-                lastName : this.state.user.lastName,
-                country : this.state.user.country,
-                phoneNo : this.state.user.phoneNo,
-                gender : this.state.user.gender,
-                birthday : this.state.user.birthday,
-                email : newEmail,
             }
         })
     }
@@ -183,7 +160,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                     <div id="checkoutComponents">
                         <div id="checkoutFormContainer">
                             <CheckoutForm updateFirstName={this.updateFirstName} updateLastName={this.updateLastName} updateCountry={this.updateCountry}
-                                updatePhoneNo={this.updatePhoneNo} updateGender={this.updateGender} updateBirthday={this.updateBirthday} updateEmail={this.updateEmail} />
+                                updatePhoneNo={this.updatePhoneNo} updateGender={this.updateGender} updateBirthday={this.updateBirthday} />
                         </div>
                         <div id="checkoutReceiptContainer">
                             <CheckoutReceipt checkoutFormInfo={this.state.user} idToken={this.props.id_Token} flightOffers={this.props.reservedFlightOffers} 
