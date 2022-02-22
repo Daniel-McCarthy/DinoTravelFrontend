@@ -37,8 +37,7 @@ export default function CheckoutReceipt({checkoutFormInfo, flightOffers, idToken
     const completeBooking = async () => {
         console.log("booking");
 
-        if (idToken !== null && validateFlights() && validateUser()) {
-            // TODO send error message if booking could not go through
+            if (idToken !== null && validateFlights() && validateUser()) {
 
             updateUser(checkoutFormInfo.firstName, checkoutFormInfo.lastName, checkoutFormInfo.birthday, idToken);
 
