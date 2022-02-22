@@ -13,7 +13,12 @@
 
 #btnCompleteBooking {
     width: 310px;
+    color: rgba(255, 255, 255, 0.8);
     transition: all 0.2s ease-in-out;
+}
+
+#btnCompleteBooking:enabled {
+    background: rgb(59, 77, 145);
 }
 
 #btnCompleteBooking:active {

@@ -38,7 +38,7 @@ export interface ICheckoutFormInfo {
     country: string,
     phoneNo: string,
     gender: string,
-    birthday: moment.Moment,
+    birthday: moment.Moment | undefined,
 }
 
 export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutPageState> {
@@ -63,7 +63,7 @@ export class CheckoutPage extends React.Component<ICheckoutPageProps, ICheckoutP
                 country: "",
                 phoneNo: "",
                 gender: "",
-                birthday: moment(),
+                birthday: undefined,
             },
 
             // Initialize toast data, invisible by default until is configured for a message to be shown.
