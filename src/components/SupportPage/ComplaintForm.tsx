@@ -73,7 +73,7 @@ export default function ComplaintForm() {
                     <br/>
                     <input type="text" id="txtFullName" placeholder="John Smith" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setName(_.currentTarget.value)
-                    } value={val}/>
+                    } value={val} required/>
                 </p>
 
                 <p>
@@ -81,7 +81,7 @@ export default function ComplaintForm() {
                     <br/>
                     <input type="text" id="txtFullName" placeholder="email@domain.com" onChange={
                         (_ : React.ChangeEvent<HTMLInputElement>) => setEmail(_.currentTarget.value)
-                    } value={val}/>
+                    } value={val} required/>
                 </p>
 
                 <p>
@@ -97,7 +97,7 @@ export default function ComplaintForm() {
                     <br/>
                     <textarea id="txtarComplaint" placeholder="Type Complaint Here" onChange={
                         (_ : React.ChangeEvent<HTMLTextAreaElement>) => setComplaint(_.currentTarget.value)
-                    } value={val}/>
+                    } value={val} required/>
                 </p>
 
                 <p>
