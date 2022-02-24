@@ -33,7 +33,6 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
         super(props)
         this.state = {IDToken: null, isLoggedIn: false, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0, flightClass: FlightClass.BusinessClass, flightType: FlightType.MultiCity}
         let TokenJson = JSON.parse(localStorage.getItem('Token') as string)
-        console.log(TokenJson)
         if (TokenJson != null) {
             let TimeExpired = TokenJson.expires_at
             if (Date.now() >= TimeExpired) {
@@ -54,7 +53,6 @@ export class PageRouting extends React.Component<IPageRoutingProps, IPageRouting
             IDToken: newID,
             isLoggedIn: newID != null
         });
-        console.log("updated to: " + newID);
         this.render();
     }
 

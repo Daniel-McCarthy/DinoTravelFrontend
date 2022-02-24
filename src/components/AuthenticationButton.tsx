@@ -48,7 +48,6 @@ export class AuthenticationButton extends React.Component<IAuthenticationProps, 
 
     onSignIn = (googleUser : any) => {
         //DO NOT SEND USER ID TO BACKEND
-        console.log(googleUser);
         localStorage.setItem('LoggedIn', 'true');
         localStorage.setItem('LoginAttempted', 'true');
         localStorage.setItem('Profile', JSON.stringify(googleUser.profileObj));
