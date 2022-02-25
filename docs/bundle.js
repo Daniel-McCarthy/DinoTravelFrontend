@@ -126,7 +126,6 @@ const CheckoutForm_1 = __importDefault(__webpack_require__(/*! ./components/Chec
 const CheckoutReceipt_1 = __importDefault(__webpack_require__(/*! ./components/CheckoutPage/CheckoutReceipt */ "./src/components/CheckoutPage/CheckoutReceipt.tsx"));
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
 __webpack_require__(/*! ./styles/CheckoutPage.css */ "./src/styles/CheckoutPage.css");
-const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 const ToastMessage_1 = __webpack_require__(/*! ./components/ToastMessage */ "./src/components/ToastMessage.tsx");
 const ToastType_1 = __webpack_require__(/*! ./enums/ToastType */ "./src/enums/ToastType.ts");
 const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
@@ -137,24 +136,78 @@ const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ 
 class CheckoutPage extends React.Component {
     constructor(props) {
         super(props);
+        // Sorry for adding all of these update functions. I'm not sure how to update a specific field
+        // through a more generic function call
         this.updateFirstName = (newFirstName) => {
             this.setState({
-                firstName: newFirstName,
+                user: {
+                    firstName: newFirstName,
+                    lastName: this.state.user.lastName,
+                    country: this.state.user.country,
+                    phoneNo: this.state.user.phoneNo,
+                    gender: this.state.user.gender,
+                    birthday: this.state.user.birthday,
+                }
             });
         };
         this.updateLastName = (newLastName) => {
             this.setState({
-                lastName: newLastName
+                user: {
+                    firstName: this.state.user.firstName,
+                    lastName: newLastName,
+                    country: this.state.user.country,
+                    phoneNo: this.state.user.phoneNo,
+                    gender: this.state.user.gender,
+                    birthday: this.state.user.birthday,
+                }
+            });
+        };
+        this.updateCountry = (newCountry) => {
+            this.setState({
+                user: {
+                    firstName: this.state.user.firstName,
+                    lastName: this.state.user.lastName,
+                    country: newCountry,
+                    phoneNo: this.state.user.phoneNo,
+                    gender: this.state.user.gender,
+                    birthday: this.state.user.birthday,
+                }
+            });
+        };
+        this.updatePhoneNo = (newPhoneNo) => {
+            this.setState({
+                user: {
+                    firstName: this.state.user.firstName,
+                    lastName: this.state.user.lastName,
+                    country: this.state.user.country,
+                    phoneNo: newPhoneNo,
+                    gender: this.state.user.gender,
+                    birthday: this.state.user.birthday,
+                }
+            });
+        };
+        this.updateGender = (newGender) => {
+            this.setState({
+                user: {
+                    firstName: this.state.user.firstName,
+                    lastName: this.state.user.lastName,
+                    country: this.state.user.country,
+                    phoneNo: this.state.user.phoneNo,
+                    gender: newGender,
+                    birthday: this.state.user.birthday,
+                }
             });
         };
         this.updateBirthday = (newBirthday) => {
             this.setState({
-                birthday: newBirthday
-            });
-        };
-        this.updateEmail = (newEmail) => {
-            this.setState({
-                email: newEmail
+                user: {
+                    firstName: this.state.user.firstName,
+                    lastName: this.state.user.lastName,
+                    country: this.state.user.country,
+                    phoneNo: this.state.user.phoneNo,
+                    gender: this.state.user.gender,
+                    birthday: newBirthday,
+                }
             });
         };
         this.onBookingCompleteClicked = async () => {
@@ -222,7 +275,7 @@ class CheckoutPage extends React.Component {
                         price: parseFloat(!!flight.price.grandTotal ? flight.price.grandTotal : '0'),
                         trip_type: (0, FlightType_1.flightTypeAsJsonLabel)(this.props.flightType),
                         traveler_type: travelerType,
-                        traveler_name: `${this.state.firstName} ${this.state.lastName}`,
+                        traveler_name: `${this.state.user.firstName} ${this.state.user.lastName}`,
                         seat_id: '',
                         seat_class: (0, FlightClass_1.flightClassAsJsonLabel)(this.props.flightClass),
                         num_checked_bags: 0,
@@ -242,21 +295,26 @@ class CheckoutPage extends React.Component {
                 return false;
             }
             else {
-                this.displaySuccess(`Success! Your flight has now been booked. We'll now show you the flight details.`);
                 return true;
             }
         };
         console.log('From checkoutpage; flight offers:' + JSON.stringify(this.props.reservedFlightOffers));
         this.updateFirstName.bind(this);
         this.updateLastName.bind(this);
+        this.updateCountry.bind(this);
+        this.updatePhoneNo.bind(this);
+        this.updateGender.bind(this);
         this.updateBirthday.bind(this);
-        this.updateEmail.bind(this);
         this.state = {
             bannerImages: [],
-            firstName: "",
-            lastName: "",
-            birthday: moment(),
-            email: "",
+            user: {
+                firstName: "",
+                lastName: "",
+                country: "",
+                phoneNo: "",
+                gender: "",
+                birthday: undefined,
+            },
             // Initialize toast data, invisible by default until is configured for a message to be shown.
             toastMessage: { toastType: ToastType_1.ToastType.InfoToast, message: "" },
             showToast: false,
@@ -268,9 +326,9 @@ class CheckoutPage extends React.Component {
             React.createElement("main", null,
                 React.createElement("div", { id: "checkoutComponents" },
                     React.createElement("div", { id: "checkoutFormContainer" },
-                        React.createElement(CheckoutForm_1.default, { updateFirstName: this.updateFirstName, updateLastName: this.updateLastName, updateBirthday: this.updateBirthday, updateEmail: this.updateEmail })),
+                        React.createElement(CheckoutForm_1.default, { updateFirstName: this.updateFirstName, updateLastName: this.updateLastName, updateCountry: this.updateCountry, updatePhoneNo: this.updatePhoneNo, updateGender: this.updateGender, updateBirthday: this.updateBirthday })),
                     React.createElement("div", { id: "checkoutReceiptContainer" },
-                        React.createElement(CheckoutReceipt_1.default, { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email, dob: (this.state.birthday), idToken: this.props.id_Token, flightOffers: this.props.reservedFlightOffers, onBookingComplete: this.onBookingCompleteClicked })))),
+                        React.createElement(CheckoutReceipt_1.default, { checkoutFormInfo: this.state.user, idToken: this.props.id_Token, flightOffers: this.props.reservedFlightOffers, onBookingComplete: this.onBookingCompleteClicked, displayError: this.displayError })))),
             React.createElement("div", { id: 'bannerCarousel' },
                 React.createElement(ImageCarousel_1.ImageCarousel, { height: 500, imagesToUse: this.state.bannerImages })),
             React.createElement(ToastMessage_1.ToastMessage, { toastType: this.state.toastMessage.toastType, show: this.state.showToast, message: this.state.toastMessage.message, onToastClosed: this.onToastClosed })));
@@ -1773,7 +1831,7 @@ const baseURL = 'purpledinoapi.link';
 const port = '8080';
 const usersAPI = '/api/users';
 const usersEndpointURL = `https://www.${baseURL}:${port}${usersAPI}`;
-const updateUser = async (newFirstName, newLastName, newEmail, newBirthday, subjectId) => {
+const updateUser = async (newFirstName, newLastName, newBirthday, subjectId) => {
     const options = {
         'method': 'PUT',
         'headers': {
@@ -1784,12 +1842,12 @@ const updateUser = async (newFirstName, newLastName, newEmail, newBirthday, subj
         body: JSON.stringify({
             "first_name": newFirstName,
             "last_name": newLastName,
-            "email": newEmail,
             "dob": newBirthday
         })
     };
     try {
         const responseData = await fetch(usersEndpointURL, options);
+        console.log("User updated");
         return responseData;
     }
     catch (error) {
@@ -2102,7 +2160,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-function CheckoutForm({ updateFirstName, updateLastName, updateBirthday, updateEmail }) {
+function CheckoutForm({ updateFirstName, updateLastName, updateCountry, updatePhoneNo, updateGender, updateBirthday }) {
     // Gender, Country, and Phone no. don't need to be added to the users DB
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", { id: "checkoutForm" },
@@ -2110,53 +2168,48 @@ function CheckoutForm({ updateFirstName, updateLastName, updateBirthday, updateE
                 react_1.default.createElement("h1", null, "Secure Booking - only takes a few minutes!"),
                 react_1.default.createElement("h2", null, "Traveler Info"),
                 react_1.default.createElement("p", null,
-                    "Traveler names must match government-issued photo ID exactly.",
+                    "Your name must match government-issued photo ID exactly.",
                     react_1.default.createElement("br", null),
                     "All fields must be filled out.")),
             react_1.default.createElement("div", { id: "userInfoCheckout" },
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("label", { htmlFor: "txtFirstName" }, "First Name*"),
                     react_1.default.createElement("br", null),
-                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateFirstName(event.target.value) })),
+                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateFirstName(event.target.value), required: true })),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("label", { htmlFor: "txtLastName" }, "Last Name*"),
                     react_1.default.createElement("br", null),
-                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateLastName(event.target.value) })),
+                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateLastName(event.target.value), required: true })),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("label", { htmlFor: "txtCountry" }, "Country*"),
                     react_1.default.createElement("br", null),
-                    react_1.default.createElement("input", { type: "text" })),
+                    react_1.default.createElement("input", { type: "text", onChange: (event) => updateCountry(event.target.value), required: true })),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("label", { htmlFor: "txtPhoneNo" }, "Phone Number*"),
                     react_1.default.createElement("br", null),
-                    react_1.default.createElement("input", { type: "text" })),
+                    react_1.default.createElement("input", { type: "text", onChange: (event) => updatePhoneNo(event.target.value), required: true })),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("label", null, "Gender*"),
                     react_1.default.createElement("br", null),
-                    react_1.default.createElement("input", { type: "radio", name: "radGender", id: "male", value: "male" }),
+                    react_1.default.createElement("input", { type: "radio", name: "radGender", id: "male", value: "male", onChange: (event) => updateGender(event.target.value), required: true }),
                     react_1.default.createElement("label", { htmlFor: "male" }, "Male"),
-                    react_1.default.createElement("input", { type: "radio", name: "radGender", id: "female", value: "female" }),
+                    react_1.default.createElement("input", { type: "radio", name: "radGender", id: "female", value: "female", onChange: (event) => updateGender(event.target.value), required: true }),
                     react_1.default.createElement("label", { htmlFor: "female" }, "Female")),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("label", { htmlFor: "txtBirthDate" }, "Date of birth*"),
                     react_1.default.createElement("br", null),
-                    react_1.default.createElement("input", { className: "datePicker", type: "date", placeholder: "yyyy-mm-dd", onChange: (event) => updateBirthday(moment(event.currentTarget.value, "YYYY-MM-DD")) }))),
+                    react_1.default.createElement("input", { className: "datePicker", type: "date", placeholder: "yyyy-mm-dd", required: true, onChange: (event) => updateBirthday(moment(event.currentTarget.value, "YYYY-MM-DD")) }))),
             react_1.default.createElement("hr", null),
             react_1.default.createElement("div", { id: "manageCheckout" },
                 react_1.default.createElement("div", { id: "manageCheckoutHeader" },
                     react_1.default.createElement("h2", null, "Manage your booking"),
                     react_1.default.createElement("span", { style: { "fontWeight": "bold" } }, "Confirmation email"),
-                    react_1.default.createElement("p", null, "Please enter the email address where you would like to receive your confirmation.")),
-                react_1.default.createElement("div", { id: "inputEmail" },
-                    react_1.default.createElement("p", null,
-                        react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email address*"),
-                        react_1.default.createElement("br", null),
-                        react_1.default.createElement("input", { type: "txtEmail", onChange: (event) => updateEmail(event.target.value) })))),
+                    react_1.default.createElement("p", null, "You will recieve a booking confirmation through the email associated with your account. "))),
             react_1.default.createElement("hr", null),
             react_1.default.createElement("div", { id: "reviewCheckout" },
                 react_1.default.createElement("h2", null, "Review and book your trip"),
                 react_1.default.createElement("p", null, "Review your trip details to make sure the dates and times are correct"),
-                react_1.default.createElement("p", null, "Check your spelling. Flight passenger names must match government-issued photo ID exactly."),
+                react_1.default.createElement("p", null, "Check your spelling. Your name must match government-issued photo ID exactly."),
                 react_1.default.createElement("p", null, "Review the terms of your booking on the flight website."),
                 react_1.default.createElement("p", null, "By clicking the complete booking button, I acknowledge that I have reviewed the Privacy Statement and Government Travel Adice and have reviewed and accept the above Rules & Restrictions and Terms of Use.")))));
 }
@@ -2192,19 +2245,32 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const moment_1 = __importDefault(__webpack_require__(/*! moment */ "./node_modules/moment/moment.js"));
 const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
+const react_router_1 = __webpack_require__(/*! react-router */ "./node_modules/react-router/index.js");
 const flightOffers_1 = __webpack_require__(/*! ../../api/flightOffers */ "./src/api/flightOffers.ts");
 const users_1 = __webpack_require__(/*! ../../api/users */ "./src/api/users.ts");
 __webpack_require__(/*! ../../styles/CheckoutPage.css */ "./src/styles/CheckoutPage.css");
-function CheckoutReceipt({ firstName, lastName, email, dob, idToken, flightOffers, onBookingComplete }) {
+function CheckoutReceipt({ checkoutFormInfo, flightOffers, idToken, onBookingComplete, displayError }) {
     const [total, setTotal] = (0, react_1.useState)(0);
-    const completeBooking = () => {
+    const [success, setSuccess] = (0, react_1.useState)(false);
+    const navigate = (0, react_router_1.useNavigate)();
+    const completeBooking = async () => {
         console.log("booking");
-        if (idToken !== null) {
-            (0, users_1.updateUser)(firstName, lastName, email, dob, idToken);
+        if (idToken !== null && validateFlight() && validateUser()) {
+            const bday = (checkoutFormInfo.birthday ? checkoutFormInfo.birthday : (0, moment_1.default)());
+            (0, users_1.updateUser)(checkoutFormInfo.firstName, checkoutFormInfo.lastName, bday, idToken);
+            onBookingComplete();
+            await new Promise(r => setTimeout(r, 1000));
+            setSuccess(true);
         }
-        onBookingComplete();
+        else {
+            displayError("Make sure you have chosen a flight and have filled out all fields.");
+        }
     };
     const getTotal = (offers) => {
         var sm = 0;
@@ -2220,47 +2286,57 @@ function CheckoutReceipt({ firstName, lastName, email, dob, idToken, flightOffer
     (0, react_1.useEffect)(() => {
         getTotal(flightOffers);
     }, flightOffers);
+    const validateUser = () => {
+        return checkoutFormInfo.firstName && checkoutFormInfo.lastName && checkoutFormInfo.birthday
+            && checkoutFormInfo.country && checkoutFormInfo.gender && checkoutFormInfo.phoneNo;
+    };
+    const validateFlight = () => {
+        return flightOffers.at(0);
+    };
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", { id: "bookingReceipt" },
             react_1.default.createElement("div", { id: "receiptTitle" },
                 react_1.default.createElement("h2", null, "Booking Information"),
                 react_1.default.createElement("h3", null,
                     flightOffers.length,
-                    " Reservations")),
+                    " ",
+                    (flightOffers.length === 1) ? "Reservation" : "Reservations")),
             react_1.default.createElement("div", { id: "receiptFlights" }, flightOffers.map((offer) => {
                 return offer.itineraries.map((itenary) => {
-                    return itenary.segments.map((segment) => {
-                        return (react_1.default.createElement(react_1.default.Fragment, null,
-                            react_1.default.createElement("p", null,
-                                "(",
-                                segment.departure.iataCode,
-                                ") to (",
-                                segment.arrival.iataCode,
-                                ")"),
-                            react_1.default.createElement("p", null,
-                                (segment.departure.at).substring(11),
-                                " - ",
-                                (segment.arrival.at).substring(11),
-                                "(",
-                                (0, flightOffers_1.getTotalFlightTimeFromItinerary)(itenary).totalHours,
-                                "h ",
-                                (0, flightOffers_1.getTotalFlightTimeFromItinerary)(itenary).totalMinutes,
-                                "m)"),
-                            react_1.default.createElement("p", null, segment.carrierCode),
-                            react_1.default.createElement("p", null,
-                                "$",
-                                offer.price.grandTotal && offer.price.grandTotal),
-                            react_1.default.createElement("br", null)));
-                    });
+                    return (react_1.default.createElement(react_1.default.Fragment, null,
+                        react_1.default.createElement("p", null,
+                            "$",
+                            offer.price.grandTotal && parseFloat(offer.price.grandTotal).toFixed(2)),
+                        itenary.segments.map((segment) => {
+                            return (react_1.default.createElement(react_1.default.Fragment, null,
+                                react_1.default.createElement("p", null,
+                                    "(",
+                                    segment.departure.iataCode,
+                                    ") to (",
+                                    segment.arrival.iataCode,
+                                    ")"),
+                                react_1.default.createElement("p", null,
+                                    (segment.departure.at).substring(11),
+                                    " - ",
+                                    (segment.arrival.at).substring(11),
+                                    "(",
+                                    (0, flightOffers_1.getTotalFlightTimeFromItinerary)(itenary).totalHours,
+                                    "h ",
+                                    (0, flightOffers_1.getTotalFlightTimeFromItinerary)(itenary).totalMinutes,
+                                    "m)"),
+                                react_1.default.createElement("p", null, segment.carrierCode),
+                                react_1.default.createElement("br", null)));
+                        })));
                 });
             })),
             react_1.default.createElement("div", { id: "receiptTotal" },
                 react_1.default.createElement("h3", null, "Your estimated total:"),
                 react_1.default.createElement("p", null,
                     "$",
-                    total)),
+                    total.toFixed(2))),
             react_1.default.createElement("p", null,
-                react_1.default.createElement("button", { id: "btnCompleteBooking", onClick: () => completeBooking() }, "Complete Booking")))));
+                react_1.default.createElement("button", { id: "btnCompleteBooking", onClick: () => completeBooking(), disabled: !(validateUser() && validateFlight()) }, "Complete Booking"),
+                success && navigate("/success")))));
 }
 exports["default"] = CheckoutReceipt;
 
@@ -2323,7 +2399,7 @@ function SuccessPage({ isLoggedIn }) {
                     react_1.default.createElement("h2", null, "Your flight has been booked."),
                     react_1.default.createElement("img", { src: Checkmark_green_png_1.default })),
                 react_1.default.createElement("div", { id: "successRedirects" },
-                    react_1.default.createElement(react_router_dom_1.Link, { to: "/trip" },
+                    react_1.default.createElement(react_router_dom_1.Link, { to: "/trips" },
                         react_1.default.createElement("button", { className: "nontoggle" }, "Update your trip")),
                     react_1.default.createElement(react_router_dom_1.Link, { to: "/" },
                         react_1.default.createElement("button", { className: "nontoggle" }, "Book another flight?")),
@@ -2904,11 +2980,11 @@ function ComplaintForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtFullName" }, "Full Name"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "John Smith", onChange: (_) => setName(_.currentTarget.value), value: val })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "John Smith", onChange: (_) => setName(_.currentTarget.value), value: val, required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value), value: val })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value), value: val, required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtResNum" }, "Reservation ID (Optional)"),
                 react_1.default.createElement("br", null),
@@ -2916,7 +2992,7 @@ function ComplaintForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtarComplaint" }, "Complaint"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("textarea", { id: "txtarComplaint", placeholder: "Type Complaint Here", onChange: (_) => setComplaint(_.currentTarget.value), value: val })),
+                react_1.default.createElement("textarea", { id: "txtarComplaint", placeholder: "Type Complaint Here", onChange: (_) => setComplaint(_.currentTarget.value), value: val, required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("button", { id: "btnSubmit", onClick: validateComplaint, disabled: !isFormValid() }, "Submit"))),
         react_1.default.createElement(ToastMessage_1.ToastMessage, { toastType: toast.toastType, show: toast.show, message: toast.message, onToastClosed: onToastClosed })));
@@ -3031,41 +3107,41 @@ function ReviewForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtFullName" }, "Full Name"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "First and Last", onChange: (_) => setName(_.currentTarget.value) })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "First and Last", onChange: (_) => setName(_.currentTarget.value), required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value) })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value), required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "How was your experience on our website?"),
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "(1 = lowest and 5 = highest)"),
-                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp1", value: "1", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp1", value: "1", onChange: (_) => setExperience(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "exp1" }, "1"),
-                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp2", value: "2", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp2", value: "2", onChange: (_) => setExperience(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "exp2" }, "2"),
-                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp3", value: "3", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp3", value: "3", onChange: (_) => setExperience(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "exp3" }, "3"),
-                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp4", value: "4", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp4", value: "4", onChange: (_) => setExperience(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "exp4" }, "4"),
-                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp5", value: "5", onChange: (_) => setExperience(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radExperience", id: "exp5", value: "5", onChange: (_) => setExperience(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "exp5" }, "5")),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "How likely are you to recommend Dino Travel to someone you know?"),
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "(1 = not very likely and 5 = very likely)"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec1", value: "1", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec1", value: "1", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec1" }, "1"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec2", value: "2", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec2", value: "2", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec2" }, "2"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec3", value: "3", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec3", value: "3", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec3" }, "3"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec4", value: "4", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec4", value: "4", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec4" }, "4"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec5", value: "5", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)) }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec5", value: "5", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec5" }, "5")),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtarReview" }, "Is there anything we can do to improve?"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("textarea", { id: "txtarReview", placeholder: "Type Here", onChange: (_) => setReview(_.currentTarget.value) })),
+                react_1.default.createElement("textarea", { id: "txtarReview", placeholder: "Type Here", onChange: (_) => setReview(_.currentTarget.value), required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "btnSubmit" }, "We will use your email address to follow-up on account issues, and for no other purpose."),
                 react_1.default.createElement("br", null),
@@ -3261,7 +3337,7 @@ function FlightsTable({ tableData, cancel, update, idToken }) {
                 react_1.default.createElement("td", null, _.numCheckedBags),
                 react_1.default.createElement("td", null,
                     "$",
-                    _.price),
+                    _.price.toFixed(2)),
                 react_1.default.createElement("td", null, _.pnr),
                 react_1.default.createElement("td", null,
                     cancel && react_1.default.createElement("a", { href: "javascript: void(0)", onClick: () => handleDelete(_.pnr) }, "\u274C"),
@@ -3365,7 +3441,7 @@ function UpdateForm({ updateItem, idToken }) {
                     react_1.default.createElement("button", { onClick: bagChangeAdd, style: { width: "30px", height: "30px", marginLeft: "20px" } }, "+")),
                 react_1.default.createElement("p", { id: "newPrice" },
                     "Price: $",
-                    newPrice),
+                    newPrice.toFixed(2)),
                 react_1.default.createElement("p", null,
                     react_1.default.createElement("button", { id: "btnSubmitChanges", style: { width: "300px" }, onClick: () => { handleReservationUpdate(); } }, "Confirm Changes"))))));
 }
@@ -3781,7 +3857,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#checkoutForm {\r\n    width: 700px;\r\n    padding: 10px;\r\n}\r\n#checkoutComponents {\r\n    width: 1100px;\r\n    margin: auto;\r\n}\r\n\r\n#bookingReceipt {\r\n    width: 310px;\r\n}\r\n\r\n#btnCompleteBooking {\r\n    width: 310px;\r\n}\r\n\r\n#checkoutFormContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutReceiptContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/CheckoutPage.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,aAAa;AACjB;AACA;IACI,aAAa;IACb,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,oBAAoB;IACpB,WAAW;AACf;;AAEA;IACI,oBAAoB;IACpB,WAAW;AACf","sourcesContent":["#checkoutForm {\r\n    width: 700px;\r\n    padding: 10px;\r\n}\r\n#checkoutComponents {\r\n    width: 1100px;\r\n    margin: auto;\r\n}\r\n\r\n#bookingReceipt {\r\n    width: 310px;\r\n}\r\n\r\n#btnCompleteBooking {\r\n    width: 310px;\r\n}\r\n\r\n#checkoutFormContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutReceiptContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#checkoutForm {\r\n    width: 700px;\r\n    padding: 10px;\r\n}\r\n#checkoutComponents {\r\n    width: 1100px;\r\n    margin: auto;\r\n}\r\n\r\n#bookingReceipt {\r\n    width: 310px;\r\n}\r\n\r\n#btnCompleteBooking {\r\n    width: 310px;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnCompleteBooking:enabled {\r\n    background: rgb(59, 77, 145);\r\n}\r\n\r\n#btnCompleteBooking:active {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\n#btnCompleteBooking:hover:enabled {\r\n    color: rgba(255, 255, 255, 1);\r\n    background-color: rgb(59, 77, 145);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n\r\n#checkoutFormContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutReceiptContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutForm input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#checkoutForm input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#checkoutForm input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#checkoutForm input:valid + label {\r\n    color: black;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/CheckoutPage.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,aAAa;AACjB;AACA;IACI,aAAa;IACb,YAAY;AAChB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,YAAY;IACZ,+BAA+B;IAC/B,gCAAgC;AACpC;;AAEA;IACI,4BAA4B;AAChC;;AAEA;IACI,kCAAkC;AACtC;;AAEA;IACI,6BAA6B;IAC7B,kCAAkC;IAClC,sCAAsC;AAC1C;;AAEA;IACI,oBAAoB;IACpB,WAAW;AACf;;AAEA;IACI,oBAAoB;IACpB,WAAW;AACf;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#checkoutForm {\r\n    width: 700px;\r\n    padding: 10px;\r\n}\r\n#checkoutComponents {\r\n    width: 1100px;\r\n    margin: auto;\r\n}\r\n\r\n#bookingReceipt {\r\n    width: 310px;\r\n}\r\n\r\n#btnCompleteBooking {\r\n    width: 310px;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnCompleteBooking:enabled {\r\n    background: rgb(59, 77, 145);\r\n}\r\n\r\n#btnCompleteBooking:active {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\n#btnCompleteBooking:hover:enabled {\r\n    color: rgba(255, 255, 255, 1);\r\n    background-color: rgb(59, 77, 145);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n\r\n#checkoutFormContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutReceiptContainer {\r\n    display: inline-flex;\r\n    margin: 5px;\r\n}\r\n\r\n#checkoutForm input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#checkoutForm input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#checkoutForm input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#checkoutForm input:valid + label {\r\n    color: black;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3808,7 +3884,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n    text-decoration: none;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    background: gray;\r\n    font-weight: normal;\r\n    text-transform: uppercase;\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnSubmit:enabled{\r\n    background: rgb(59, 77, 145);;\r\n}\r\n\r\n#btnSubmit:hover:enabled{\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ComplaintForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;IACZ,qBAAqB;IACrB,+BAA+B;IAC/B,gBAAgB;IAChB,mBAAmB;IACnB,yBAAyB;IACzB,gCAAgC;AACpC;;AAEA;IACI,4BAA4B;AAChC;;AAEA;IACI,6BAA6B;IAC7B,sCAAsC;AAC1C","sourcesContent":["#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n    text-decoration: none;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    background: gray;\r\n    font-weight: normal;\r\n    text-transform: uppercase;\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnSubmit:enabled{\r\n    background: rgb(59, 77, 145);;\r\n}\r\n\r\n#btnSubmit:hover:enabled{\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n    text-decoration: none;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    background: gray;\r\n    font-weight: normal;\r\n    text-transform: uppercase;\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnSubmit:enabled {\r\n    background: rgb(59, 77, 145);\r\n}\r\n\r\n#btnSubmit:hover:enabled {\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n\r\n#complaint input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#complaint textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#complaint input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#complaint textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ComplaintForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;IACZ,qBAAqB;IACrB,+BAA+B;IAC/B,gBAAgB;IAChB,mBAAmB;IACnB,yBAAyB;IACzB,gCAAgC;AACpC;;AAEA;IACI,4BAA4B;AAChC;;AAEA;IACI,6BAA6B;IAC7B,sCAAsC;AAC1C;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B","sourcesContent":["#complaint {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n    text-decoration: none;\r\n    color: rgba(255, 255, 255, 0.8);\r\n    background: gray;\r\n    font-weight: normal;\r\n    text-transform: uppercase;\r\n    transition: all 0.2s ease-in-out;\r\n}\r\n\r\n#btnSubmit:enabled {\r\n    background: rgb(59, 77, 145);\r\n}\r\n\r\n#btnSubmit:hover:enabled {\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n\r\n#complaint input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#complaint textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#complaint input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#complaint textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4039,7 +4115,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ReviewForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,kBAAkB;IAClB,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n\r\n#review input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#review input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review input:valid + label {\r\n    color: black;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ReviewForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,kBAAkB;IAClB,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n\r\n#review input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#review input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review input:valid + label {\r\n    color: black;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4066,7 +4142,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#successContent {\r\n    text-align: center;\r\n}\r\n\r\n#successRedirects button {\r\n    width: 200px;\r\n    margin: 5px;\r\n}\r\n\r\n#successRedirects a {\r\n    text-decoration: none;\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Success.css"],"names":[],"mappings":"AAAA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,WAAW;AACf;;AAEA;IACI,qBAAqB;IACrB,uBAAuB;AAC3B","sourcesContent":["#successContent {\r\n    text-align: center;\r\n}\r\n\r\n#successRedirects button {\r\n    width: 200px;\r\n    margin: 5px;\r\n}\r\n\r\n#successRedirects a {\r\n    text-decoration: none;\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#successContent {\r\n    text-align: center;\r\n}\r\n\r\n#successRedirects button {\r\n    width: 200px;\r\n    margin: 5px;\r\n}\r\n\r\n#successRedirects a {\r\n    text-decoration: none;\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#successRedirects a:hover {\r\n    color: rgb(108, 140, 255);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/Success.css"],"names":[],"mappings":"AAAA;IACI,kBAAkB;AACtB;;AAEA;IACI,YAAY;IACZ,WAAW;AACf;;AAEA;IACI,qBAAqB;IACrB,uBAAuB;AAC3B;;AAEA;IACI,yBAAyB;AAC7B","sourcesContent":["#successContent {\r\n    text-align: center;\r\n}\r\n\r\n#successRedirects button {\r\n    width: 200px;\r\n    margin: 5px;\r\n}\r\n\r\n#successRedirects a {\r\n    text-decoration: none;\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#successRedirects a:hover {\r\n    color: rgb(108, 140, 255);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4147,7 +4223,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1180px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1180px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1180px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#manageButtons a:visited {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#manageButtons a:hover {\r\n    color: rgb(108, 140, 255);\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/TripsPage.css"],"names":[],"mappings":"AAAA;IACI,iBAAiB;IACjB,kBAAkB;IAClB,aAAa;AACjB;;AAEA;IACI,aAAa;AACjB;;AAEA;IACI,oBAAoB;IACpB,kBAAkB;IAClB,gBAAgB;IAChB,qBAAqB;IACrB,iBAAiB;IACjB,gBAAgB;AACpB;;AAEA;IACI,uBAAuB;AAC3B;;AAEA;IACI,yBAAyB;AAC7B;;AAEA;IACI,YAAY;IACZ,kBAAkB;AACtB;;AAEA;IACI,sBAAsB;AAC1B;;AAEA;IACI,uBAAuB;AAC3B","sourcesContent":["#tripsContent {\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    width: 1180px;\r\n}\r\n\r\n#manageButtons {\r\n    display: flex;\r\n}\r\n\r\n#manageButtons a {\r\n    padding-bottom: 20px;\r\n    margin-right: 60px;\r\n    margin-top: 20px;\r\n    text-decoration: none;\r\n    font-size: larger;\r\n    font-weight: 500;\r\n}\r\n\r\n#manageButtons a:visited {\r\n    color: rgb(59, 77, 145);\r\n}\r\n\r\n#manageButtons a:hover {\r\n    color: rgb(108, 140, 255);\r\n}\r\n\r\n#loginRedirect {\r\n    margin: auto;\r\n    text-align: center;\r\n}\r\n\r\n.toggleSelected {\r\n    color: rgb(33, 33, 33);\r\n}\r\n\r\n.toggleUnselected {\r\n    color: rgb(59, 77, 145);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4174,7 +4250,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#updateFormContent {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n.updateFormTitle {\r\n    color: rgb(59, 77, 145);\r\n    font-weight: 700;\r\n    font-size: large;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.flightDetails {\r\n    font-weight: 600;\r\n}\r\n\r\n#newPrice {\r\n    font-weight: 600;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/UpdateForm.css"],"names":[],"mappings":"AAAA;IACI,qBAAqB;AACzB;;AAEA;IACI,uBAAuB;IACvB,gBAAgB;IAChB,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,gBAAgB;AACpB","sourcesContent":["#updateFormContent {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n.updateFormTitle {\r\n    color: rgb(59, 77, 145);\r\n    font-weight: 700;\r\n    font-size: large;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.flightDetails {\r\n    font-weight: 600;\r\n}\r\n\r\n#newPrice {\r\n    font-weight: 600;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#updateFormContent {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n.updateFormTitle {\r\n    color: rgb(59, 77, 145);\r\n    font-weight: 700;\r\n    font-size: large;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.flightDetails {\r\n    font-weight: 600;\r\n}\r\n\r\n#newPrice {\r\n    font-weight: 600;\r\n}\r\n\r\n#btnSubmitChanges:enabled {\r\n    background: rgb(59, 77, 145);\r\n    color: rgba(255, 255, 255, 0.8);\r\n}\r\n\r\n#btnSubmitChanges:hover:enabled {\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/UpdateForm.css"],"names":[],"mappings":"AAAA;IACI,qBAAqB;AACzB;;AAEA;IACI,uBAAuB;IACvB,gBAAgB;IAChB,gBAAgB;IAChB,mBAAmB;AACvB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,4BAA4B;IAC5B,+BAA+B;AACnC;;AAEA;IACI,6BAA6B;IAC7B,sCAAsC;AAC1C","sourcesContent":["#updateFormContent {\r\n    padding-bottom: 200px;\r\n}\r\n\r\n.updateFormTitle {\r\n    color: rgb(59, 77, 145);\r\n    font-weight: 700;\r\n    font-size: large;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.flightDetails {\r\n    font-weight: 600;\r\n}\r\n\r\n#newPrice {\r\n    font-weight: 600;\r\n}\r\n\r\n#btnSubmitChanges:enabled {\r\n    background: rgb(59, 77, 145);\r\n    color: rgba(255, 255, 255, 0.8);\r\n}\r\n\r\n#btnSubmitChanges:hover:enabled {\r\n    color: rgba(255, 255, 255, 1);\r\n    box-shadow: 0 5px 15px rgb(63, 0, 114);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -4201,7 +4277,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.disabledButton {\r\n    background-color: darkgray;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,oCAAoC;IACpC,YAAY;IACZ,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,0BAA0B;AAC9B;;AAEA;IACI,kCAAkC;AACtC;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: white;\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\n.disabledButton {\r\n    background-color: darkgray;\r\n}\r\n\r\n.selected, .nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: rgba(255, 255, 255, 0.8);\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\nbutton:hover {\r\n    color: rgba(255, 255, 255, 1);\r\n}\r\n\r\n.disabledButton {\r\n    background-color: darkgray;\r\n}\r\n\r\n.selected,\r\n.nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/theme.css"],"names":[],"mappings":"AAAA;IACI,oCAAoC;IACpC,+BAA+B;IAC/B,YAAY;IACZ,YAAY;IACZ,gBAAgB;IAChB,kBAAkB;AACtB;;AAEA;IACI,6BAA6B;AACjC;;AAEA;IACI,0BAA0B;AAC9B;;AAEA;;IAEI,kCAAkC;AACtC;;AAEA;IACI,YAAY;IACZ,YAAY;AAChB","sourcesContent":["button {\r\n    background-color: rgb(124, 124, 124);\r\n    color: rgba(255, 255, 255, 0.8);\r\n    height: 50px;\r\n    width: 150px;\r\n    font-size: large;\r\n    border-radius: 7px;\r\n}\r\n\r\nbutton:hover {\r\n    color: rgba(255, 255, 255, 1);\r\n}\r\n\r\n.disabledButton {\r\n    background-color: darkgray;\r\n}\r\n\r\n.selected,\r\n.nontoggle {\r\n    background-color: rgb(59, 77, 145);\r\n}\r\n\r\nselect {\r\n    height: 40px;\r\n    width: 150px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
