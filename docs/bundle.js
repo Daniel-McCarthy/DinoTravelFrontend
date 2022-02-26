@@ -35,15 +35,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AboutPage = void 0;
 const React = __importStar(__webpack_require__(/*! react */ "react"));
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
-const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
-const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
-const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
-const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
-const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
-const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
-const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
-const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
-const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+const bannerImages = ['flight.jpg', 'flight1.jpg', 'flight2.jpg', 'vacation.png', 'vacation1.png', 'vacation2.png', 'vacation3.png', 'vacation4.png'];
 __webpack_require__(/*! ./styles/AboutPage.css */ "./src/styles/AboutPage.css");
 const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 class AboutPage extends React.Component {
@@ -381,21 +373,12 @@ __webpack_require__(/*! ./styles/HomePage.css */ "./src/styles/HomePage.css");
 __webpack_require__(/*! ./styles/theme.css */ "./src/styles/theme.css");
 const FlightList_1 = __webpack_require__(/*! ./components/FlightList */ "./src/components/FlightList.tsx");
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
-// Import banner images needed to load in Image Carousel
-const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
-const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
-const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
-const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
-const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
-const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
-const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
-const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 const MultiCityFlightSelection_1 = __webpack_require__(/*! ./components/MultiCityFlightSelection */ "./src/components/MultiCityFlightSelection.tsx");
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const AirportSelector_1 = __webpack_require__(/*! ./components/AirportSelector */ "./src/components/AirportSelector.tsx");
 const flightOffers_1 = __webpack_require__(/*! ./api/flightOffers */ "./src/api/flightOffers.ts");
-const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+const bannerImages = ['flight.jpg', 'flight1.jpg', 'flight2.jpg', 'vacation.png', 'vacation1.png', 'vacation2.png', 'vacation3.png', 'vacation4.png'];
 var SearchStatus;
 (function (SearchStatus) {
     SearchStatus[SearchStatus["SettingFilters"] = 0] = "SettingFilters";
@@ -582,8 +565,6 @@ class HomePage extends React.Component {
                     numberOfAdults: this.state.numAdultTravelers,
                     numberOfChildren: this.state.numChildTravelers,
                 };
-                // if (this.state.flightType === FlightType.RoundTrip)
-                //     flightOfferArguments.returnDate = this.state.returnFlightDate;
                 const flightOffers = await (0, flightOffers_1.getFlightOffersWithFilters)(flightOfferArguments);
                 console.log(flightOffers);
                 // So that we can handle it in catch and function can treat 
@@ -1041,15 +1022,7 @@ const ComplaintForm_1 = __importDefault(__webpack_require__(/*! ./components/Sup
 const Policies_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/Policies */ "./src/components/SupportPage/Policies.tsx"));
 const ReviewForm_1 = __importDefault(__webpack_require__(/*! ./components/SupportPage/ReviewForm */ "./src/components/SupportPage/ReviewForm.tsx"));
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
-const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
-const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
-const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
-const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
-const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
-const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
-const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
-const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
-const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+const bannerImages = ['flight.jpg', 'flight1.jpg', 'flight2.jpg', 'vacation.png', 'vacation1.png', 'vacation2.png', 'vacation3.png', 'vacation4.png'];
 __webpack_require__(/*! ./styles/SupportPage.css */ "./src/styles/SupportPage.css");
 const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
 class SupportPage extends React.Component {
@@ -1126,18 +1099,10 @@ const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_m
 const ImageCarousel_1 = __webpack_require__(/*! ./components/ImageCarousel */ "./src/components/ImageCarousel.tsx");
 const reservations_1 = __webpack_require__(/*! ./api/reservations */ "./src/api/reservations.ts");
 const flights_1 = __webpack_require__(/*! ./api/flights */ "./src/api/flights.ts");
-const bannerImage1 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
-const bannerImage2 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
-const bannerImage3 = __importStar(__webpack_require__(/*! ../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
-const bannerImage4 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
-const bannerImage5 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
-const bannerImage6 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
-const bannerImage7 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
-const bannerImage8 = __importStar(__webpack_require__(/*! ../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const FlightsTable_1 = __importDefault(__webpack_require__(/*! ./components/TripsPage/FlightsTable */ "./src/components/TripsPage/FlightsTable.tsx"));
 __webpack_require__(/*! ./styles/TripsPage.css */ "./src/styles/TripsPage.css");
 const Header_1 = __importDefault(__webpack_require__(/*! ./components/Header */ "./src/components/Header.tsx"));
-const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+const bannerImages = ['flight.jpg', 'flight1.jpg', 'flight2.jpg', 'vacation.png', 'vacation1.png', 'vacation2.png', 'vacation3.png', 'vacation4.png'];
 class TripsPage extends React.Component {
     constructor(props) {
         super(props);
@@ -2351,25 +2316,6 @@ exports["default"] = CheckoutReceipt;
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -2378,17 +2324,9 @@ const react_1 = __importDefault(__webpack_require__(/*! react */ "react"));
 const react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 const Checkmark_green_png_1 = __importDefault(__webpack_require__(/*! ../../assets/Checkmark_green.png */ "./src/assets/Checkmark_green.png"));
 __webpack_require__(/*! ../../styles/Success.css */ "./src/styles/Success.css");
-const bannerImage1 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/flight.jpg */ "./assets/banner_images/flight.jpg"));
-const bannerImage2 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/flight1.jpg */ "./assets/banner_images/flight1.jpg"));
-const bannerImage3 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"));
-const bannerImage4 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation.png */ "./assets/banner_images/vacation.png"));
-const bannerImage5 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation1.png */ "./assets/banner_images/vacation1.png"));
-const bannerImage6 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation2.png */ "./assets/banner_images/vacation2.png"));
-const bannerImage7 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation3.png */ "./assets/banner_images/vacation3.png"));
-const bannerImage8 = __importStar(__webpack_require__(/*! ../../../assets/banner_images/vacation4.png */ "./assets/banner_images/vacation4.png"));
 const ImageCarousel_1 = __webpack_require__(/*! ../ImageCarousel */ "./src/components/ImageCarousel.tsx");
 const Header_1 = __importDefault(__webpack_require__(/*! ../Header */ "./src/components/Header.tsx"));
-const bannerImages = [bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8];
+const bannerImages = ['flight.jpg', 'flight1.jpg', 'flight2.jpg', 'vacation.png', 'vacation1.png', 'vacation2.png', 'vacation3.png', 'vacation4.png'];
 function SuccessPage({ isLoggedIn }) {
     return (react_1.default.createElement(react_1.default.Fragment, null,
         react_1.default.createElement("div", null,
@@ -2745,8 +2683,10 @@ class ImageCarousel extends React.Component {
         };
     }
     render() {
+        const imageIndex = this.state.currentIndex % this.state.imagesToUse.length;
+        this.changePhotoAfterTime();
         return (React.createElement("div", { className: 'carousel' },
-            React.createElement("img", { height: this.state.height, ref: element => { this.setRef(element); }, src: this.state.imagesToUse[this.state.currentIndex], onLoad: this.changePhotoAfterTime })));
+            React.createElement("div", { ref: element => { this.setRef(element); }, id: `image_${imageIndex}`, className: 'image', style: { minHeight: `${this.state.height}px`, maxHeight: `${this.state.height}px` } })));
     }
 }
 exports.ImageCarousel = ImageCarousel;
@@ -4004,10 +3944,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ___CSS_LOADER_URL_IMPORT_0___ = new URL(/* asset import */ __webpack_require__(/*! ../../assets/banner_images/flight2.jpg */ "./assets/banner_images/flight2.jpg"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_1___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/flight.jpg */ "./src/assets/flight.jpg"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_2___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/flight1.jpg */ "./src/assets/flight1.jpg"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_3___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/flight2.jpg */ "./src/assets/flight2.jpg"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_4___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/vacation.png */ "./src/assets/vacation.png"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_5___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/vacation1.png */ "./src/assets/vacation1.png"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_6___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/vacation2.png */ "./src/assets/vacation2.png"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_7___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/vacation3.png */ "./src/assets/vacation3.png"), __webpack_require__.b);
+var ___CSS_LOADER_URL_IMPORT_8___ = new URL(/* asset import */ __webpack_require__(/*! ../assets/vacation4.png */ "./src/assets/vacation4.png"), __webpack_require__.b);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 var ___CSS_LOADER_URL_REPLACEMENT_0___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_0___);
+var ___CSS_LOADER_URL_REPLACEMENT_1___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_1___);
+var ___CSS_LOADER_URL_REPLACEMENT_2___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_2___);
+var ___CSS_LOADER_URL_REPLACEMENT_3___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_3___);
+var ___CSS_LOADER_URL_REPLACEMENT_4___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_4___);
+var ___CSS_LOADER_URL_REPLACEMENT_5___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_5___);
+var ___CSS_LOADER_URL_REPLACEMENT_6___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_6___);
+var ___CSS_LOADER_URL_REPLACEMENT_7___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_7___);
+var ___CSS_LOADER_URL_REPLACEMENT_8___ = _node_modules_css_loader_dist_runtime_getUrl_js__WEBPACK_IMPORTED_MODULE_2___default()(___CSS_LOADER_URL_IMPORT_8___);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\r\n    background-color: black;\r\n    display: flex;\r\n\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n    background-attachment: fixed;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n\r\n.carousel img {\r\n    mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    opacity: 0.7;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ImageCarousel.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,aAAa;;IAEb,yDAA+D;IAC/D,4BAA4B;IAC5B,2BAA2B;IAC3B,4BAA4B;IAC5B,sBAAsB;AAC1B;;AAEA;IACI,yHAAyH;IACzH,iIAAiI;IACjI,iBAAiB;IACjB,kBAAkB;IAClB,YAAY;AAChB","sourcesContent":[".carousel {\r\n    background-color: black;\r\n    display: flex;\r\n\r\n    background-image: url(\"../../assets/banner_images/flight2.jpg\");\r\n    background-attachment: fixed;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n\r\n.carousel img {\r\n    mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    opacity: 0.7;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, ".carousel {\r\n    background-color: black;\r\n    display: flex;\r\n\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_0___ + ");\r\n    background-attachment: fixed;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n\r\n.carousel .image {\r\n    mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    opacity: 0.7;\r\n    width: 30%;\r\n}\r\n\r\n#image_0 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_1___ + ");\r\n}\r\n\r\n#image_1 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_2___ + ");\r\n}\r\n\r\n#image_2 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_3___ + ");\r\n}\r\n\r\n#image_3 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_4___ + ");\r\n}\r\n\r\n#image_4 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_5___ + ");\r\n}\r\n\r\n#image_5 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_6___ + ");\r\n}\r\n\r\n#image_6 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_7___ + ");\r\n}\r\n\r\n#image_7 {\r\n    background-image: url(" + ___CSS_LOADER_URL_REPLACEMENT_8___ + ");\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ImageCarousel.css"],"names":[],"mappings":"AAAA;IACI,uBAAuB;IACvB,aAAa;;IAEb,yDAA+D;IAC/D,4BAA4B;IAC5B,2BAA2B;IAC3B,4BAA4B;IAC5B,sBAAsB;AAC1B;;AAEA;IACI,yHAAyH;IACzH,iIAAiI;IACjI,iBAAiB;IACjB,kBAAkB;IAClB,YAAY;IACZ,UAAU;AACd;;AAEA;IACI,yDAA6C;AACjD;;AAEA;IACI,yDAA8C;AAClD;;AAEA;IACI,yDAA8C;AAClD;;AAEA;IACI,yDAA+C;AACnD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAgD;AACpD;;AAEA;IACI,yDAAgD;AACpD","sourcesContent":[".carousel {\r\n    background-color: black;\r\n    display: flex;\r\n\r\n    background-image: url(\"../../assets/banner_images/flight2.jpg\");\r\n    background-attachment: fixed;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    background-size: cover;\r\n}\r\n\r\n.carousel .image {\r\n    mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    opacity: 0.7;\r\n    width: 30%;\r\n}\r\n\r\n#image_0 {\r\n    background-image: url(\"../assets/flight.jpg\");\r\n}\r\n\r\n#image_1 {\r\n    background-image: url(\"../assets/flight1.jpg\");\r\n}\r\n\r\n#image_2 {\r\n    background-image: url(\"../assets/flight2.jpg\");\r\n}\r\n\r\n#image_3 {\r\n    background-image: url(\"../assets/vacation.png\");\r\n}\r\n\r\n#image_4 {\r\n    background-image: url(\"../assets/vacation1.png\");\r\n}\r\n\r\n#image_5 {\r\n    background-image: url(\"../assets/vacation2.png\");\r\n}\r\n\r\n#image_6 {\r\n    background-image: url(\"../assets/vacation3.png\");\r\n}\r\n\r\n#image_7 {\r\n    background-image: url(\"../assets/vacation4.png\");\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30927,28 +30883,6 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./assets/banner_images/flight.jpg":
-/*!*****************************************!*\
-  !*** ./assets/banner_images/flight.jpg ***!
-  \*****************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "82f404f038f9af09017f.jpg";
-
-/***/ }),
-
-/***/ "./assets/banner_images/flight1.jpg":
-/*!******************************************!*\
-  !*** ./assets/banner_images/flight1.jpg ***!
-  \******************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "8ba7b76fe172d54c94b1.jpg";
-
-/***/ }),
-
 /***/ "./assets/banner_images/flight2.jpg":
 /*!******************************************!*\
   !*** ./assets/banner_images/flight2.jpg ***!
@@ -30957,61 +30891,6 @@ module.exports = __webpack_require__.p + "8ba7b76fe172d54c94b1.jpg";
 
 "use strict";
 module.exports = __webpack_require__.p + "2a750cd5d7cf23ea5b38.jpg";
-
-/***/ }),
-
-/***/ "./assets/banner_images/vacation.png":
-/*!*******************************************!*\
-  !*** ./assets/banner_images/vacation.png ***!
-  \*******************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "7e32c9673859c33db5d9.png";
-
-/***/ }),
-
-/***/ "./assets/banner_images/vacation1.png":
-/*!********************************************!*\
-  !*** ./assets/banner_images/vacation1.png ***!
-  \********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "9136aebeffdd4f8fec73.png";
-
-/***/ }),
-
-/***/ "./assets/banner_images/vacation2.png":
-/*!********************************************!*\
-  !*** ./assets/banner_images/vacation2.png ***!
-  \********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "b9079e99eecc0572f9ba.png";
-
-/***/ }),
-
-/***/ "./assets/banner_images/vacation3.png":
-/*!********************************************!*\
-  !*** ./assets/banner_images/vacation3.png ***!
-  \********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "ab0499413241736d9cf6.png";
-
-/***/ }),
-
-/***/ "./assets/banner_images/vacation4.png":
-/*!********************************************!*\
-  !*** ./assets/banner_images/vacation4.png ***!
-  \********************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-module.exports = __webpack_require__.p + "d46da574bd942483c818.png";
 
 /***/ }),
 
@@ -31045,6 +30924,94 @@ module.exports = __webpack_require__.p + "a620c3a27f39ca361323.gif";
 
 "use strict";
 module.exports = __webpack_require__.p + "e7f6c7ab90fac3e80174.png";
+
+/***/ }),
+
+/***/ "./src/assets/flight.jpg":
+/*!*******************************!*\
+  !*** ./src/assets/flight.jpg ***!
+  \*******************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "82f404f038f9af09017f.jpg";
+
+/***/ }),
+
+/***/ "./src/assets/flight1.jpg":
+/*!********************************!*\
+  !*** ./src/assets/flight1.jpg ***!
+  \********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "8ba7b76fe172d54c94b1.jpg";
+
+/***/ }),
+
+/***/ "./src/assets/flight2.jpg":
+/*!********************************!*\
+  !*** ./src/assets/flight2.jpg ***!
+  \********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "2a750cd5d7cf23ea5b38.jpg";
+
+/***/ }),
+
+/***/ "./src/assets/vacation.png":
+/*!*********************************!*\
+  !*** ./src/assets/vacation.png ***!
+  \*********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "7e32c9673859c33db5d9.png";
+
+/***/ }),
+
+/***/ "./src/assets/vacation1.png":
+/*!**********************************!*\
+  !*** ./src/assets/vacation1.png ***!
+  \**********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "9136aebeffdd4f8fec73.png";
+
+/***/ }),
+
+/***/ "./src/assets/vacation2.png":
+/*!**********************************!*\
+  !*** ./src/assets/vacation2.png ***!
+  \**********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "b9079e99eecc0572f9ba.png";
+
+/***/ }),
+
+/***/ "./src/assets/vacation3.png":
+/*!**********************************!*\
+  !*** ./src/assets/vacation3.png ***!
+  \**********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "ab0499413241736d9cf6.png";
+
+/***/ }),
+
+/***/ "./src/assets/vacation4.png":
+/*!**********************************!*\
+  !*** ./src/assets/vacation4.png ***!
+  \**********************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+module.exports = __webpack_require__.p + "d46da574bd942483c818.png";
 
 /***/ }),
 
