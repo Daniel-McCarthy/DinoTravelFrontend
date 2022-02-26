@@ -67,14 +67,16 @@ export class ImageCarousel extends React.Component<ICarouselProps, ICarouselStat
     }
 
     render() {
+        const imageIndex = this.state.currentIndex % this.state.imagesToUse.length;
+        this.changePhotoAfterTime();
         return (
             <div className='carousel'>
-                <img 
-                    height={this.state.height}
+                <div
                     ref={element => {this.setRef(element)}}
-                    src={this.state.imagesToUse[this.state.currentIndex]}
-                    onLoad={this.changePhotoAfterTime}
-                ></img>
+                    id={`image_${imageIndex}`}
+                    className='image'
+                    style={{minHeight: `${this.state.height}px`, maxHeight: `${this.state.height}px`}}
+                ></div>
             </div>
         )
     }

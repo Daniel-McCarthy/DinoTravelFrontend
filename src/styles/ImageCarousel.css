@@ -9,10 +9,43 @@
     background-size: cover;
 }
 
-.carousel img {
+.carousel .image {
     mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
     -webkit-mask-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0) 100%);
     margin-left: auto;
     margin-right: auto;
     opacity: 0.7;
+    width: 30%;
+}
+
+#image_0 {
+    background-image: url("../assets/flight.jpg");
+}
+
+#image_1 {
+    background-image: url("../assets/flight1.jpg");
+}
+
+#image_2 {
+    background-image: url("../assets/flight2.jpg");
+}
+
+#image_3 {
+    background-image: url("../assets/vacation.png");
+}
+
+#image_4 {
+    background-image: url("../assets/vacation1.png");
+}
+
+#image_5 {
+    background-image: url("../assets/vacation2.png");
+}
+
+#image_6 {
+    background-image: url("../assets/vacation3.png");
+}
+
+#image_7 {
+    background-image: url("../assets/vacation4.png");
 }

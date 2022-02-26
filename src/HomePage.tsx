@@ -9,23 +9,14 @@ import './styles/HomePage.css';
 import './styles/theme.css';
 import { FlightList } from "./components/FlightList";
 import { ImageCarousel } from "./components/ImageCarousel";
-
-// Import banner images needed to load in Image Carousel
-import * as bannerImage1 from '../assets/banner_images/flight.jpg';
-import * as bannerImage2 from '../assets/banner_images/flight1.jpg';
-import * as bannerImage3 from '../assets/banner_images/flight2.jpg';
-import * as bannerImage4 from '../assets/banner_images/vacation.png';
-import * as bannerImage5 from '../assets/banner_images/vacation1.png';
-import * as bannerImage6 from '../assets/banner_images/vacation2.png';
-import * as bannerImage7 from '../assets/banner_images/vacation3.png';
-import * as bannerImage8 from '../assets/banner_images/vacation4.png';
 import moment = require("moment");
 import { Flight, MultiCityFlightSelect } from "./components/MultiCityFlightSelection";
 import { Link } from "react-router-dom";
 import { AirportSelector } from "./components/AirportSelector";
 import { ILocationData } from "./api/locations";
 import { getFlightOffersWithFilters, IFlightOfferArguments, IFlightOfferData } from "./api/flightOffers";
-const bannerImages = [ bannerImage1, bannerImage2, bannerImage3, bannerImage4, bannerImage5, bannerImage6, bannerImage7, bannerImage8 ];
+
+const bannerImages = [ 'flight.jpg', 'flight1.jpg', 'flight2.jpg', 'vacation.png', 'vacation1.png', 'vacation2.png', 'vacation3.png', 'vacation4.png' ];
 
 interface IFlight {
     originAirportIataCode: string;
@@ -319,8 +310,6 @@ export class HomePage extends React.Component<IHomePageProps, IHomePageState> {
                 numberOfChildren: this.state.numChildTravelers,
             };
 
-            // if (this.state.flightType === FlightType.RoundTrip)
-            //     flightOfferArguments.returnDate = this.state.returnFlightDate;
             const flightOffers: Array<IFlightOfferData> | Error = await getFlightOffersWithFilters(flightOfferArguments);
             console.log(flightOffers);
 
