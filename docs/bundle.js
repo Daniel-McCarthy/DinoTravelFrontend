@@ -938,7 +938,6 @@ class PageRouting extends React.Component {
                 IDToken: newID,
                 isLoggedIn: newID != null
             });
-            console.log("updated to: " + newID);
             this.render();
         };
         this.updateReservedFlights = (reservedFlights, reservedAdultSeats, reservedChildSeats, flightClass, flightType) => {
@@ -952,7 +951,6 @@ class PageRouting extends React.Component {
         };
         this.state = { IDToken: null, isLoggedIn: false, reservedFlights: [], reservedAdultSeats: 0, reservedChildSeats: 0, flightClass: FlightClass_1.FlightClass.BusinessClass, flightType: FlightType_1.FlightType.MultiCity };
         let TokenJson = JSON.parse(localStorage.getItem('Token'));
-        console.log(TokenJson);
         if (TokenJson != null) {
             let TimeExpired = TokenJson.expires_at;
             if (Date.now() >= TimeExpired) {
@@ -1782,6 +1780,46 @@ exports.deleteReservation = deleteReservation;
 
 /***/ }),
 
+/***/ "./src/api/reviews.ts":
+/*!****************************!*\
+  !*** ./src/api/reviews.ts ***!
+  \****************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.makeReview = void 0;
+const baseURL = 'purpledinoapi.link';
+const port = '8080';
+const complaintsAPI = '/api/reviews';
+const complaintsEndpointURL = `https://www.${baseURL}:${port}${complaintsAPI}`;
+const makeReview = async (review) => {
+    console.log(`Making a review with endpoint: ${complaintsEndpointURL}`);
+    const options = {
+        'method': 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(review)
+    };
+    try {
+        const responseData = await fetch(complaintsEndpointURL, options);
+        const statusCode = responseData.status;
+        console.log(`Received response from ${complaintsEndpointURL} endpoint with status: '${statusCode}'`);
+        return responseData;
+    }
+    catch (error) {
+        console.error(`Failed to post complaint data from API endpoint due to reason: ${error}`);
+        return error;
+    }
+};
+exports.makeReview = makeReview;
+
+
+/***/ }),
+
 /***/ "./src/api/users.ts":
 /*!**************************!*\
   !*** ./src/api/users.ts ***!
@@ -2049,7 +2087,6 @@ class AuthenticationButton extends React.Component {
         };
         this.onSignIn = (googleUser) => {
             //DO NOT SEND USER ID TO BACKEND
-            console.log(googleUser);
             localStorage.setItem('LoggedIn', 'true');
             localStorage.setItem('LoginAttempted', 'true');
             localStorage.setItem('Profile', JSON.stringify(googleUser.profileObj));
@@ -3010,6 +3047,7 @@ const react_1 = __importStar(__webpack_require__(/*! react */ "react"));
 const ToastType_1 = __webpack_require__(/*! ../../enums/ToastType */ "./src/enums/ToastType.ts");
 const ToastMessage_1 = __webpack_require__(/*! ../ToastMessage */ "./src/components/ToastMessage.tsx");
 __webpack_require__(/*! ../../styles/ReviewForm.css */ "./src/styles/ReviewForm.css");
+const reviews_1 = __webpack_require__(/*! ../../api/reviews */ "./src/api/reviews.ts");
 function ReviewForm() {
     const [toast, setToast] = (0, react_1.useState)({ toastType: ToastType_1.ToastType.InfoToast, message: "", show: false });
     const [name, setName] = (0, react_1.useState)();
@@ -3017,13 +3055,32 @@ function ReviewForm() {
     const [experience, setExperience] = (0, react_1.useState)();
     const [recommendation, setRecommendation] = (0, react_1.useState)();
     const [review, setReview] = (0, react_1.useState)();
-    const validateReview = () => {
+    const [val, setVal] = (0, react_1.useState)();
+    const validateReview = async () => {
         if (name && email && experience && recommendation && review) {
-            setToast({
-                message: "Thank you for your review!",
-                toastType: ToastType_1.ToastType.SuccessToast,
-                show: true
-            });
+            const newReview = {
+                fullName: name,
+                email: email,
+                experience_rating: experience,
+                recommendation_rating: recommendation,
+                review: review
+            };
+            const response = await (0, reviews_1.makeReview)(newReview);
+            if (response instanceof Error) {
+                console.log('Failed to send reservation submission to Dino Travel.');
+            }
+            else {
+                setVal("");
+                setToast({
+                    message: "Your review has been received!",
+                    toastType: ToastType_1.ToastType.SuccessToast,
+                    show: true
+                });
+                const experienceButtons = document.getElementsByName("radExperience");
+                experienceButtons.forEach(element => (element.checked = false));
+                const recommendButtons = document.getElementsByName("radRecommend");
+                recommendButtons.forEach(element => (element.checked = false));
+            }
         }
         else {
             setToast({
@@ -3034,6 +3091,9 @@ function ReviewForm() {
                 show: true
             });
         }
+    };
+    const isFormValid = () => {
+        return name && email && review && experience && recommendation;
     };
     const onToastClosed = () => {
         setToast({
@@ -3047,11 +3107,11 @@ function ReviewForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtFullName" }, "Full Name"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "First and Last", onChange: (_) => setName(_.currentTarget.value), required: true })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "John Smith", onChange: (_) => setName(_.currentTarget.value), value: val, required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("label", { htmlFor: "txtEmail" }, "Email Address"),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value), required: true })),
+                react_1.default.createElement("input", { type: "text", id: "txtFullName", placeholder: "email@domain.com", onChange: (_) => setEmail(_.currentTarget.value), value: val, required: true })),
             react_1.default.createElement("p", null,
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "How was your experience on our website?"),
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "(1 = lowest and 5 = highest)"),
@@ -3068,24 +3128,24 @@ function ReviewForm() {
             react_1.default.createElement("p", null,
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "How likely are you to recommend Dino Travel to someone you know?"),
                 react_1.default.createElement("p", { style: { margin: 0, padding: 0 } }, "(1 = not very likely and 5 = very likely)"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec1", value: "1", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecommend", id: "rec1", value: "1", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec1" }, "1"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec2", value: "2", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecommend", id: "rec2", value: "2", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec2" }, "2"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec3", value: "3", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecommend", id: "rec3", value: "3", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec3" }, "3"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec4", value: "4", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecommend", id: "rec4", value: "4", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec4" }, "4"),
-                react_1.default.createElement("input", { type: "radio", name: "radRecomend", id: "rec5", value: "5", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
+                react_1.default.createElement("input", { type: "radio", name: "radRecommend", id: "rec5", value: "5", onChange: (_) => setRecommendation(parseInt(_.currentTarget.value)), required: true }),
                 react_1.default.createElement("label", { htmlFor: "rec5" }, "5")),
             react_1.default.createElement("p", null,
-                react_1.default.createElement("label", { htmlFor: "txtarReview" }, "Is there anything we can do to improve?"),
+                react_1.default.createElement("label", { htmlFor: "txtarReview" }, "Please leave a review for us."),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("textarea", { id: "txtarReview", placeholder: "Type Here", onChange: (_) => setReview(_.currentTarget.value), required: true })),
+                react_1.default.createElement("textarea", { id: "txtarReview", placeholder: "Type Here", onChange: (_) => setReview(_.currentTarget.value), value: val, required: true })),
             react_1.default.createElement("p", null,
-                react_1.default.createElement("label", { htmlFor: "btnSubmit" }, "We will use your email address to follow-up on account issues, and for no other purpose."),
+                react_1.default.createElement("label", { htmlFor: "btnSubmit" }, "We will only use your email address to follow-up on account issues, and for no other purpose."),
                 react_1.default.createElement("br", null),
-                react_1.default.createElement("button", { id: "btnSubmit", onClick: validateReview }, "Submit"))),
+                react_1.default.createElement("button", { id: "btnSubmit", onClick: validateReview, disabled: !isFormValid() }, "Submit"))),
         react_1.default.createElement(ToastMessage_1.ToastMessage, { toastType: toast.toastType, show: toast.show, message: toast.message, onToastClosed: onToastClosed })));
 }
 exports["default"] = ReviewForm;
@@ -4071,7 +4131,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n\r\n#review input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#review input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review input:valid + label {\r\n    color: black;\r\n}\r\n", "",{"version":3,"sources":["webpack://./src/styles/ReviewForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,kBAAkB;IAClB,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n\r\n#review input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#review input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review input:valid + label {\r\n    color: black;\r\n}\r\n"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n\r\n#review input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#review input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review input:valid + label {\r\n    color: black;\r\n}\r\n\r\n", "",{"version":3,"sources":["webpack://./src/styles/ReviewForm.css"],"names":[],"mappings":"AAAA;IACI,YAAY;IACZ,iBAAiB;IACjB,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,aAAa;IACb,YAAY;IACZ,kBAAkB;IAClB,iBAAiB;IACjB,gBAAgB;IAChB,eAAe;IACf,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,WAAW;IACX,YAAY;AAChB;;AAEA;IACI,kBAAkB;IAClB,gBAAgB;AACpB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,qBAAqB;IACrB,iBAAiB;AACrB;;AAEA;IACI,cAAc;AAClB;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,yBAAyB;AAC7B;;AAEA;IACI,YAAY;AAChB","sourcesContent":["#review {\r\n    width: 300px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding-bottom: 100px;\r\n}\r\n\r\ninput {\r\n    height: 40px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ntextarea {\r\n    height: 150px;\r\n    width: 300px;\r\n    border-radius: 4px;\r\n    padding-left: 5px;\r\n    padding-top: 5px;\r\n    margin-top: 3px;\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\ninput[type='radio'] {\r\n    width: 14px;\r\n    height: 14px;\r\n}\r\n\r\nlabel {\r\n    margin-right: 27px;\r\n    margin-left: 2px;\r\n}\r\n\r\n#btnSubmit {\r\n    width: 310px;\r\n}\r\n\r\n#review input:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review textarea:required {\r\n    border-color: #a50000;\r\n    border-width: 2px;\r\n}\r\n\r\n#review input:required + label {\r\n    color: #a50000;\r\n}\r\n\r\n#review input:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review textarea:valid {\r\n    border-width: 1px;\r\n    border-color: #d8dee9;\r\n    background-color: #fcfcfc;\r\n}\r\n\r\n#review input:valid + label {\r\n    color: black;\r\n}\r\n\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
